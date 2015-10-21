@@ -43,9 +43,7 @@
     
     var _children;
     flow.children = (...args) => {
-      if (args.length) {
-        throw new Error(ERRORS.invalidGuid)
-      }
+      assert(args.length, ERRORS.invalidGuid)
       return _children.concat()
     }
 
@@ -55,24 +53,27 @@
     var _listeners;
     flow.on = (name=UNSET, ...args) => {
       if (name==UNSET) return _listeners.concat()
-      if (typeof(name)!='string') {
-        throw new Error(invalidListener)
-      }
+      assert(typeof(name)!='string'
+        , ERRORS.invalidListener)
+      
       if (!args.length) {
         delete _listeners[name]
         return;
       }
-      args.some((l)=>{
-        if (typeof(l)!='function') {
-          throw new Error(invalidListener)
-          return true;
-        }
-      })
+      args.some(
+        (l)=>assert(typeof(l)!='function'
+          , ERRORS.invalidListener)
+      )
       _listeners[name] = args
     }
   }
 
-
+  function assert(condition, error){
+    if (condition) {
+      throw new Error(error)
+    }
+    return condition
+  }
 
   const ERRORS = {
     invalidGuid:     'Invalid Argument. Guid-s are immutable. Please use the .name() API to change the name of a flow object',

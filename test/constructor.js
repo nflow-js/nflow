@@ -11,9 +11,17 @@ describe('Construction', function(){
       .parent(null)
   })
 
+  describe('guid API', function(){
+    it('should create unique guids', function(){
+      var sut1 = testFlow.create()   
+      var sut2 = testFlow.create()   
+      expect(sut1.guid()).to.not.equal(sut2.guid())
+    })
+  })
+
   describe('name API', function(){
     it('should store name', function(){
-      var sut = testFlow.create('test')    
+      var sut = testFlow.create('test')   
       expect(sut.name()).to.equal('test')
     })
   })
@@ -60,9 +68,9 @@ describe('Construction', function(){
    describe('parent API', function(){
 
     it('should return correct parent', function(){
-      var sut1 = testFlow.create('sut1')
-      var sut2 = sut1.create('sut2')
-
+      var sut1 = testFlow.create('parent')
+      var sut2 = sut1.create('child')
+      console.log("sut2's parent:", sut2.parent().name())
       expect(sut2.parent()).to.equal(sut1)
     })
     

@@ -13,6 +13,16 @@ describe('Dispatchers', function(){
   })
   describe('.emit() API', function(){
 
+    it('emit should create a new node', function(){
+      var bar = sut.emit('bar')
+      expect(bar.parent()).to.equal(sut)
+    })
+
+    it('should detach emitted node', function(){
+      var bar = sut.emit('bar')
+      expect(bar.parent().children()).to.not.contain(bar)
+    })
+
     it('should emit new node', function(done){
       var payload = {}
       var listener = function(data){

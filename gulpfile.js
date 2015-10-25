@@ -16,11 +16,18 @@ gulp.task('watch', function() {
 });
 
 gulp.task('build', function() {
-  gulp.src(['src/**/*.js'])
+  gulp.src([
+        'src/wrap-start.js',
+        'src/nflow.js',
+        'src/behaviours/*.js',
+        'src/consts.js',
+        'src/utils.js',
+        'src/wrap-end.js'
+        ])
     //.pipe(browserify())
     .pipe(sourcemaps.init())
-    .pipe(babel())
     .pipe(concat('flow.js'))
+    .pipe(babel())
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest('./dist/'))
 })

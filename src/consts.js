@@ -39,4 +39,5 @@ const ERRORS = {
 , invalidParent:'Invalid flow parent object. Expected a flow instance, got: %s'
 , invalidParents:'Invalid Argument. Please use the child.parent(parent) API to re-parent flow objects.'
 , invalidStatus:'Invalid Argument. The .status() API is read only'
+, invalidRoot:'Invalid Argument. The .parents.root() API is read only'
 }

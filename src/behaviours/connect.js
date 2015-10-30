@@ -1,4 +1,50 @@
 behaviours.connect = (flow)=>{
+  
+  /**
+   *  .children() API
+   */
+  flow.children = (...args) => {
+    assert(args.length, ERRORS.invalidChildren)
+    return flow.children.value.concat()
+  }
+  flow.children.value = []
+
+  flow.children.has = (matcher, recursive)=>flow.children.find(matcher, recursive)!=null
+
+  flow.children.find = (matcher, recursive)=>flow.children.findAll(matcher, recursive).pop()
+  
+  flow.children.findAll = (matcher, recursive)=>{
+
+    var matches = flow.children.value
+        .filter(typeof(matcher)=="string"
+          ? (f=>f.name()==matcher)
+          : matcher)
+    
+    if (recursive) matches = matches
+        .concat(...flow.children()
+          .map(f=>f.children.findAll(matcher, recursive))
+        )
+    return matches
+  }
+
+  flow.children.has = (matcher, recursive)=>flow.children.find(matcher, recursive)!=null
+  flow.children.find = (matcher, recursive)=>flow.children.findAll(matcher, recursive).pop()
+  flow.children.findAll = (matcher, recursive)=>{
+    var matches = flow.children.value
+        .filter(typeof(matcher)=="string"
+          ? (f=>f.name()==matcher)
+          : matcher)
+    
+    if (recursive) matches = matches
+        .concat(...flow.children()
+          .map(f=>f.children.findAll(matcher, recursive))
+        )
+    return matches
+  }
+
+  /**
+   *  .parent() API
+   */
   flow.parent = (parent=UNSET) => {
     if (parent===UNSET) return flow.parent.value;
     parent && assert(!isFlow(parent), ERRORS.invalidParent, parent)
@@ -7,7 +53,7 @@ behaviours.connect = (flow)=>{
     attach(parent)  
     return flow
   }
-  
+
   flow.parents = (...args)=>{
     assert(args.length, ERRORS.invalidParents)
     var parentMap = {}
@@ -21,12 +67,20 @@ behaviours.connect = (flow)=>{
     return parents 
   }
 
-  flow.children = (...args) => {
-    assert(args.length, ERRORS.invalidChildren)
-    return flow.children.value.concat()
+  flow.parents.find = (matcher)=>{
+    return flow.parents()
+      .filter(typeof(matcher)=="string"
+          ? (f=>f.name()==matcher)
+          : matcher)
+      .pop()
   }
-  flow.children.value = []
 
+  flow.parents.root = (...args)=>{
+    assert(args.length, ERRORS.invalidRoot)
+    return flow
+      .parents()
+      .pop()
+  }
 
   flow.children.detach = (child)=>{
     flow.children.value = 

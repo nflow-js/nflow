@@ -39,17 +39,36 @@ behaviours.emit = (flow)=>{
 
   function emit(flow){
     // 1. detach from parent
-    console.log("emitting", flow.name())
+    //console.log("emitting", flow.name())
     flow.parent() 
       && flow.parent().children.detach(flow)
 
     // 2. reset status
     flow.emit.recipients = []
-    flow.emit.recipientMap = {}
-    flow.status.value = STATUS.FLOWING;
-    flowTo(flow, flow) // start dispatching foer itself
+    flow.emit.recipientsMap = {}
+    
+    flow.emit.targets = calculateTargetList(flow, flow.direction())
 
+
+    flow.status.value = STATUS.FLOWING;
+    //
   }
+
+  /**
+   *  return an array of 
+   */
+  function calculateTargetList(flow, direction){
+    //if (flow.parent() &&
+      //&& !flow.parent().children.has
+
+
+    var targets = getNextFlowDestination(flow, direction)
+
+
+    return targets
+  }
+
+  //function get
 
   function flowTo(flow, destination){
     if (flow.status() != STATUS.FLOWING) return;
@@ -73,13 +92,13 @@ behaviours.emit = (flow)=>{
   }
 
 
-  function getNextFlowDestination(flow, currentNode){
+  function getNextFlowDestination(currentNode, direction){
     return {
       NONE: [currentNode],
       UPSTREAM: [currentNode.parent()],
       DEFAULT: [currentNode.parent()],
       DOWNSTREAM: currentNode.children()
-    }[flow.direction()]
+    }[direction]
   }
 
 

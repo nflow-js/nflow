@@ -10,36 +10,35 @@ behaviours.connect = (flow)=>{
   flow.children.value = []
 
   flow.children.has = (matcher, recursive)=>flow.children.find(matcher, recursive)!=null
-
   flow.children.find = (matcher, recursive)=>flow.children.findAll(matcher, recursive).pop()
-  
   flow.children.findAll = (matcher, recursive)=>{
 
-    var matches = flow.children.value
-        .filter(typeof(matcher)=="string"
-          ? (f=>f.name()==matcher)
-          : matcher)
+    var filter = matcher;
+    if (typeof(matcher)=="string") filter = f=>f.name()==matcher
+    else if (isFlow(matcher)) filter = f=>f==matcher
+    var children = recursive 
+      ? flow.children.all()
+      : flow.children()
     
-    if (recursive) matches = matches
-        .concat(...flow.children()
-          .map(f=>f.children.findAll(matcher, recursive))
-        )
-    return matches
+    return children.filter(filter)
   }
 
-  flow.children.has = (matcher, recursive)=>flow.children.find(matcher, recursive)!=null
-  flow.children.find = (matcher, recursive)=>flow.children.findAll(matcher, recursive).pop()
-  flow.children.findAll = (matcher, recursive)=>{
-    var matches = flow.children.value
-        .filter(typeof(matcher)=="string"
-          ? (f=>f.name()==matcher)
-          : matcher)
-    
-    if (recursive) matches = matches
-        .concat(...flow.children()
-          .map(f=>f.children.findAll(matcher, recursive))
-        )
-    return matches
+  /**
+   *  return all children recursively
+   */
+  flow.children.all = (...args)=>{
+    assert(args.length, ERRORS.invalidChildren)
+    //TODO handle circular deps
+    return getChildren(flow)
+
+    function getChildren(flow){
+      var c = flow.children.value
+      var gc = flow.children.value.map(getChildren)
+      
+      return c.concat.apply(c, gc);
+
+    }
+
   }
 
   /**

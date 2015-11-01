@@ -47,47 +47,30 @@ behaviours.emit = (flow)=>{
     flow.emit.recipients = []
     flow.emit.recipientsMap = {}
     
-    flow.emit.targets = calculateTargetList(flow, flow.direction())
-
-
+    if (flow.direction() == DIRECTION.DEFAULT) flow.emit.targets = flatten([flow].concat(flow.parents())
+      .map((node)=>{
+        if (isDetached(node)
+          || !node.parent()) return [node]
+          .concat(node.children.all())
+        //TODO check circular deps
+        return [node]
+      }))
     flow.status.value = STATUS.FLOWING;
-    //
-  }
 
-  /**
-   *  return an array of 
-   */
-  function calculateTargetList(flow, direction){
-    //if (flow.parent() &&
-      //&& !flow.parent().children.has
+    while (flow.emit.targets.length){
+      var destination = flow.emit.targets.shift()
+      notify(flow, destination)
+    }
 
-
-    var targets = getNextFlowDestination(flow, direction)
-
-
-    return targets
-  }
-
-  //function get
-
-  function flowTo(flow, destination){
-    if (flow.status() != STATUS.FLOWING) return;
-    notify(flow, destination)
-    //console.log('next:', getNextFlowDestination(flow, destination))
-    getNextFlowDestination(flow, destination)
-      //.filter(f=>flow.emit.recipientMap[f.guid()]) //only deliver to a node once
-      .filter(Boolean) //ignore null parents
-      //TODO filter by cached listeners
-      .forEach(destination=>{flowTo(flow, destination)})
   }
 
   function notify(flow, currentNode){
-    if (flow.emit.recipientMap[currentNode.guid()] == flow.direction()) {
+    if (flow.emit.recipientsMap[currentNode.guid()] == flow.direction()) {
       // we already checked this node
       return;
     }
     flow.emit.recipients.push(currentNode)
-    flow.emit.recipientMap[currentNode.guid()] = flow.direction()
+    flow.emit.recipientsMap[currentNode.guid()] = flow.direction()
     currentNode.on.notifyListeners(flow)
   }
 

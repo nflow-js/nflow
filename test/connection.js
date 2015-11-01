@@ -4,7 +4,7 @@ var flow = require('../dist/flow')
 var expect = require('chai').expect;
 var sut
 
-describe('Listeners', function(){
+describe('Connection', function(){
   beforeEach(function(){
     sut = flow
       .create('sut')
@@ -47,7 +47,16 @@ describe('Listeners', function(){
       d.parent(null)
       expect(sut.children()).to.eql([a,b,c])  
     })
-    
+
+    it('.all() should return all children recursively', function(){
+      
+      var a = sut.create("test1")
+      var b = a.create("test2")
+      var c = b.create("test3")
+      var children = sut.children.all()
+      expect(children).to.eql([a,b,c])  
+    })
+
     it('should find child by String', function(){
       
       var a = sut.create("test1")

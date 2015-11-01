@@ -15,3 +15,12 @@ function isFlow(flow){
     && flow.name
     && flow.name.isFlow
 }
+
+function isDetached(flow){
+  return flow.parent()
+    && !flow.parent().children.has(flow)
+}
+
+function flatten(array){
+  return [].concat.apply([], array);
+}

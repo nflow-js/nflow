@@ -6,7 +6,7 @@ behaviours.listen = (flow)=>{
       , ERRORS.invalidListener)
     
     if (!args.length) {
-      return listenerMap[name] //TODO clone this
+      return listenerMap[name]
     }
 
     if (args.length==1 && args[0]==null) {
@@ -15,23 +15,20 @@ behaviours.listen = (flow)=>{
     }
     listenerMap[name] = args
       .filter(l=>!assert(typeof(l)!='function'
-        , ERRORS.invalidListener)
+        , ERRORS.invalidListenerType, typeof(l)+": "+l)
       )
-    //console.log("adding listener", name, 'to', flow.name(), flow.guid())
     return flow
   }
 
   flow.on.notifyListeners = (event)=>{
-    //console.log("notifying", event.name(), 'to', flow.name(), flow.guid())
     if (listenerMap[event.name()]) {
+      event.target = flow
       listenerMap[event.name()]
         .every(listener=>{
-          listener(...event.data.value)
+          listener.apply(event, event.data.value)
           return (flow.status() == STATUS.FLOWING)
         })
+      return true
     }
   }
-
-
-  //TODO cache listeners
 }

@@ -1,7 +1,5 @@
 "use strict";
 
-var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i]; return arr2; } else { return Array.from(arr); } };
-
 (function (scope) {
 
   var create = function (defaults, name, data) {
@@ -24,7 +22,10 @@ var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i =
       if (!data.length) {
         return flow.data.value.length <= 1 ? flow.data.value[0] : flow.data.value;
       }
-      return (flow.data.value = data, flow);
+      var oldData = flow.data.value;
+      flow.data.value = data;
+      dispatchInternalEvent(flow, "data", data.length > 1 ? data : data[0], oldData.length > 1 ? oldData : oldData[0]);
+      return flow;
     };
     flow.data.value = data;
   };
@@ -90,8 +91,10 @@ var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i =
 
       if (parent === UNSET) return flow.parent.value;
       parent && assert(!isFlow(parent), ERRORS.invalidParent, parent);
-      flow.parent() && flow.parent().children.detach(flow);
+      var previousParent = flow.parent();
+      detach(flow);
       attach(parent);
+      dispatchInternalEvent(flow, "parent", parent, previousParent);
       return flow;
     };
 
@@ -147,7 +150,8 @@ var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i =
       }
 
       var instance = create(flow.create.defaults, name, data);
-      instance.parent(flow);
+      instance.parent.value = flow;
+      flow.children.value.push(instance);
       return instance;
     };
 
@@ -169,16 +173,17 @@ var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i =
       return flow.status.value;
     };
     flow.status.value = STATUS.IDLE;
+    merge(STATUS, flow.status);
 
     flow.direction = function () {
-      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
+      var direction = arguments[0] === undefined ? UNSET : arguments[0];
 
-      assert(args.length, ERRORS.invalidStatus);
-      return flow.direction.value;
+      if (direction === UNSET) return flow.direction.value;
+      flow.direction.value = direction;
+      return flow;
     };
     flow.direction.value = flow.create.defaults.direction;
+    merge(DIRECTION, flow.direction);
 
     flow.emit = function () {
       for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -189,7 +194,8 @@ var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i =
 
       if (name == UNSET) {
         // emit current flow object
-        emit(flow);
+        detach(flow);
+        flow.emit.route(flow);
         return flow;
       }
       if (isFlow(name)) {
@@ -197,47 +203,63 @@ var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i =
         name.parent(flow);
 
         //2.  emit the passed in flow object
-        emit(name);
+        detach(flow);
+        flow.emit.route(name);
         return flow;
       }
 
       assert(typeof name != "string", ERRORS.invalidEventName);
 
       var event = flow.create.apply(flow, [name].concat(args));
-      emit(event);
+      detach(event);
+      flow.emit.route(event);
       return event;
     };
 
-    function emit(flow) {
-      // 1. detach from parent
-      //console.log("emitting", flow.name())
-      flow.parent() && flow.parent().children.detach(flow);
-
+    flow.emit.route = function (flow) {
       // 2. reset status
       flow.emit.recipients = [];
       flow.emit.recipientsMap = {};
 
-      if (flow.direction() == DIRECTION.DEFAULT) flow.emit.targets = flatten([flow].concat(flow.parents()).map(function (node) {
-        if (isDetached(node) || !node.parent()) return [node].concat(node.children.all());
-        //TODO check circular deps
-        return [node];
-      }));
       flow.status.value = STATUS.FLOWING;
+
+      // only keep unique recipients
+      flow.emit.targets = flow.emit.route[flow.direction()](flow).filter(function (f) {
+        if (flow.emit.recipientsMap[f.guid()]) return false;
+        return flow.emit.recipientsMap[f.guid()] = true;
+      });
 
       while (flow.emit.targets.length) {
         var destination = flow.emit.targets.shift();
         notify(flow, destination);
       }
-    }
+    };
+
+    flow.emit.route.DEFAULT = function (flow) {
+      return flatten([flow].concat(flow.parents()).map(function (node) {
+        if (isDetached(node) || !node.parent()) return [node].concat(node.children.all());
+        //TODO check circular deps
+        return [node];
+      }));
+    };
+
+    flow.emit.route.UPSTREAM = function (flow) {
+      return [flow].concat(flow.parents());
+    };
+
+    flow.emit.route.DOWNSTREAM = function (flow) {
+      return flatten([flow].concat(flow.parent()).concat(flow.parent().children.all()).filter(Boolean));
+    };
+
+    flow.emit.route.NONE = function (flow) {
+      return [flow, flow.parent()];
+    };
 
     function notify(flow, currentNode) {
-      if (flow.emit.recipientsMap[currentNode.guid()] == flow.direction()) {
-        // we already checked this node
-        return;
+      if (currentNode.on.notifyListeners(flow)) {
+        flow.emit.recipientsMap[currentNode.guid()] = flow.direction();
+        flow.emit.recipients.push(currentNode);
       }
-      flow.emit.recipients.push(currentNode);
-      flow.emit.recipientsMap[currentNode.guid()] = flow.direction();
-      currentNode.on.notifyListeners(flow);
     }
 
     function getNextFlowDestination(currentNode, direction) {
@@ -272,6 +294,7 @@ var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i =
     };
     flow.name(name || flow.guid());
     flow.name.isFlow = true;
+    flow.name.isInternal = false;
   };
   behaviours.listen = function (flow) {
     var listenerMap = {};
@@ -286,8 +309,7 @@ var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i =
       assert(typeof name != "string", ERRORS.invalidListener);
 
       if (!args.length) {
-        return listenerMap[name] //TODO clone this
-        ;
+        return listenerMap[name];
       }
 
       if (args.length == 1 && args[0] == null) {
@@ -295,24 +317,21 @@ var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i =
         return flow;
       }
       listenerMap[name] = args.filter(function (l) {
-        return !assert(typeof l != "function", ERRORS.invalidListener);
+        return !assert(typeof l != "function", ERRORS.invalidListenerType, typeof l + ": " + l);
       });
-      //console.log("adding listener", name, 'to', flow.name(), flow.guid())
       return flow;
     };
 
     flow.on.notifyListeners = function (event) {
-      //console.log("notifying", event.name(), 'to', flow.name(), flow.guid())
       if (listenerMap[event.name()]) {
+        event.target = flow;
         listenerMap[event.name()].every(function (listener) {
-          listener.apply(undefined, _toConsumableArray(event.data.value));
+          listener.apply(event, event.data.value);
           return flow.status() == STATUS.FLOWING;
         });
+        return true;
       }
-    }
-
-    //TODO cache listeners
-    ;
+    };
   };
   behaviours.log = function (flow) {
 
@@ -350,6 +369,7 @@ var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i =
     invalidGuid: "Invalid Argument. Guid-s are immutable. Please use the .name() API to change the name of a flow object.",
     invalidChildren: "Invalid Argument. Please use child.parent(parent) to re-parent flow objects.",
     invalidListener: "Invalid Arguments. Please use .on(\"foo\", handler) to create a listener.",
+    invalidListenerType: "Invalid Listener function. Expected a function, got: %s",
     invalidEventName: "Invalid Arguments. Please use .emit(\"foo\", payload) to emit a flow event.",
     invalidName: "Invalid flow Name. Expected a String value, got: %s",
     invalidParent: "Invalid flow parent object. Expected a flow instance, got: %s",
@@ -372,12 +392,38 @@ var _toConsumableArray = function (arr) { if (Array.isArray(arr)) { for (var i =
     return flow && flow.name && flow.name.isFlow;
   }
 
+  function isInternal(flow) {
+    return flow && flow.name && flow.name.isFlow;
+  }
+
+  function detach(flow) {
+    flow.parent() && flow.parent().children.detach(flow);
+  }
+
   function isDetached(flow) {
-    return flow.parent() && !flow.parent().children.has(flow);
+    return !flow.parent() || !flow.parent().children.has(flow);
   }
 
   function flatten(array) {
     return [].concat.apply([], array);
+  }
+
+  function merge(source, target) {
+    Object.keys(source).forEach(function (key) {
+      target[key] = source[key];
+    });
+  }
+
+  function dispatchInternalEvent(flow, name, newData, oldData) {
+    var e = create(DEFAULTS, "flow." + name);
+    e.name.isInternal = true;
+    e.data.value = [newData, oldData];
+    e.direction.value = DIRECTION.NONE;
+    e.parent.value = flow;
+    e.emit();
+    e.direction.value = DIRECTION.UPSTREAM;
+    e.name.value = "flow.children." + name;
+    e.emit();
   }
   var instance = create(DEFAULTS, "flow");
 

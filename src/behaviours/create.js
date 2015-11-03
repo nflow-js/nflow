@@ -2,7 +2,8 @@ behaviours.create = (flow, defaults)=>{
 
   flow.create = (name, ...data) => {
     var instance = create(flow.create.defaults, name, data)
-    instance.parent(flow)
+    instance.parent.value = flow
+    flow.children.value.push(instance)
     return instance
   }
 

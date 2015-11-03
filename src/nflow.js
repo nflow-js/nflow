@@ -6,7 +6,6 @@ var create = (defaults, name, data)=>{
     .behaviours
     .forEach((d)=>d(flow, defaults, name, data))
 
-  
   return flow
 }
 

@@ -36,7 +36,6 @@ behaviours.connect = (flow)=>{
       var gc = flow.children.value.map(getChildren)
       
       return c.concat.apply(c, gc);
-
     }
 
   }
@@ -47,9 +46,10 @@ behaviours.connect = (flow)=>{
   flow.parent = (parent=UNSET) => {
     if (parent===UNSET) return flow.parent.value;
     parent && assert(!isFlow(parent), ERRORS.invalidParent, parent)
-    flow.parent()
-      && flow.parent().children.detach(flow)
-    attach(parent)  
+    var previousParent = flow.parent() 
+    detach(flow)
+    attach(parent)
+    dispatchInternalEvent(flow, 'parent', parent, previousParent)
     return flow
   }
 

@@ -34,6 +34,7 @@ const ERRORS = {
   invalidGuid:     'Invalid Argument. Guid-s are immutable. Please use the .name() API to change the name of a flow object.'
 , invalidChildren: 'Invalid Argument. Please use child.parent(parent) to re-parent flow objects.'
 , invalidListener: 'Invalid Arguments. Please use .on("foo", handler) to create a listener.'
+, invalidListenerType: 'Invalid Listener function. Expected a function, got: %s'
 , invalidEventName:'Invalid Arguments. Please use .emit("foo", payload) to emit a flow event.'
 , invalidName:'Invalid flow Name. Expected a String value, got: %s'
 , invalidParent:'Invalid flow parent object. Expected a flow instance, got: %s'

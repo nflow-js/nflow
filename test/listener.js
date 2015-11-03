@@ -25,31 +25,25 @@ describe('Listeners', function(){
       expect(sut.on('foo')).to.eql([listener1, listener2])  
     })
 
-    it('should store listeners for Bubble phase', function(){
-      var listener = function(){}
-      sut.on('foo', listener, sut.direction.UPSTREAM)
-      expect(sut.on('foo')).to.eql([])  
-      expect(sut.on('foo', sut.direction.UPSTREAM)).to.eql([listener])  
-    })
-    
-    it('should store listeners for Flow phase', function(){
-      var listener = function(){}
-      sut.on('foo', listener, sut.direction.DOWNSTREAM)
-      expect(sut.on('foo')).to.eql([])  
-      expect(sut.on('foo', sut.direction.DOWNSTREAM)).to.eql([listener])  
-    })
-    
-    it('return [] for non-existent listeners', function(){
-      expect(sut.on('non-existent')).to.eql([])
+    it('return undefined for non-existent listeners', function(){
+      expect(sut.on('non-existent')).to.be.undefined
     })
     
     it('should destroy single listener', function(){
       var listener = function(){}
       sut.on('foo', listener)
       sut.on('foo', null)
-      expect(sut.on('foo')).to.eql([])  
+      expect(sut.on('foo')).to.be.undefined  
     })
     
+    it('should destroy multiple listeners', function(){
+      var listener = function(){}
+      var listener1 = function(){}
+      sut.on('foo', listener, listener1)
+      sut.on('foo', null)
+      expect(sut.on('foo')).to.be.undefined  
+    })
+
     it('should store multiple listeners', function(){
       var listener1 = function(){}
       var listener2 = function(){}
@@ -60,8 +54,13 @@ describe('Listeners', function(){
     it('should ignore invalid listeners', function(){
       var listener1 = function(){}
       var listener2 = function(){}
-      sut.on('foo', listener1, 'invalid', listener2)
-      expect(sut.on('foo')).to.eql([listener1, listener2])  
+      try{
+        sut.on('foo', listener1, 'invalid', listener2)
+      }
+      catch(e){
+        expect(e).to.be.an.error
+      }
+      expect(sut.on('foo')).to.be.undefined  
     })
 
   })

@@ -16,11 +16,44 @@ function isFlow(flow){
     && flow.name.isFlow
 }
 
+function isInternal(flow){
+  return flow 
+    && flow.name
+    && flow.name.isFlow
+}
+
+function detach(flow){
+  flow.parent() 
+    && flow.parent().children.detach(flow)
+}
+
 function isDetached(flow){
-  return flow.parent()
-    && !flow.parent().children.has(flow)
+  return !flow.parent()
+    || !flow.parent().children.has(flow)
 }
 
 function flatten(array){
   return [].concat.apply([], array);
+}
+
+function merge(source, target){
+  Object.keys(source).forEach(key=>{
+    target[key]= source[key]
+  })
+}
+
+function dispatchInternalEvent(flow, name, newData, oldData){
+  var e= create(DEFAULTS, "flow."+name)
+  e.name.isInternal = true
+  e.data.value = [newData, oldData]
+  e.direction.value= DIRECTION.NONE
+  e.parent.value = flow
+  e.emit()
+  e.direction.value= DIRECTION.UPSTREAM
+  e.name.value="flow.children."+name
+  e.emit()
+  
+
+
+
 }

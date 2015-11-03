@@ -16,5 +16,6 @@ behaviours.identify = (flow, defaults, name)=>{
   }
   flow.name(name || flow.guid())
   flow.name.isFlow = true
+  flow.name.isInternal = false
 
 }

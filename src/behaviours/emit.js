@@ -6,18 +6,22 @@ behaviours.emit = (flow)=>{
     return flow.status.value
   }
   flow.status.value = STATUS.IDLE
+  merge(STATUS, flow.status)
+  
 
-  flow.direction = (...args) => {
-    assert(args.length
-         , ERRORS.invalidStatus)
-    return flow.direction.value
+  flow.direction = (direction=UNSET) => {
+    if (direction===UNSET) return flow.direction.value
+    flow.direction.value = direction
+    return flow
   }
   flow.direction.value = flow.create.defaults.direction
+  merge(DIRECTION, flow.direction)
 
   flow.emit = (name=UNSET, ...args) => {
     if (name==UNSET) {
       // emit current flow object
-      emit(flow)
+      detach(flow)
+      flow.emit.route(flow)
       return flow
     }
     if (isFlow(name)) {
@@ -25,7 +29,8 @@ behaviours.emit = (flow)=>{
       name.parent(flow)
 
       //2.  emit the passed in flow object
-      emit(name)
+      detach(flow)
+      flow.emit.route(name)
       return flow
     }
 
@@ -33,45 +38,59 @@ behaviours.emit = (flow)=>{
       , ERRORS.invalidEventName)
     
     var event = flow.create(name, ...args)
-    emit(event)
+    detach(event)
+    flow.emit.route(event)
     return event
   }
 
-  function emit(flow){
-    // 1. detach from parent
-    //console.log("emitting", flow.name())
-    flow.parent() 
-      && flow.parent().children.detach(flow)
-
+  flow.emit.route = (flow)=>{
     // 2. reset status
     flow.emit.recipients = []
     flow.emit.recipientsMap = {}
     
-    if (flow.direction() == DIRECTION.DEFAULT) flow.emit.targets = flatten([flow].concat(flow.parents())
+    flow.status.value = STATUS.FLOWING;
+    
+    // only keep unique recipients
+    flow.emit.targets = flow.emit.route[flow.direction()](flow)
+      .filter(f=>{
+        if (flow.emit.recipientsMap[f.guid()]) return false
+        return flow.emit.recipientsMap[f.guid()] = true
+      })
+
+    while (flow.emit.targets.length){
+      var destination = flow.emit.targets.shift()
+      notify(flow, destination)
+    }
+  }
+
+  flow.emit.route.DEFAULT = (flow)=>{
+    return flatten([flow].concat(flow.parents())
       .map((node)=>{
         if (isDetached(node)
           || !node.parent()) return [node]
           .concat(node.children.all())
         //TODO check circular deps
         return [node]
-      }))
-    flow.status.value = STATUS.FLOWING;
+    }))}
 
-    while (flow.emit.targets.length){
-      var destination = flow.emit.targets.shift()
-      notify(flow, destination)
-    }
-
+  flow.emit.route.UPSTREAM = (flow)=>{
+    return [flow].concat(flow.parents())
   }
 
+  flow.emit.route.DOWNSTREAM = (flow)=>{
+    return flatten([flow]
+      .concat(flow.parent())
+      .concat(flow.parent().children.all())
+      .filter(Boolean)
+    )}
+
+  flow.emit.route.NONE = (flow)=>[flow, flow.parent()]
+
   function notify(flow, currentNode){
-    if (flow.emit.recipientsMap[currentNode.guid()] == flow.direction()) {
-      // we already checked this node
-      return;
+    if (currentNode.on.notifyListeners(flow)) {
+      flow.emit.recipientsMap[currentNode.guid()] = flow.direction()
+      flow.emit.recipients.push(currentNode)
     }
-    flow.emit.recipients.push(currentNode)
-    flow.emit.recipientsMap[currentNode.guid()] = flow.direction()
-    currentNode.on.notifyListeners(flow)
   }
 
 

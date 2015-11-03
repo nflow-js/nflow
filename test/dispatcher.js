@@ -134,7 +134,6 @@ describe('Dispatchers', function(){
         done(new Error('incorrect listener was called'))
       }
       var sut3= sut
-        .direction(sut.direction.UPSTREAM)
         .on('bar', shouldListen)
         .create('sut2')
         .on('bar', shouldListen)
@@ -144,9 +143,15 @@ describe('Dispatchers', function(){
       sut3.create('sut4')
           .on('bar', shouldNotListen)
 
-      sut3.emit('bar', payload)
+      var event = sut3.create('bar', payload)
+        .direction(sut.direction.UPSTREAM)
+        .emit()
+
       setTimeout(function(){
-        if (numRecipients!=3) done('not all listeners got called')
+        if (numRecipients!=3) {
+          expect(numRecipients).to.eql(3)
+          done('not all listeners got called')
+        }
         else done()
       },10)
     })
@@ -162,7 +167,6 @@ describe('Dispatchers', function(){
         done(new Error('incorrect listener was called'))
       }
       var sut3= sut
-        .direction(sut.direction.DOWNSTREAM)
         .on('bar', shouldNotListen)
         .create('sut2')
         .on('bar', shouldNotListen)
@@ -177,9 +181,13 @@ describe('Dispatchers', function(){
       sut3.create('sut6')
           .on('bar', shouldListen)
 
-      sut3.emit('bar', payload)
+      var event = sut3.create('bar', payload)
+        .direction(sut.direction.DOWNSTREAM)
+        .emit()
+
       setTimeout(function(){
-        if (numRecipients!=4) done('not all listeners got called'+numRecipients)
+        expect(numRecipients).to.eql(4)
+        if (numRecipients!=4) done('not all listeners got called')
         else done()
       },10)
     })
@@ -213,39 +221,6 @@ describe('Dispatchers', function(){
 
       setTimeout(done,10)
     })
-    
-    it('should use custom matcher', function(done){
-      var payload = {}
-      var listener = function(data){
-        expect(data).to.equal('dog')
-        done()
-      }
-      sut
-        .matcher(function(flow,name){
-          return flow.data()=='dog'
-        })
-        .on('bar', listener)
-        .create('sut2')
-        .create('sut3')
-        .emit('bar', 'dog')
-    })
-
-    it('should not deliver mismatching nodes using custom matcher', function(done){
-      var payload = {}
-      var listener = function(data){
-        done(new Error('incorrect listener was called'))
-      }
-      sut.on('sut1', listener)
-        .matcher(function(flow,name){
-          return flow.data()=='dog'
-        })
-        .create('sut2')
-        .create('sut3')
-        .emit('bar', 'cat')
-
-      setTimeout(done,10)
-    })
-
 
   })
 

@@ -1,30 +1,39 @@
 
+# nFlow
+Hierarchical event dispatcher
+
+### Work in progress 
+
 
 # API
-```
+
+```js
 flow
   .create()
-  .create('name')
+  .create('name') // create a new leaf node from flow
   .create('name', data)
 
 flow
   .name()
-  .name('test')
+  .name('test') 
 
 flow
-  .data()
-  .data({})
+  .data() // getter
+  .data({}) // setter
+  .data({},{},{}) //setter with multiple payloads
 
 flow
-  .emit()
-  .emit('name')
-  .emit('name', data)
-  .emit(flow)
+  .emit() // emit current flow object
+  .emit('name') // create and emit 'name'
+  .emit('name', data) // create and emit 'name' with data as the payload
+  .emit(flow2) // detach and emit an existing flow object
 
 flow
-  .parent()
-  .parent(null)
-  .parent(flow)
+  .parent() // returns the arent flow object
+  .parent(null) // detach the flow object, creating a new subtree
+  .parent(flow) // re-parent the flow object
+
+flow.parents() // returns all upstream flow objects
 
 flow
   .direction()
@@ -34,10 +43,8 @@ flow
   .direction(flow.direction.NONE)
 
 flow
-  .owner()
-
-flow
-  .children()
+  .children() //returns all direct descendant nodes
+  .children.all() // return all child nodes recursively
 
 flow
   .cancel()
@@ -48,46 +55,8 @@ flow
   .stopPropagation()
 
 flow
-  .on()
+  .on('name')
   .on('name', handler)
-  .on((e)=>e.name=='name'), handler)
+  .on('name', handler1, handler 2)
 
-flow
-  .matcher((e, key)=>e.name==key)
-
-flow
-  .logger(flow
-    .on('create', handler)
-    .on('created', handler)
-    .on('emit', handler)
-    .on('emitted', handler)
-  )
-
-flow
-  .route(flow)
 ```
-
-  )
-
-/**
- *  private API
- */
-```
-flow
-  .listeners[]
-  .childListeners[]
- ```
-flow
-
-
-
-
-# Trees
-The hierarchical relationship between Flow objects is normally represented as a single Tree data structure.
-Detaching allows you to turn this structure into several disconnected trees:
-//PIC
-
-# Recursion 
-Re-parenting allows you to create loops in the flow hierarchy:
-//PIC
-

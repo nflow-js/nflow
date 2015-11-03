@@ -29,11 +29,11 @@ flow
   .emit(flow2) // detach and emit an existing flow object
 
 flow
-  .parent() // returns the arent flow object
+  .parent() // return the parent flow object
   .parent(null) // detach the flow object, creating a new subtree
   .parent(flow) // re-parent the flow object
 
-flow.parents() // returns all upstream flow objects
+flow.parents() // return all upstream flow objects
 
 flow
   .direction()
@@ -43,7 +43,7 @@ flow
   .direction(flow.direction.NONE)
 
 flow
-  .children() //returns all direct descendant nodes
+  .children() //return all direct descendant nodes
   .children.all() // return all child nodes recursively
 
 flow

@@ -21,11 +21,12 @@ const DEFAULTS = {
   factory: ()=>({}),
   behaviours:[
     behaviours.identify,
-    behaviours.carry,
+    behaviours.stateful,
     behaviours.connect,
     behaviours.create,
     behaviours.emit,
     behaviours.listen,
+    behaviours.cancellable,
     behaviours.log
   ],
   direction: DIRECTION.DEFAULT
@@ -40,5 +41,6 @@ const ERRORS = {
 , invalidParent:'Invalid flow parent object. Expected a flow instance, got: %s'
 , invalidParents:'Invalid Argument. Please use the child.parent(parent) API to re-parent flow objects.'
 , invalidStatus:'Invalid Argument. The .status() API is read only'
+, invalidCancelArgs:'Invalid Argument. The .cancel() API requires no parameters'
 , invalidRoot:'Invalid Argument. The .parents.root() API is read only'
 }

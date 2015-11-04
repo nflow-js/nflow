@@ -1,4 +1,4 @@
-  behaviours.carry = (flow, defaults, name, data)=>{
+  behaviours.stateful = (flow, defaults, name, data)=>{
     flow.data = (...data) => {
     if (!data.length) {
       return (flow.data.value.length<=1)

@@ -13,21 +13,24 @@
   };
 
   var behaviours = {};
-  behaviours.carry = function (flow, defaults, name, data) {
-    flow.data = function () {
-      for (var _len = arguments.length, data = Array(_len), _key = 0; _key < _len; _key++) {
-        data[_key] = arguments[_key];
+  behaviours.cancellable = function (flow, defaults, name) {
+
+    flow.cancel = function () {
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
       }
 
-      if (!data.length) {
-        return flow.data.value.length <= 1 ? flow.data.value[0] : flow.data.value;
-      }
-      var oldData = flow.data.value;
-      flow.data.value = data;
-      dispatchInternalEvent(flow, "data", data.length > 1 ? data : data[0], oldData.length > 1 ? oldData : oldData[0]);
+      assert(args.length, ERRORS.invalidCancelArgs);
+      dispatchInternalEvent(flow, "cancel", true);
+      flow.status.value = STATUS.CANCELLED;
       return flow;
     };
-    flow.data.value = data;
+
+    flow.isCancelled = function () {
+      return [flow].concat(flow.parents()).some(function (e) {
+        return e.status.value == STATUS.CANCELLED;
+      });
+    };
   };
   behaviours.connect = function (flow) {
 
@@ -72,10 +75,13 @@
       }
 
       assert(args.length, ERRORS.invalidChildren);
-      //TODO handle circular deps
+      var childMap = {};
       return getChildren(flow);
 
       function getChildren(flow) {
+        if (childMap[flow.guid()]) {
+          return [];
+        }childMap[flow.guid()] = true;
         var c = flow.children.value;
         var gc = flow.children.value.map(getChildren);
 
@@ -93,8 +99,9 @@
       parent && assert(!isFlow(parent), ERRORS.invalidParent, parent);
       var previousParent = flow.parent();
       detach(flow);
+      dispatchInternalEvent(flow, "childRemoved", previousParent);
       attach(parent);
-      dispatchInternalEvent(flow, "parent", parent, previousParent);
+      dispatchInternalEvent(flow, "childAdded", parent, previousParent);
       return flow;
     };
 
@@ -327,7 +334,7 @@
         event.target = flow;
         listenerMap[event.name()].every(function (listener) {
           listener.apply(event, event.data.value);
-          return flow.status() == STATUS.FLOWING;
+          return event.status() == STATUS.FLOWING;
         });
         return true;
       }
@@ -338,6 +345,22 @@
     flow.toString = function () {
       return "{ Object Flow }";
     };
+  };
+  behaviours.stateful = function (flow, defaults, name, data) {
+    flow.data = function () {
+      for (var _len = arguments.length, data = Array(_len), _key = 0; _key < _len; _key++) {
+        data[_key] = arguments[_key];
+      }
+
+      if (!data.length) {
+        return flow.data.value.length <= 1 ? flow.data.value[0] : flow.data.value;
+      }
+      var oldData = flow.data.value;
+      flow.data.value = data;
+      dispatchInternalEvent(flow, "data", data.length > 1 ? data : data[0], oldData.length > 1 ? oldData : oldData[0]);
+      return flow;
+    };
+    flow.data.value = data;
   };
   /**
    *  consts
@@ -362,7 +385,7 @@
     factory: function () {
       return {};
     },
-    behaviours: [behaviours.identify, behaviours.carry, behaviours.connect, behaviours.create, behaviours.emit, behaviours.listen, behaviours.log],
+    behaviours: [behaviours.identify, behaviours.stateful, behaviours.connect, behaviours.create, behaviours.emit, behaviours.listen, behaviours.cancellable, behaviours.log],
     direction: DIRECTION.DEFAULT
   };
   var ERRORS = {
@@ -375,6 +398,7 @@
     invalidParent: "Invalid flow parent object. Expected a flow instance, got: %s",
     invalidParents: "Invalid Argument. Please use the child.parent(parent) API to re-parent flow objects.",
     invalidStatus: "Invalid Argument. The .status() API is read only",
+    invalidCancelArgs: "Invalid Argument. The .cancel() API requires no parameters",
     invalidRoot: "Invalid Argument. The .parents.root() API is read only"
   };
 
@@ -393,7 +417,7 @@
   }
 
   function isInternal(flow) {
-    return flow && flow.name && flow.name.isFlow;
+    return flow && flow.name && flow.name.isInternal;
   }
 
   function detach(flow) {
@@ -421,8 +445,13 @@
     e.direction.value = DIRECTION.NONE;
     e.parent.value = flow;
     e.emit();
+    e.data.value = [flow, newData, oldData];
     e.direction.value = DIRECTION.UPSTREAM;
     e.name.value = "flow.children." + name;
+    e.emit();
+
+    e.direction.value = DIRECTION.DOWNSTREAM;
+    e.name.value = "flow.parent." + name;
     e.emit();
   }
   var instance = create(DEFAULTS, "flow");

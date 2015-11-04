@@ -60,6 +60,33 @@ describe('Dispatchers', function(){
         .emit()
     })
 
+    it('should deliver to multiple listeners on the same node', function(done){
+      var payload1 = {}
+      var payload2 = {}
+      var listener1 = function(data1, data2){
+        expect(data1).to.equal(payload1)
+        expect(data2).to.equal(payload2)
+        listener1.done = true
+        listener1.done
+          && listener2.done
+          && done()
+      }
+      var listener2 = function(data1, data2){
+        expect(data1).to.equal(payload1)
+        expect(data2).to.equal(payload2)
+        listener2.done = true
+        listener1.done
+          && listener2.done
+          && done()
+      }
+
+
+      sut.on('bar', listener1, listener2)
+        .create('bar')
+        .data(payload1, payload2)
+        .emit()
+    })
+
     it('should emit lightweight nodes', function(done){
       var listener = function(data){
         expect(data).to.equal(undefined)

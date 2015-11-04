@@ -28,10 +28,12 @@ behaviours.connect = (flow)=>{
    */
   flow.children.all = (...args)=>{
     assert(args.length, ERRORS.invalidChildren)
-    //TODO handle circular deps
+    var childMap = {}
     return getChildren(flow)
 
     function getChildren(flow){
+      if (childMap[flow.guid()]) return [];
+      childMap[flow.guid()] = true
       var c = flow.children.value
       var gc = flow.children.value.map(getChildren)
       
@@ -48,8 +50,9 @@ behaviours.connect = (flow)=>{
     parent && assert(!isFlow(parent), ERRORS.invalidParent, parent)
     var previousParent = flow.parent() 
     detach(flow)
+    dispatchInternalEvent(flow, 'childRemoved', previousParent)
     attach(parent)
-    dispatchInternalEvent(flow, 'parent', parent, previousParent)
+    dispatchInternalEvent(flow, 'childAdded', parent, previousParent)
     return flow
   }
 

@@ -56,6 +56,16 @@ describe('Connection', function(){
       var children = sut.children.all()
       expect(children).to.eql([a,b,c])  
     })
+    
+    it('.all() should handle circular dependencies', function(){
+      var a = sut.create('a')
+      var b = a.create('b')
+      var c = b.create('c')
+      var c1 = b.create('c1')
+      a.parent(c)
+      var children = b.children.all()
+      expect(children.map(e=>e.name())).to.eql(["c","c1","a","b"])  
+    })
 
     it('should find child by String', function(){
       

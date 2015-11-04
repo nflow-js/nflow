@@ -60,3 +60,14 @@ flow
   .on('name', handler1, handler 2)
 
 ```
+
+### Internal Events
+
+When a flow object mutates in any way, all connected flow objects are notified of the change.
+
+`.data(newData)` triggers:
+ -   `.on('flow.data', newData, oldData)` on the current flow object
+ -   `.on('flow.children.data', flow, newData, oldData)` on all parent objects
+ -   `.on('flow.parent.data', flow, newData, oldData)` on all child objects (recursively)
+
+

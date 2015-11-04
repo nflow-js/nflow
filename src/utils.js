@@ -19,7 +19,7 @@ function isFlow(flow){
 function isInternal(flow){
   return flow 
     && flow.name
-    && flow.name.isFlow
+    && flow.name.isInternal
 }
 
 function detach(flow){
@@ -49,8 +49,13 @@ function dispatchInternalEvent(flow, name, newData, oldData){
   e.direction.value= DIRECTION.NONE
   e.parent.value = flow
   e.emit()
+  e.data.value = [flow, newData, oldData]
   e.direction.value= DIRECTION.UPSTREAM
   e.name.value="flow.children."+name
+  e.emit()
+  
+  e.direction.value= DIRECTION.DOWNSTREAM
+  e.name.value="flow.parent."+name
   e.emit()
   
 

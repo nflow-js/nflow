@@ -26,7 +26,7 @@ behaviours.listen = (flow)=>{
       listenerMap[event.name()]
         .every(listener=>{
           listener.apply(event, event.data.value)
-          return (flow.status() == STATUS.FLOWING)
+          return (event.status() == STATUS.FLOWING)
         })
       return true
     }

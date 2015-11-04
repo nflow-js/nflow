@@ -1,6 +1,8 @@
 
-# nFlow
+# nFlow [![Build Status](https://travis-ci.org/mere/nflow.svg?branch=master)](https://travis-ci.org/mere/nflow) 
 Hierarchical event dispatcher
+
+[![NPM](https://nodei.co/npm/nflow.png?compact=true)](https://nodei.co/npm/nflow/)
 
 ### Work in progress 
 

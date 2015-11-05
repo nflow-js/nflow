@@ -113,6 +113,49 @@ describe('data() API', function(){
 
   })
 
+describe('create() API', function(){
+    it('should dispatch flow.create internal event', function(done){
+      
+      sut
+        .on("flow.create", (f)=>{
+          expect(f.name()).to.equal("test")
+          done()
+        })
+        .create('test')
+      
+    })
+
+    it('should dispatch flow.children.create internal event', function(done){
+      
+      sut
+        .on("flow.children.create", (f, flowCreated)=>{
+          expect(f.name()).to.equal("sut")
+          expect(flowCreated.name()).to.equal("test")
+          done()
+        })
+        .create('test')
+      
+    })
+
+    it('should dispatch flow.children.data internal event', function(done){
+      var payload = {}
+      var listener = function(f, newData, oldData){
+        expect(newData).to.equal(data2)
+        expect(oldData).to.equal(data1)
+        done()
+      }
+      var data1 = 1
+      var data2 = 2
+      
+      sut
+        .on('flow.children.data', listener)
+        .create('test', data1)
+        .data(data2)
+    })
+
+  })
+
+
 
 
   

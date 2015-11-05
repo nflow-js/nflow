@@ -159,6 +159,7 @@
       var instance = create(flow.create.defaults, name, data);
       instance.parent.value = flow;
       flow.children.value.push(instance);
+      dispatchInternalEvent(flow, "create", instance);
       return instance;
     };
 
@@ -340,10 +341,10 @@
       }
     };
   };
-  behaviours.log = function (flow) {
+  behaviours.loggable = function (flow) {
 
     flow.toString = function () {
-      return "{ Object Flow }";
+      return "{ Object Flow, name:%name }".replace("%name", flow.name());
     };
   };
   behaviours.stateful = function (flow, defaults, name, data) {
@@ -385,7 +386,7 @@
     factory: function () {
       return {};
     },
-    behaviours: [behaviours.identify, behaviours.stateful, behaviours.connect, behaviours.create, behaviours.emit, behaviours.listen, behaviours.cancellable, behaviours.log],
+    behaviours: [behaviours.identify, behaviours.stateful, behaviours.connect, behaviours.create, behaviours.emit, behaviours.listen, behaviours.cancellable, behaviours.loggable, behaviours.loggable],
     direction: DIRECTION.DEFAULT
   };
   var ERRORS = {
@@ -438,6 +439,10 @@
     });
   }
 
+  function log(flow, name, newData, oldData) {
+    instance.logger && instance.logger(flow, name, newData, oldData);
+  }
+
   function dispatchInternalEvent(flow, name, newData, oldData) {
     var e = create(DEFAULTS, "flow." + name);
     e.name.isInternal = true;
@@ -453,7 +458,10 @@
     e.direction.value = DIRECTION.DOWNSTREAM;
     e.name.value = "flow.parent." + name;
     e.emit();
+
+    log(flow, name, newData, oldData);
   }
+
   var instance = create(DEFAULTS, "flow");
 
   if (typeof define === "function" && define.amd) {

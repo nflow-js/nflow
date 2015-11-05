@@ -27,7 +27,8 @@ const DEFAULTS = {
     behaviours.emit,
     behaviours.listen,
     behaviours.cancellable,
-    behaviours.log
+    behaviours.loggable,
+    behaviours.loggable
   ],
   direction: DIRECTION.DEFAULT
 }

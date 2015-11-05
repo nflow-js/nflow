@@ -42,6 +42,11 @@ function merge(source, target){
   })
 }
 
+function log(flow, name, newData, oldData){
+  instance.logger 
+    && instance.logger(flow, name, newData, oldData)
+}
+
 function dispatchInternalEvent(flow, name, newData, oldData){
   var e= create(DEFAULTS, "flow."+name)
   e.name.isInternal = true
@@ -58,7 +63,12 @@ function dispatchInternalEvent(flow, name, newData, oldData){
   e.name.value="flow.parent."+name
   e.emit()
   
-
-
-
+  log(flow, name, newData, oldData)
 }
+
+
+
+
+
+
+

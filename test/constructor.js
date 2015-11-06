@@ -26,7 +26,21 @@ describe('Construction', function(){
     })
   })
 
-  describe('data API', function(){
+  describe('.create() API', function(){
+    it('should reuse existing flow objects', function(){
+      var sut1 = testFlow.create('test')
+      var sut2 = testFlow.create('test')
+      expect(sut1).to.equal(sut2)
+    })
+
+    it('should NOT reuse existing flow objects for unnamed flow objects', function(){
+      var sut1 = testFlow.create()
+      var sut2 = testFlow.create()
+      expect(sut1).to.not.equal(sut2)
+    })
+  })
+
+  describe('creating flow objects with data', function(){
 
     it('should default to undefined', function(){
       var sut = testFlow.create('test')

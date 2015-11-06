@@ -56,6 +56,7 @@
     flow.children.findAll = function (matcher, recursive) {
 
       var filter = matcher;
+      if (matcher == null) return [];
       if (typeof matcher == "string") filter = function (f) {
         return f.name() == matcher;
       };else if (isFlow(matcher)) filter = function (f) {
@@ -65,6 +66,9 @@
 
       return children.filter(filter);
     };
+
+    flow.get = flow.children.find;
+    flow.getAll = flow.children.find;
 
     /**
      *  return all children recursively
@@ -156,7 +160,12 @@
         data[_key - 1] = arguments[_key];
       }
 
-      var instance = create(flow.create.defaults, name, data);
+      var instance = flow.get(name);
+      if (instance) {
+        instance.data.apply(instance, data);
+        return instance;
+      }
+      instance = create(flow.create.defaults, name, data);
       instance.parent.value = flow;
       flow.children.value.push(instance);
       dispatchInternalEvent(flow, "create", instance);
@@ -203,7 +212,9 @@
       if (name == UNSET) {
         // emit current flow object
         detach(flow);
+        log(flow, "emit", flow);
         flow.emit.route(flow);
+        log(flow, "emitted", flow);
         return flow;
       }
       if (isFlow(name)) {
@@ -212,7 +223,9 @@
 
         //2.  emit the passed in flow object
         detach(flow);
+        log(name, "emit", name);
         flow.emit.route(name);
+        log(name, "emitted", name);
         return flow;
       }
 
@@ -220,7 +233,9 @@
 
       var event = flow.create.apply(flow, [name].concat(args));
       detach(event);
+      log(event, "emit", event);
       flow.emit.route(event);
+      log(event, "emitted", event);
       return event;
     };
 
@@ -298,9 +313,12 @@
 
       if (name === UNSET) return flow.name.value;
       assert(typeof name != "string", ERRORS.invalidName, name);
-      return (flow.name.value = name, flow);
+      var previousName = flow.name.value;
+      flow.name.value = name;
+      dispatchInternalEvent(flow, "name", name, previousName);
+      return flow;
     };
-    flow.name(name || flow.guid());
+    flow.name.value = name || flow.guid();
     flow.name.isFlow = true;
     flow.name.isInternal = false;
   };
@@ -440,7 +458,7 @@
   }
 
   function log(flow, name, newData, oldData) {
-    instance.logger && instance.logger(flow, name, newData, oldData);
+    instance.logger && !isInternal(flow) && instance.logger(flow, name, newData, oldData);
   }
 
   function dispatchInternalEvent(flow, name, newData, oldData) {

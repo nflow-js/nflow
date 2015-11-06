@@ -14,6 +14,7 @@ behaviours.connect = (flow)=>{
   flow.children.findAll = (matcher, recursive)=>{
 
     var filter = matcher;
+    if (matcher==null) return []
     if (typeof(matcher)=="string") filter = f=>f.name()==matcher
     else if (isFlow(matcher)) filter = f=>f==matcher
     var children = recursive 
@@ -22,6 +23,9 @@ behaviours.connect = (flow)=>{
     
     return children.filter(filter)
   }
+
+  flow.get = flow.children.find
+  flow.getAll = flow.children.find
 
   /**
    *  return all children recursively

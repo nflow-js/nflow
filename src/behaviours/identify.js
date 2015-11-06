@@ -12,9 +12,12 @@ behaviours.identify = (flow, defaults, name)=>{
     if (name===UNSET) return flow.name.value
     assert(typeof(name)!="string"
          , ERRORS.invalidName, name)
-    return flow.name.value = name, flow
+    var previousName = flow.name.value
+    flow.name.value = name
+    dispatchInternalEvent(flow, 'name', name, previousName)
+    return flow
   }
-  flow.name(name || flow.guid())
+  flow.name.value = name || flow.guid()
   flow.name.isFlow = true
   flow.name.isInternal = false
 

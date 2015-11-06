@@ -44,6 +44,7 @@ function merge(source, target){
 
 function log(flow, name, newData, oldData){
   instance.logger 
+    && !isInternal(flow)
     && instance.logger(flow, name, newData, oldData)
 }
 

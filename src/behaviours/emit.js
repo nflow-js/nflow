@@ -21,7 +21,9 @@ behaviours.emit = (flow)=>{
     if (name==UNSET) {
       // emit current flow object
       detach(flow)
+      log(flow, 'emit', flow)
       flow.emit.route(flow)
+      log(flow, 'emitted', flow)
       return flow
     }
     if (isFlow(name)) {
@@ -30,7 +32,9 @@ behaviours.emit = (flow)=>{
 
       //2.  emit the passed in flow object
       detach(flow)
+      log(name, 'emit', name)
       flow.emit.route(name)
+      log(name, 'emitted', name)
       return flow
     }
 
@@ -39,7 +43,9 @@ behaviours.emit = (flow)=>{
     
     var event = flow.create(name, ...args)
     detach(event)
+    log(event, 'emit', event)
     flow.emit.route(event)
+    log(event, 'emitted', event)
     return event
   }
 

@@ -2,6 +2,7 @@
 # nFlow [![Build Status](https://travis-ci.org/mere/nflow.svg?branch=master)](https://travis-ci.org/mere/nflow) [![NPM](https://nodei.co/npm/nflow.png?mini=true)](https://nodei.co/npm/nflow/)
 Event/data/control flow
 
+> Work in progress, decent docs and examples are on the way
 
 # API
 

@@ -1,10 +1,6 @@
 
-# nFlow [![Build Status](https://travis-ci.org/mere/nflow.svg?branch=master)](https://travis-ci.org/mere/nflow) 
-Hierarchical event dispatcher
-
-[![NPM](https://nodei.co/npm/nflow.png?compact=true)](https://nodei.co/npm/nflow/)
-
-### Work in progress 
+# nFlow [![Build Status](https://travis-ci.org/mere/nflow.svg?branch=master)](https://travis-ci.org/mere/nflow) [![NPM](https://nodei.co/npm/nflow.png?mini=true)](https://nodei.co/npm/nflow/)
+Event/data/control flow
 
 
 # API
@@ -14,6 +10,14 @@ flow
   .create()
   .create('name') // create a new leaf node from flow
   .create('name', data)
+
+flow
+  .get(matcher, recursive)
+  .getAll(matcher, recursive)
+// matcher types:
+//    String,   eg.: "test"
+//    Regexp,   eg.: /test(.*)/
+//    Function, eg.: (f)=>f.data()>25
 
 flow
   .name()

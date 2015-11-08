@@ -21,4 +21,10 @@ behaviours.identify = (flow, defaults, name)=>{
   flow.name.isFlow = true
   flow.name.isInternal = false
 
+  flow.call = (...functions){
+    functions
+      .filter(f=>typeof(f)=='function')
+      .forEach(f=>f(flow))
+  }
+
 }

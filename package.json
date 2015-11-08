@@ -1,6 +1,6 @@
 {
   "name": "nflow",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "event/data/control flow",
   "main": "dist/flow.js",
   "scripts": {
@@ -15,14 +15,15 @@
   "author": "Zoltan Bourne",
   "license": "MIT",
   "devDependencies": {
-    "karma": "~0.12.31",
-    "gulp": "~3.8.11",
-    "gulp-mocha": "~2.0.0",
-    "gulp-util": "~3.0.4",
-    "gulp-concat": "~2.5.2",
-    "gulp-traceur": "~0.17.0",
-    "gulp-sourcemaps": "~1.5.1",
     "chai": "~2.1.2",
-    "gulp-babel": "~4.0.0"
+    "gulp": "~3.8.11",
+    "gulp-babel": "~4.0.0",
+    "gulp-concat": "~2.5.2",
+    "gulp-mocha": "~2.0.0",
+    "gulp-sourcemaps": "~1.5.1",
+    "gulp-traceur": "~0.17.0",
+    "gulp-util": "~3.0.4",
+    "html-webpack-plugin": "^1.6.2",
+    "karma": "~0.12.31"
   }
 }

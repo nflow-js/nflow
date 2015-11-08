@@ -42,12 +42,6 @@ function merge(source, target){
   })
 }
 
-function log(flow, name, newData, oldData){
-  instance.logger 
-    && !isInternal(flow)
-    && instance.logger(flow, name, newData, oldData)
-}
-
 function dispatchInternalEvent(flow, name, newData, oldData){
   var e= create(DEFAULTS, "flow."+name)
   e.name.isInternal = true

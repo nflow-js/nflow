@@ -360,11 +360,14 @@
     };
   };
   behaviours.loggable = function (flow) {
-
     flow.toString = function () {
       return "{ Object Flow, name:%name }".replace("%name", flow.name());
     };
   };
+
+  function log(flow, name, newData, oldData) {
+    instance.logger && !isInternal(flow) && instance.logger(flow, name, newData, oldData);
+  }
   behaviours.stateful = function (flow, defaults, name, data) {
     flow.data = function () {
       for (var _len = arguments.length, data = Array(_len), _key = 0; _key < _len; _key++) {
@@ -455,10 +458,6 @@
     Object.keys(source).forEach(function (key) {
       target[key] = source[key];
     });
-  }
-
-  function log(flow, name, newData, oldData) {
-    instance.logger && !isInternal(flow) && instance.logger(flow, name, newData, oldData);
   }
 
   function dispatchInternalEvent(flow, name, newData, oldData) {

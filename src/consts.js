@@ -27,7 +27,6 @@ const DEFAULTS = {
     behaviours.emit,
     behaviours.listen,
     behaviours.cancellable,
-    behaviours.loggable,
     behaviours.loggable
   ],
   direction: DIRECTION.DEFAULT
@@ -43,5 +42,6 @@ const ERRORS = {
 , invalidParents:'Invalid Argument. Please use the child.parent(parent) API to re-parent flow objects.'
 , invalidStatus:'Invalid Argument. The .status() API is read only'
 , invalidCancelArgs:'Invalid Argument. The .cancel() API requires no parameters'
+, invalidStopPropagationArgs:'Invalid Argument. The .stopPropagation() API requires no parameters'
 , invalidRoot:'Invalid Argument. The .parents.root() API is read only'
 }

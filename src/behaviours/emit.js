@@ -65,6 +65,8 @@ behaviours.emit = (flow)=>{
 
     while (flow.emit.targets.length){
       var destination = flow.emit.targets.shift()
+      if (flow.isCancelled()) break;
+      if (flow.propagationStopped()) break;
       notify(flow, destination)
     }
   }

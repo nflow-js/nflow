@@ -61,7 +61,14 @@ function dispatchInternalEvent(flow, name, newData, oldData){
   log(flow, name, newData, oldData)
 }
 
-
+function sendToDevTools(action, payload){
+  var eventDetail = {
+    action: action, 
+    payload:payload
+  };
+  var flowEvent = new document.defaultView.CustomEvent("FlowEvent", {detail: eventDetail});
+  document.dispatchEvent(flowEvent);
+}
 
 
 

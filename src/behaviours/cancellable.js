@@ -14,6 +14,18 @@ behaviours.cancellable = (flow, defaults, name)=>{
       .some(e=>e.status.value == STATUS.CANCELLED)
   }
 
+  flow.stopPropagation = (...args) => {
+    assert(args.length
+         , ERRORS.invalidStopPropagationArgs)
+    flow.status.value = STATUS.STOPPED
+    dispatchInternalEvent(flow, 'propagationStopped', true)
+    return flow
+  }
+
+  flow.propagationStopped = () => {
+    return flow.status.value == STATUS.STOPPED
+  }
+
 
   
 

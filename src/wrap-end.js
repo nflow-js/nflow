@@ -1,5 +1,20 @@
   var instance = create(DEFAULTS, "flow")
 
+  instance.enableDevTools = (enableDevTools=UNSET) => {
+    if (direction===UNSET) return instance.enableDevTools.value
+    instance.enableDevTools.value = enableDevTools
+    if (enableDevTools) {
+      sendToDevTools('start', {
+        name: flow.name.value, 
+        id: flow.guid.value
+      })
+
+    }
+    return flow
+  }
+  instance.enableDevTools.value = false
+
+
   if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.
         define([], ()=>instance);

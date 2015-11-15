@@ -31,6 +31,21 @@
         return e.status.value == STATUS.CANCELLED;
       });
     };
+
+    flow.stopPropagation = function () {
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      assert(args.length, ERRORS.invalidStopPropagationArgs);
+      flow.status.value = STATUS.STOPPED;
+      dispatchInternalEvent(flow, "propagationStopped", true);
+      return flow;
+    };
+
+    flow.propagationStopped = function () {
+      return flow.status.value == STATUS.STOPPED;
+    };
   };
   behaviours.connect = function (flow) {
 
@@ -254,6 +269,8 @@
 
       while (flow.emit.targets.length) {
         var destination = flow.emit.targets.shift();
+        if (flow.isCancelled()) break;
+        if (flow.propagationStopped()) break;
         notify(flow, destination);
       }
     };
@@ -321,6 +338,18 @@
     flow.name.value = name || flow.guid();
     flow.name.isFlow = true;
     flow.name.isInternal = false;
+
+    flow.call = function () {
+      for (var _len = arguments.length, functions = Array(_len), _key = 0; _key < _len; _key++) {
+        functions[_key] = arguments[_key];
+      }
+
+      functions.filter(function (f) {
+        return typeof f == "function";
+      }).forEach(function (f) {
+        return f(flow);
+      });
+    };
   };
   behaviours.listen = function (flow) {
     var listenerMap = {};
@@ -367,6 +396,16 @@
 
   function log(flow, name, newData, oldData) {
     instance.logger && !isInternal(flow) && instance.logger(flow, name, newData, oldData);
+
+    instance.enableDevTools.value && debug(flow, name, newData, oldData);
+  }
+
+  function debug(flow, name, d, d0) {
+    sendToDevTools(name, {
+      name: d.name.value,
+      id: d.guid.value,
+      parentId: flow.guid.value
+    });
   }
   behaviours.stateful = function (flow, defaults, name, data) {
     flow.data = function () {
@@ -407,7 +446,7 @@
     factory: function () {
       return {};
     },
-    behaviours: [behaviours.identify, behaviours.stateful, behaviours.connect, behaviours.create, behaviours.emit, behaviours.listen, behaviours.cancellable, behaviours.loggable, behaviours.loggable],
+    behaviours: [behaviours.identify, behaviours.stateful, behaviours.connect, behaviours.create, behaviours.emit, behaviours.listen, behaviours.cancellable, behaviours.loggable],
     direction: DIRECTION.DEFAULT
   };
   var ERRORS = {
@@ -421,6 +460,7 @@
     invalidParents: "Invalid Argument. Please use the child.parent(parent) API to re-parent flow objects.",
     invalidStatus: "Invalid Argument. The .status() API is read only",
     invalidCancelArgs: "Invalid Argument. The .cancel() API requires no parameters",
+    invalidStopPropagationArgs: "Invalid Argument. The .stopPropagation() API requires no parameters",
     invalidRoot: "Invalid Argument. The .parents.root() API is read only"
   };
 
@@ -479,7 +519,31 @@
     log(flow, name, newData, oldData);
   }
 
+  function sendToDevTools(action, payload) {
+    var eventDetail = {
+      action: action,
+      payload: payload
+    };
+    var flowEvent = new document.defaultView.CustomEvent("FlowEvent", { detail: eventDetail });
+    document.dispatchEvent(flowEvent);
+  }
+
   var instance = create(DEFAULTS, "flow");
+
+  instance.enableDevTools = function () {
+    var enableDevTools = arguments[0] === undefined ? UNSET : arguments[0];
+
+    if (direction === UNSET) return instance.enableDevTools.value;
+    instance.enableDevTools.value = enableDevTools;
+    if (enableDevTools) {
+      sendToDevTools("start", {
+        name: flow.name.value,
+        id: flow.guid.value
+      });
+    }
+    return flow;
+  };
+  instance.enableDevTools.value = false;
 
   if (typeof define === "function" && define.amd) {
     // AMD. Register as an anonymous module.

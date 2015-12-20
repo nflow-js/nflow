@@ -1,5 +1,5 @@
  
-# ![](https://avatars2.githubusercontent.com/u/16370234?v=3&s=100)nFlow JS
+# <img align=left width=60 src="http://nflow-js.github.io/assets/logo.svg">nFlow JS
 Event/data/control flow
 
 [![Build Status](https://travis-ci.org/mere/nflow.svg?branch=master)](https://travis-ci.org/mere/nflow) [![npm version](https://badge.fury.io/js/nflow.svg)](https://badge.fury.io/js/nflow) [![Dependency Status](https://www.versioneye.com/nodejs/nflow/0.0.4/badge.svg)](https://www.versioneye.com/nodejs/nflow/0.0.4)

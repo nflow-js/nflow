@@ -4,7 +4,8 @@
   "description": "event/data/control flow",
   "main": "dist/flow.js",
   "scripts": {
-    "test": "gulp mocha"
+    "test": "gulp mocha",
+    "start": "gulp watch"
   },
   "keywords": [
     "event",

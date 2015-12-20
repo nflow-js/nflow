@@ -8,12 +8,15 @@
         name: flow.name.value, 
         id: flow.guid.value
       })
-
     }
     return flow
   }
   instance.enableDevTools.value = false
 
+  instance.logger = (logger) => {
+    instance.logger.value.push(logger)
+  }
+  instance.logger.value = []
 
   if (typeof define === 'function' && define.amd) {
         // AMD. Register as an anonymous module.

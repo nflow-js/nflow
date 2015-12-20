@@ -392,10 +392,26 @@
     flow.toString = function () {
       return "{ Object Flow, name:%name }".replace("%name", flow.name());
     };
+
+    flow.toObj = function () {
+      return {
+        name: flow.name(),
+        guid: flow.guid(),
+        parentName: flow.parent() && flow.parent().name(),
+        parentGuid: flow.parent() && flow.parent().guid(),
+        status: flow.status(),
+        listeners: Object.keys(flow.on()),
+        children: flow.children().map(function (f) {
+          return { name: f.name(), guid: f.guid() };
+        })
+      };
+    };
   };
 
   function log(flow, name, newData, oldData) {
-    instance.logger && !isInternal(flow) && instance.logger(flow, name, newData, oldData);
+    !isInternal(flow) && instance.logger.value.forEach(function (f) {
+      return f(flow, name, newData, oldData);
+    });
 
     instance.enableDevTools.value && debug(flow, name, newData, oldData);
   }
@@ -544,6 +560,11 @@
     return flow;
   };
   instance.enableDevTools.value = false;
+
+  instance.logger = function (logger) {
+    instance.logger.value.push(logger);
+  };
+  instance.logger.value = [];
 
   if (typeof define === "function" && define.amd) {
     // AMD. Register as an anonymous module.

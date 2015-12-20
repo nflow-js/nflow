@@ -1,7 +1,8 @@
  
-# ![](https://avatars2.githubusercontent.com/u/16370234?v=3&s=100)nFlow JS [![Build Status](https://travis-ci.org/mere/nflow.svg?branch=master)](https://travis-ci.org/mere/nflow) [![npm version](https://badge.fury.io/js/nflow.svg)](https://badge.fury.io/js/nflow) [![Dependency Status](https://www.versioneye.com/nodejs/nflow/0.0.4/badge.svg)](https://www.versioneye.com/nodejs/nflow/0.0.4)
+# ![](https://avatars2.githubusercontent.com/u/16370234?v=3&s=100)nFlow JS
 Event/data/control flow
 
+[![Build Status](https://travis-ci.org/mere/nflow.svg?branch=master)](https://travis-ci.org/mere/nflow) [![npm version](https://badge.fury.io/js/nflow.svg)](https://badge.fury.io/js/nflow) [![Dependency Status](https://www.versioneye.com/nodejs/nflow/0.0.4/badge.svg)](https://www.versioneye.com/nodejs/nflow/0.0.4)
 > Work in progress, decent docs and examples are on the way
 
 http://nflow-js.github.io

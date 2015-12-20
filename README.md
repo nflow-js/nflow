@@ -1,5 +1,6 @@
  
-<h1> <img align=left height=50 src="http://nflow-js.github.io/assets/logo.svg"> nFlow JS</h1>
+<img height=80 src="http://nflow-js.github.io/assets/logo.svg">
+# nFlow JS
 
 Event/data/control flow
 

@@ -1,7 +1,6 @@
-
-var assert = require("assert")
-var flow = require('../dist/flow')
-var expect = require('chai').expect;
+import flow from 'flow'
+import assert from 'assert'
+import {expect} from 'chai'
 var sut
 
 describe('Listeners', function(){

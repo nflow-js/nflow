@@ -1,4 +1,8 @@
-behaviours.listen = (flow)=>{
+import { ERRORS, UNSET, STATUS } from '../consts'
+import {assert} from '../utils'
+import logger from '../logger'
+
+export default (flow)=>{
   var listenerMap = {};
   flow.on = (name=UNSET, ...args) => {
     if (name==UNSET) return listenerMap //TODO clone this!

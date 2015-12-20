@@ -1,4 +1,14 @@
-behaviours.emit = (flow)=>{
+import { DEFAULTS
+       , ERRORS
+       , STATUS
+       , DIRECTION
+       , UNSET } from '../consts'
+
+import {merge, detach, flatten, assert, isDetached, isFlow} from '../utils'
+import logger from '../logger'
+
+var log = logger.log
+export default (flow)=>{
   
   flow.status = (...args) => {
     assert(args.length

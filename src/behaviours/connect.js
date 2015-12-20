@@ -1,4 +1,7 @@
-behaviours.connect = (flow)=>{
+import {assert, detach, dispatchInternalEvent, isFlow} from '../utils'
+import { ERRORS, UNSET } from '../consts'
+
+export default (flow)=>{
   
   /**
    *  .children() API

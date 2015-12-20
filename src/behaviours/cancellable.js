@@ -1,4 +1,11 @@
-behaviours.cancellable = (flow, defaults, name)=>{
+import { DEFAULTS
+       , ERRORS
+       , STATUS
+       , DIRECTION
+       , UNSET } from '../consts'
+import {assert, detach, dispatchInternalEvent} from '../utils'
+
+export default (flow, defaults, name)=>{
   
   flow.cancel = (...args) => {
     assert(args.length
@@ -25,8 +32,4 @@ behaviours.cancellable = (flow, defaults, name)=>{
   flow.propagationStopped = () => {
     return flow.status.value == STATUS.STOPPED
   }
-
-
-  
-
 }

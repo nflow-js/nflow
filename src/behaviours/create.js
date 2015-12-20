@@ -1,4 +1,8 @@
-behaviours.create = (flow, defaults)=>{
+import factory from '../factory'
+import logger from '../logger'
+import {assert, dispatchInternalEvent} from '../utils'
+
+export default (flow, defaults)=>{
 
   flow.create = (name, ...data) => {
     
@@ -7,7 +11,7 @@ behaviours.create = (flow, defaults)=>{
       instance.data(...data)
       return instance
     }
-    instance = create(flow.create.defaults, name, data)
+    instance = factory(flow.create.defaults, name, data)
     instance.parent.value = flow
     flow.children.value.push(instance)
     dispatchInternalEvent(flow, 'create', instance)

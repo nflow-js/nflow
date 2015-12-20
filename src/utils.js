@@ -1,7 +1,14 @@
+import factory from './factory'
+import { DEFAULTS
+       , ERRORS
+       , STATUS
+       , DIRECTION
+       , UNSET } from './consts'
+import logger from './logger'
 /**
  *  utils
  */
-function assert(condition, error, val){
+export function assert(condition, error, val){
   if (condition) {
     throw new Error(error
       .replace("%s", val))
@@ -9,41 +16,40 @@ function assert(condition, error, val){
   return condition
 }
 
-
-function isFlow(flow){
+export function isFlow(flow){
   return flow 
     && flow.name
     && flow.name.isFlow
 }
 
-function isInternal(flow){
+export function isInternal(flow){
   return flow 
     && flow.name
     && flow.name.isInternal
 }
 
-function detach(flow){
+export function detach(flow){
   flow.parent() 
     && flow.parent().children.detach(flow)
 }
 
-function isDetached(flow){
+export function isDetached(flow){
   return !flow.parent()
     || !flow.parent().children.has(flow)
 }
 
-function flatten(array){
+export function flatten(array){
   return [].concat.apply([], array);
 }
 
-function merge(source, target){
+export function merge(source, target){
   Object.keys(source).forEach(key=>{
     target[key]= source[key]
   })
 }
 
-function dispatchInternalEvent(flow, name, newData, oldData){
-  var e= create(DEFAULTS, "flow."+name)
+export function dispatchInternalEvent(flow, name, newData, oldData){
+  var e= factory(DEFAULTS, "flow."+name)
   e.name.isInternal = true
   e.data.value = [newData, oldData]
   e.direction.value= DIRECTION.NONE
@@ -58,19 +64,5 @@ function dispatchInternalEvent(flow, name, newData, oldData){
   e.name.value="flow.parent."+name
   e.emit()
   
-  log(flow, name, newData, oldData)
+  logger.log(flow, name, newData, oldData)
 }
-
-function sendToDevTools(action, payload){
-  var eventDetail = {
-    action: action, 
-    payload:payload
-  };
-  var flowEvent = new document.defaultView.CustomEvent("FlowEvent", {detail: eventDetail});
-  document.dispatchEvent(flowEvent);
-}
-
-
-
-
-

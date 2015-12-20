@@ -1,15 +1,16 @@
 /**
  *  consts
  */
-const UNSET = {}
-const DIRECTION = {
+
+export const UNSET = {}
+export const DIRECTION = {
   NONE: "NONE",
   DEFAULT: "DEFAULT",
   UPSTREAM: "UPSTREAM",
   DOWNSTREAM: "DOWNSTREAM"
 }
 
-const STATUS = {
+export const STATUS = {
   IDLE: "IDLE",
   FLOWING: "FLOWING",
   STOPPED: "STOPPED",
@@ -17,21 +18,21 @@ const STATUS = {
   CANCELLED: "CANCELLED"
 }
 
-const DEFAULTS = {
+export const DEFAULTS = {
   factory: ()=>({}),
   behaviours:[
-    behaviours.identify,
-    behaviours.stateful,
-    behaviours.connect,
-    behaviours.create,
-    behaviours.emit,
-    behaviours.listen,
-    behaviours.cancellable,
-    behaviours.loggable
+    'identify',
+    'stateful',
+    'connect',
+    'create',
+    'emit',
+    'listen',
+    'cancellable',
+    'loggable'
   ],
   direction: DIRECTION.DEFAULT
 }
-const ERRORS = {
+export const ERRORS = {
   invalidGuid:     'Invalid Argument. Guid-s are immutable. Please use the .name() API to change the name of a flow object.'
 , invalidChildren: 'Invalid Argument. Please use child.parent(parent) to re-parent flow objects.'
 , invalidListener: 'Invalid Arguments. Please use .on("foo", handler) to create a listener.'

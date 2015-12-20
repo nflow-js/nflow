@@ -1,5 +1,14 @@
+import { DEFAULTS
+       , ERRORS
+       , STATUS
+       , DIRECTION
+       , UNSET } from '../consts'
+
+import logger from '../logger'
+import {assert} from '../utils'
+
 var guid = 0
-behaviours.identify = (flow, defaults, name)=>{
+export default (flow, defaults, name)=>{
   
   flow.guid = (...args) => {
     assert(args.length
@@ -14,7 +23,7 @@ behaviours.identify = (flow, defaults, name)=>{
          , ERRORS.invalidName, name)
     var previousName = flow.name.value
     flow.name.value = name
-    dispatchInternalEvent(flow, 'name', name, previousName)
+    logger.dispatchInternalEvent(flow, 'name', name, previousName)
     return flow
   }
   flow.name.value = name || flow.guid()

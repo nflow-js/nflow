@@ -1,4 +1,7 @@
-  behaviours.stateful = (flow, defaults, name, data)=>{
+import logger from '../logger'
+import {assert, dispatchInternalEvent} from '../utils'
+
+export default (flow, defaults, name, data)=>{
     flow.data = (...data) => {
     if (!data.length) {
       return (flow.data.value.length<=1)

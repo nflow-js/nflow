@@ -1,7 +1,7 @@
+import flow from 'flow'
+import assert from 'assert'
+import {expect} from 'chai'
 
-var assert = require("assert")
-var flow = require('../dist/flow')
-var expect = require('chai').expect;
 var sut
 
 describe('Cancellation', function(){
@@ -37,7 +37,7 @@ describe('Cancellation', function(){
 
     })
 
-    it('should cancel event delegation', function(done){
+    it('should cancel event delegation.', function(done){
       function shouldCall(){
         this.cancel()
       }

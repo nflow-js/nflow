@@ -26,5 +26,17 @@
     "gulp-util": "~3.0.4",
     "html-webpack-plugin": "^1.6.2",
     "karma": "~0.12.31"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nflow-js/nflow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nflow-js/nflow/issues"
+  },
+  "homepage": "https://github.com/nflow-js/nflow#readme"
 }

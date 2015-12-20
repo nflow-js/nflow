@@ -1,6 +1,5 @@
  
-<img align=left height=60 src="http://nflow-js.github.io/assets/logo.svg"> 
-# nFlow JS
+# <img align=left height=60 src="http://nflow-js.github.io/assets/logo.svg">  nFlow JS
 Event/data/control flow
 
 

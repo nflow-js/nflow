@@ -4,7 +4,7 @@
 
 Event/data/control flow
 
-[![Build Status](https://travis-ci.org/mere/nflow.svg?branch=master)](https://travis-ci.org/mere/nflow) [![npm version](https://badge.fury.io/js/nflow.svg)](https://badge.fury.io/js/nflow) [![Dependency Status](https://www.versioneye.com/nodejs/nflow/0.0.4/badge.svg)](https://www.versioneye.com/nodejs/nflow/0.0.4)
+ [![npm version](https://badge.fury.io/js/nflow.svg)](https://badge.fury.io/js/nflow) [![Dependency Status](https://www.versioneye.com/nodejs/nflow/0.0.4/badge.svg)](https://www.versioneye.com/nodejs/nflow/0.0.4)
 
 > Work in progress, decent docs and examples are on the way
 
@@ -26,6 +26,7 @@ Clone this repo and run:
  - `npm start` 
 
 ### Unit tests
+[![Circle CI](https://circleci.com/gh/nflow-js/nflow.svg?style=svg&circle-token=c48681c248ecfdd1fcbc94ca9f5dd2b39fd06fbc)](https://circleci.com/gh/nflow-js/nflow)
 
 To run the unit tests, clone this repo and run:
  - `npm install`

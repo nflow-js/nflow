@@ -6,7 +6,7 @@
   "scripts": {
     "test-dev": "webpack-dev-server --config webpack.tests.config.js",
     "pretest": "webpack --config webpack.tests.config.js",
-    "test": "mocha ./.test/test.node.js --reporter spec",
+    "test": "mocha ./.test/test.node.js --reporter mocha-circleci-reporter",
     "start": "webpack --watch --colors",
     "dev": "webpack-dev-server",
     "publish-to-npm": "publish"
@@ -36,7 +36,8 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.12.8",
     "webpack-dev-server": "^1.12.1",
-   "publish": "0.5.0"
+    "publish": "0.5.0",
+    "mocha-circleci-reporter": "^0.0.1"
   },
   "directories": {
     "test": "test"

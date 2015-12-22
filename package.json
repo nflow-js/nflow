@@ -1,6 +1,6 @@
 {
   "name": "nflow",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "event/data/control flow",
   "main": "dist/nflow.js",
   "scripts": {
@@ -9,6 +9,7 @@
     "test": "mocha ./.test/test.node.js --reporter mocha-circleci-reporter",
     "start": "webpack --watch --colors",
     "dev": "webpack-dev-server",
+    "prepublish-to-npm": "webpack",
     "publish-to-npm": "publish"
   },
   "keywords": [

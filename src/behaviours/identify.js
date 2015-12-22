@@ -5,7 +5,7 @@ import { DEFAULTS
        , UNSET } from '../consts'
 
 import logger from '../logger'
-import {assert} from '../utils'
+import {assert, dispatchInternalEvent} from '../utils'
 
 var guid = 0
 export default (flow, defaults, name)=>{
@@ -23,7 +23,7 @@ export default (flow, defaults, name)=>{
          , ERRORS.invalidName, name)
     var previousName = flow.name.value
     flow.name.value = name
-    logger.dispatchInternalEvent(flow, 'name', name, previousName)
+    dispatchInternalEvent(flow, 'name', name, previousName)
     return flow
   }
   flow.name.value = name || flow.guid()

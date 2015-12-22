@@ -5,5 +5,5 @@ import logger from './logger'
 var root = factory(DEFAULTS, "flow")
 logger.init(root)
 
-global && global.nflow = root
+global.nflow = root
 module.exports = root

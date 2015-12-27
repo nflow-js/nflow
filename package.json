@@ -6,7 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server",
     "pretest": "webpack",
-    "test": "mocha ./.test/test.node.js --reporter mocha-circleci-reporter",
+    "test": "mocha ./dist/node-test.js --reporter mocha-circleci-reporter",
     "prepublish-to-npm": "webpack",
     "publish-to-npm": "publish"
   },

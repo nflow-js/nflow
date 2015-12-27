@@ -1,4 +1,4 @@
-import flow from 'flow'
+import flow from 'nflow'
 import assert from 'assert'
 import {expect} from 'chai'
 var sut

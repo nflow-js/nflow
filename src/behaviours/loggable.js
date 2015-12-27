@@ -1,7 +1,6 @@
 export default (flow)=>{
   flow.toString = () => {
-    return "{ Object Flow, name:%name }"
-      .replace("%name", flow.name())
+    return JSON.stringify(flow.toObj())
   }
 
   flow.toObj = () => ({

@@ -22,8 +22,11 @@ http://nflow-js.github.io
 
 ### How to develop
 
+nFlow uses a single build script that compiles the code and the tests, creates a dev server and watches all source files for changes.
+
 Clone this repo and run:
  - `npm start` 
+ - navigate to `http://localhost:4000/webpack-dev-server/`
 
 ### Unit tests
 [![Circle CI](https://circleci.com/gh/nflow-js/nflow.svg?style=svg&circle-token=c48681c248ecfdd1fcbc94ca9f5dd2b39fd06fbc)](https://circleci.com/gh/nflow-js/nflow)

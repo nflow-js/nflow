@@ -4,11 +4,9 @@
   "description": "event/data/control flow",
   "main": "dist/nflow.js",
   "scripts": {
-    "test-dev": "webpack-dev-server --config webpack.tests.config.js",
-    "pretest": "webpack --config webpack.tests.config.js",
-    "test": "mocha ./.test/test.node.js --reporter mocha-circleci-reporter",
-    "start": "webpack --watch --colors",
-    "dev": "webpack-dev-server",
+    "start": "webpack-dev-server",
+    "pretest": "webpack",
+    "test": "mocha ./dist/node-test.js --reporter mocha-circleci-reporter",
     "prepublish-to-npm": "webpack",
     "publish-to-npm": "publish"
   },

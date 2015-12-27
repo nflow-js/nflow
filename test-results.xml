@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.14600000000000005" tests="72" failures="0">
+  <testsuite name="Root Suite" timestamp="2015-12-27T13:14:08" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name="Cancellation" timestamp="2015-12-27T13:14:08" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name="Flow Cancellation" timestamp="2015-12-27T13:14:08" tests="4" failures="0" time="0.044">
+    <testcase name="Root Suite Cancellation Flow Cancellation parent node should cancel all child nodes" time="0.003" classname="parent node should cancel all child nodes">
+    </testcase>
+    <testcase name="Root Suite Cancellation Flow Cancellation should cancel event delegation." time="0.016" classname="should cancel event delegation.">
+    </testcase>
+    <testcase name="Root Suite Cancellation Flow Cancellation should cancel event delivery on same listener" time="0.012" classname="should cancel event delivery on same listener">
+    </testcase>
+    <testcase name="Root Suite Cancellation Flow Cancellation should not emit events on cancelled nodes" time="0.013" classname="should not emit events on cancelled nodes">
+    </testcase>
+  </testsuite>
+  <testsuite name="Flow stopPropagation()" timestamp="2015-12-27T13:14:08" tests="3" failures="0" time="0.024">
+    <testcase name="Root Suite Cancellation Flow stopPropagation() should stop event delegation" time="0.014" classname="should stop event delegation">
+    </testcase>
+    <testcase name="Root Suite Cancellation Flow stopPropagation() should stop event delivery on same listener" time="0.01" classname="should stop event delivery on same listener">
+    </testcase>
+    <testcase name="Root Suite Cancellation Flow stopPropagation() should still emit events on stopped nodes" time="0" classname="should still emit events on stopped nodes">
+    </testcase>
+  </testsuite>
+  <testsuite name="Connection" timestamp="2015-12-27T13:14:08" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name="Children API" timestamp="2015-12-27T13:14:08" tests="13" failures="0" time="0.011000000000000003">
+    <testcase name="Root Suite Connection Children API should remove detached nodes" time="0.001" classname="should remove detached nodes">
+    </testcase>
+    <testcase name="Root Suite Connection Children API should re-parent" time="0.001" classname="should re-parent">
+    </testcase>
+    <testcase name="Root Suite Connection Children API should retrieve children" time="0.001" classname="should retrieve children">
+    </testcase>
+    <testcase name="Root Suite Connection Children API should not retrieve detached children" time="0.001" classname="should not retrieve detached children">
+    </testcase>
+    <testcase name="Root Suite Connection Children API .all() should return all children recursively" time="0.001" classname=".all() should return all children recursively">
+    </testcase>
+    <testcase name="Root Suite Connection Children API .all() should handle circular dependencies" time="0.001" classname=".all() should handle circular dependencies">
+    </testcase>
+    <testcase name="Root Suite Connection Children API should find child by String" time="0" classname="should find child by String">
+    </testcase>
+    <testcase name="Root Suite Connection Children API should find child by matcher function" time="0.001" classname="should find child by matcher function">
+    </testcase>
+    <testcase name="Root Suite Connection Children API should find All children by matcher function" time="0.001" classname="should find All children by matcher function">
+    </testcase>
+    <testcase name="Root Suite Connection Children API should find child by String recursively" time="0.001" classname="should find child by String recursively">
+    </testcase>
+    <testcase name="Root Suite Connection Children API should find All children by matcher function recursively" time="0.001" classname="should find All children by matcher function recursively">
+    </testcase>
+    <testcase name="Root Suite Connection Children API should check if child exists by matcher function" time="0.001" classname="should check if child exists by matcher function">
+    </testcase>
+    <testcase name="Root Suite Connection Children API should check if child exists by matcher function recursively" time="0" classname="should check if child exists by matcher function recursively">
+    </testcase>
+  </testsuite>
+  <testsuite name="parent API" timestamp="2015-12-27T13:14:08" tests="3" failures="0" time="0.003">
+    <testcase name="Root Suite Connection parent API should return correct parent" time="0.001" classname="should return correct parent">
+    </testcase>
+    <testcase name="Root Suite Connection parent API should detach" time="0.001" classname="should detach">
+    </testcase>
+    <testcase name="Root Suite Connection parent API should re-parent" time="0.001" classname="should re-parent">
+    </testcase>
+  </testsuite>
+  <testsuite name="parents API" timestamp="2015-12-27T13:14:08" tests="8" failures="0" time="0.003">
+    <testcase name="Root Suite Connection parents API should return parent chain" time="0" classname="should return parent chain">
+    </testcase>
+    <testcase name="Root Suite Connection parents API return correct chain for detached nodes" time="0.001" classname="return correct chain for detached nodes">
+    </testcase>
+    <testcase name="Root Suite Connection parents API should return correct chain for re-parented nodes" time="0.001" classname="should return correct chain for re-parented nodes">
+    </testcase>
+    <testcase name="Root Suite Connection parents API should handle circular references (loop)" time="0" classname="should handle circular references (loop)">
+    </testcase>
+    <testcase name="Root Suite Connection parents API should handle circular references (loop + leaf)" time="0" classname="should handle circular references (loop + leaf)">
+    </testcase>
+    <testcase name="Root Suite Connection parents API should find parent" time="0" classname="should find parent">
+    </testcase>
+    <testcase name="Root Suite Connection parents API should find root" time="0" classname="should find root">
+    </testcase>
+    <testcase name="Root Suite Connection parents API should not find sibling as parent" time="0.001" classname="should not find sibling as parent">
+    </testcase>
+  </testsuite>
+  <testsuite name="Construction" timestamp="2015-12-27T13:14:08" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name="guid API" timestamp="2015-12-27T13:14:08" tests="1" failures="0" time="0.001">
+    <testcase name="Root Suite Construction guid API should create unique guids" time="0.001" classname="should create unique guids">
+    </testcase>
+  </testsuite>
+  <testsuite name="name API" timestamp="2015-12-27T13:14:08" tests="1" failures="0" time="0.001">
+    <testcase name="Root Suite Construction name API should store name" time="0.001" classname="should store name">
+    </testcase>
+  </testsuite>
+  <testsuite name=".create() API" timestamp="2015-12-27T13:14:08" tests="2" failures="0" time="0.002">
+    <testcase name="Root Suite Construction .create() API should reuse existing flow objects" time="0.001" classname="should reuse existing flow objects">
+    </testcase>
+    <testcase name="Root Suite Construction .create() API should NOT reuse existing flow objects for unnamed flow objects" time="0.001" classname="should NOT reuse existing flow objects for unnamed flow objects">
+    </testcase>
+  </testsuite>
+  <testsuite name="creating flow objects with data" timestamp="2015-12-27T13:14:08" tests="5" failures="0" time="0.001">
+    <testcase name="Root Suite Construction creating flow objects with data should default to undefined" time="0" classname="should default to undefined">
+    </testcase>
+    <testcase name="Root Suite Construction creating flow objects with data should store null" time="0.001" classname="should store null">
+    </testcase>
+    <testcase name="Root Suite Construction creating flow objects with data should store falsy data" time="0" classname="should store falsy data">
+    </testcase>
+    <testcase name="Root Suite Construction creating flow objects with data should store single data object" time="0" classname="should store single data object">
+    </testcase>
+    <testcase name="Root Suite Construction creating flow objects with data should store multiple data objects" time="0" classname="should store multiple data objects">
+    </testcase>
+  </testsuite>
+  <testsuite name="Dispatchers" timestamp="2015-12-27T13:14:08" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name=".emit() API" timestamp="2015-12-27T13:14:08" tests="7" failures="0" time="0.007">
+    <testcase name="Root Suite Dispatchers .emit() API emit should create a new node" time="0" classname="emit should create a new node">
+    </testcase>
+    <testcase name="Root Suite Dispatchers .emit() API should detach emitted node" time="0.005" classname="should detach emitted node">
+    </testcase>
+    <testcase name="Root Suite Dispatchers .emit() API should emit new node" time="0" classname="should emit new node">
+    </testcase>
+    <testcase name="Root Suite Dispatchers .emit() API should emit current node" time="0.001" classname="should emit current node">
+    </testcase>
+    <testcase name="Root Suite Dispatchers .emit() API should deliver multiple payloads" time="0" classname="should deliver multiple payloads">
+    </testcase>
+    <testcase name="Root Suite Dispatchers .emit() API should deliver to multiple listeners on the same node" time="0.001" classname="should deliver to multiple listeners on the same node">
+    </testcase>
+    <testcase name="Root Suite Dispatchers .emit() API should emit lightweight nodes" time="0" classname="should emit lightweight nodes">
+    </testcase>
+  </testsuite>
+  <testsuite name="Flow Direction" timestamp="2015-12-27T13:14:09" tests="5" failures="0" time="0.028999999999999998">
+    <testcase name="Root Suite Dispatchers Flow Direction should flow upstream" time="0.001" classname="should flow upstream">
+    </testcase>
+    <testcase name="Root Suite Dispatchers Flow Direction should flow downstream" time="0.001" classname="should flow downstream">
+    </testcase>
+    <testcase name="Root Suite Dispatchers Flow Direction should flow from root" time="0.001" classname="should flow from root">
+    </testcase>
+    <testcase name="Root Suite Dispatchers Flow Direction should be unidirectional (upstream)" time="0.011" classname="should be unidirectional (upstream)">
+    </testcase>
+    <testcase name="Root Suite Dispatchers Flow Direction should be unidirectional (downstream)" time="0.015" classname="should be unidirectional (downstream)">
+    </testcase>
+  </testsuite>
+  <testsuite name=".matcher() API" timestamp="2015-12-27T13:14:09" tests="2" failures="0" time="0.013000000000000001">
+    <testcase name="Root Suite Dispatchers .matcher() API should match by name" time="0.001" classname="should match by name">
+    </testcase>
+    <testcase name="Root Suite Dispatchers .matcher() API should not deliver mismatching name" time="0.012" classname="should not deliver mismatching name">
+    </testcase>
+  </testsuite>
+  <testsuite name="Internal Events" timestamp="2015-12-27T13:14:09" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name="parent() API" timestamp="2015-12-27T13:14:09" tests="4" failures="0" time="0.004">
+    <testcase name="Root Suite Internal Events parent() API should dispatch flow.childRemoved internal event" time="0.001" classname="should dispatch flow.childRemoved internal event">
+    </testcase>
+    <testcase name="Root Suite Internal Events parent() API should dispatch flow.childAdded internal event on reparenting" time="0.001" classname="should dispatch flow.childAdded internal event on reparenting">
+    </testcase>
+    <testcase name="Root Suite Internal Events parent() API should dispatch flow.children.childRemoved internal event" time="0.001" classname="should dispatch flow.children.childRemoved internal event">
+    </testcase>
+    <testcase name="Root Suite Internal Events parent() API should dispatch flow.children.childAdded internal event" time="0.001" classname="should dispatch flow.children.childAdded internal event">
+    </testcase>
+  </testsuite>
+  <testsuite name="data() API" timestamp="2015-12-27T13:14:09" tests="2" failures="0" time="0.001">
+    <testcase name="Root Suite Internal Events data() API should dispatch flow.data internal event" time="0" classname="should dispatch flow.data internal event">
+    </testcase>
+    <testcase name="Root Suite Internal Events data() API should dispatch flow.children.data internal event" time="0.001" classname="should dispatch flow.children.data internal event">
+    </testcase>
+  </testsuite>
+  <testsuite name="create() API" timestamp="2015-12-27T13:14:09" tests="3" failures="0" time="0">
+    <testcase name="Root Suite Internal Events create() API should dispatch flow.create internal event" time="0" classname="should dispatch flow.create internal event">
+    </testcase>
+    <testcase name="Root Suite Internal Events create() API should dispatch flow.children.create internal event" time="0" classname="should dispatch flow.children.create internal event">
+    </testcase>
+    <testcase name="Root Suite Internal Events create() API should dispatch flow.children.data internal event" time="0" classname="should dispatch flow.children.data internal event">
+    </testcase>
+  </testsuite>
+  <testsuite name="Listeners" timestamp="2015-12-27T13:14:09" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name="on() API" timestamp="2015-12-27T13:14:09" tests="7" failures="0" time="0.001">
+    <testcase name="Root Suite Listeners on() API should store single listener" time="0" classname="should store single listener">
+    </testcase>
+    <testcase name="Root Suite Listeners on() API should store multiple listeners" time="0.001" classname="should store multiple listeners">
+    </testcase>
+    <testcase name="Root Suite Listeners on() API return undefined for non-existent listeners" time="0" classname="return undefined for non-existent listeners">
+    </testcase>
+    <testcase name="Root Suite Listeners on() API should destroy single listener" time="0" classname="should destroy single listener">
+    </testcase>
+    <testcase name="Root Suite Listeners on() API should destroy multiple listeners" time="0" classname="should destroy multiple listeners">
+    </testcase>
+    <testcase name="Root Suite Listeners on() API should store multiple listeners" time="0" classname="should store multiple listeners">
+    </testcase>
+    <testcase name="Root Suite Listeners on() API should ignore invalid listeners" time="0" classname="should ignore invalid listeners">
+    </testcase>
+  </testsuite>
+  <testsuite name="Logging" timestamp="2015-12-27T13:14:09" tests="0" failures="0" time="0">
+  </testsuite>
+  <testsuite name="Flow Logging" timestamp="2015-12-27T13:14:09" tests="2" failures="0" time="0.001">
+    <testcase name="Root Suite Logging Flow Logging Should toString" time="0" classname="Should toString">
+    </testcase>
+    <testcase name="Root Suite Logging Flow Logging Should use global logger" time="0.001" classname="Should use global logger">
+    </testcase>
+  </testsuite>
+</testsuites>

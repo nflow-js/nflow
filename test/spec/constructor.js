@@ -40,6 +40,37 @@ describe('Construction', function(){
     })
   })
 
+  describe('.dispose() API', function(){
+    it('should detach disposed nodes', function(){
+      var sut = testFlow.create('test')
+      sut.dispose()
+      expect(sut.parent()).to.equal(null)
+    })
+
+    it('should not emit events on disposed nodes', function(){
+      var sut1 = testFlow.create()
+        .on('foo', ()=>{
+          assert.fail('should not deliver message on disposed nodes')
+        })
+      sut1.dispose()
+      sut1.emit('foo')
+      assert.ok(sut1)
+    })
+
+    it('should not emit events on children of disposed nodes', function(){
+      var sut1 = testFlow.create()
+      sut1.dispose()
+
+      sut1
+        .on('foo', ()=>{
+          assert.fail('should not deliver message on disposed nodes')
+        })
+      
+      sut1.emit('foo')
+      assert.ok(sut1)
+    })
+  })
+
   describe('creating flow objects with data', function(){
 
     it('should default to undefined', function(){

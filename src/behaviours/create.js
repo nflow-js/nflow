@@ -1,6 +1,12 @@
 import factory from '../factory'
 import logger from '../logger'
 import {assert, dispatchInternalEvent} from '../utils'
+import { DEFAULTS
+       , ERRORS
+       , STATUS
+       , DIRECTION
+       , UNSET } from '../consts'
+
 
 export default (flow, defaults)=>{
 
@@ -24,5 +30,21 @@ export default (flow, defaults)=>{
     direction: defaults.direction
 
   }
+
+  flow.dispose = (...args) => {
+    assert(args.length
+         , ERRORS.invalidDisposeArgs)
+    if (flow.status.value == STATUS.DISPOSED) return;
+    
+    dispatchInternalEvent(flow, 'dispose', true)
+    flow.parent(null)
+    flow.status.value = STATUS.DISPOSED
+    flow.on.listenerMap = {}
+    
+    //recursively dispose all downstream nodes
+    flow.children().forEach(f=>f.dispose())
+    return flow
+  }
+
 
 }

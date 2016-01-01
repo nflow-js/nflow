@@ -34,7 +34,7 @@
 /******/ 	__webpack_require__.c = installedModules;
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "http://localhost:4000/dist/";
+/******/ 	__webpack_require__.p = "http://localhost:5000/dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -156,7 +156,7 @@
 	  }
 	});
 	
-	var _identify = __webpack_require__(11);
+	var _identify = __webpack_require__(16);
 	
 	Object.defineProperty(exports, 'identify', {
 	  enumerable: true,
@@ -165,7 +165,7 @@
 	  }
 	});
 	
-	var _listen = __webpack_require__(12);
+	var _listen = __webpack_require__(17);
 	
 	Object.defineProperty(exports, 'listen', {
 	  enumerable: true,
@@ -174,7 +174,7 @@
 	  }
 	});
 	
-	var _loggable = __webpack_require__(13);
+	var _loggable = __webpack_require__(18);
 	
 	Object.defineProperty(exports, 'loggable', {
 	  enumerable: true,
@@ -183,12 +183,21 @@
 	  }
 	});
 	
-	var _stateful = __webpack_require__(14);
+	var _stateful = __webpack_require__(19);
 	
 	Object.defineProperty(exports, 'stateful', {
 	  enumerable: true,
 	  get: function get() {
 	    return _stateful.default;
+	  }
+	});
+	
+	var _get = __webpack_require__(20);
+	
+	Object.defineProperty(exports, 'get', {
+	  enumerable: true,
+	  get: function get() {
+	    return _get.default;
 	  }
 	});
 
@@ -210,14 +219,14 @@
 	
 	  flow.cancel = function () {
 	    (0, _utils.assert)(arguments.length, _consts.ERRORS.invalidCancelArgs);
-	    (0, _utils.dispatchInternalEvent)(flow, 'cancel', true);
 	    flow.status.value = _consts.STATUS.CANCELLED;
+	    (0, _utils.dispatchInternalEvent)(flow, 'cancel', true);
 	    return flow;
 	  };
 	
 	  flow.isCancelled = function () {
 	    return [flow].concat(flow.parents()).some(function (e) {
-	      return e.status.value == _consts.STATUS.CANCELLED;
+	      return e.status.value == _consts.STATUS.CANCELLED || e.status.value == _consts.STATUS.DISPOSED;
 	    });
 	  };
 	
@@ -259,7 +268,8 @@
 	  FLOWING: "FLOWING",
 	  STOPPED: "STOPPED",
 	  COMPLETED: "COMPLETED",
-	  CANCELLED: "CANCELLED"
+	  CANCELLED: "CANCELLED",
+	  DISPOSED: "DISPOSED"
 	};
 	
 	var DEFAULTS = exports.DEFAULTS = {
@@ -279,6 +289,7 @@
 	  invalidParent: 'Invalid flow parent object. Expected a flow instance, got: %s',
 	  invalidParents: 'Invalid Argument. Please use the child.parent(parent) API to re-parent flow objects.',
 	  invalidStatus: 'Invalid Argument. The .status() API is read only',
+	  invalidDisposeArgs: 'Invalid Argument. The .dispose() API requires no parameters',
 	  invalidCancelArgs: 'Invalid Argument. The .cancel() API requires no parameters',
 	  invalidStopPropagationArgs: 'Invalid Argument. The .stopPropagation() API requires no parameters',
 	  invalidRoot: 'Invalid Argument. The .parents.root() API is read only'
@@ -402,9 +413,10 @@
 	
 	function debug(flow, name, d, d0) {
 	  sendToDevTools(name, {
-	    name: d.name.value,
-	    id: d.guid.value,
-	    parentId: flow.guid.value
+	    flow: flow.toObj(),
+	    name: name,
+	    d: d && (d.toObj ? d.toObj() : d),
+	    d0: d0 && (d0.toObj ? d0.toObj() : d0)
 	  });
 	}
 	
@@ -420,15 +432,12 @@
 	function init(flow) {
 	
 	  flow.enableDevTools = function () {
-	    var enabled = arguments.length <= 0 || arguments[0] === undefined ? _consts.UNSET : arguments[0];
+	    var enabled = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 	
-	    if (enabled === _consts.UNSET) return devToolsEnabled;
 	    devToolsEnabled = enabled;
+	
 	    if (enabled) {
-	      sendToDevTools('start', {
-	        name: flow.name.value,
-	        id: flow.guid.value
-	      });
+	      debug(flow, 'start', flow, flow);
 	    }
 	    return flow;
 	  };
@@ -586,6 +595,8 @@
 	
 	var _utils = __webpack_require__(6);
 	
+	var _consts = __webpack_require__(5);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = function (flow, defaults) {
@@ -615,6 +626,22 @@
 	    direction: defaults.direction
 	
 	  };
+	
+	  flow.dispose = function () {
+	    (0, _utils.assert)(arguments.length, _consts.ERRORS.invalidDisposeArgs);
+	    if (flow.status.value == _consts.STATUS.DISPOSED) return;
+	
+	    (0, _utils.dispatchInternalEvent)(flow, 'dispose', true);
+	    flow.parent(null);
+	    flow.status.value = _consts.STATUS.DISPOSED;
+	    flow.on.listenerMap = {};
+	
+	    //recursively dispose all downstream nodes
+	    flow.children().forEach(function (f) {
+	      return f.dispose();
+	    });
+	    return flow;
+	  };
 	};
 
 /***/ },
@@ -635,7 +662,15 @@
 	
 	var _logger2 = _interopRequireDefault(_logger);
 	
+	var _routes = __webpack_require__(11);
+	
+	var routes = _interopRequireWildcard(_routes);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	var log = _logger2.default.log;
 	
@@ -665,9 +700,19 @@
 	
 	    var name = arguments.length <= 0 || arguments[0] === undefined ? _consts.UNSET : arguments[0];
 	
+	    return emit(name, args);
+	  };
+	  createEmitAPI(flow);
+	
+	  function emit() {
+	    var name = arguments.length <= 0 || arguments[0] === undefined ? _consts.UNSET : arguments[0];
+	    var args = arguments[1];
+	    var direction = arguments[2];
+	
 	    if (name == _consts.UNSET) {
 	      // emit current flow object
 	      (0, _utils.detach)(flow);
+	      direction && flow.direction(direction);
 	      log(flow, 'emit', flow);
 	      flow.emit.route(flow);
 	      log(flow, 'emitted', flow);
@@ -676,9 +721,9 @@
 	    if ((0, _utils.isFlow)(name)) {
 	      //1. reparent the passed in flow object where it's emitted from
 	      name.parent(flow);
-	
 	      //2.  emit the passed in flow object
-	      (0, _utils.detach)(flow);
+	      (0, _utils.detach)(name);
+	      direction && name.direction(direction);
 	      log(name, 'emit', name);
 	      flow.emit.route(name);
 	      log(name, 'emitted', name);
@@ -687,13 +732,14 @@
 	
 	    (0, _utils.assert)(typeof name != 'string', _consts.ERRORS.invalidEventName);
 	
-	    var event = flow.create.apply(flow, [name].concat(args));
+	    var event = flow.create.apply(flow, [name].concat(_toConsumableArray(args)));
 	    (0, _utils.detach)(event);
+	    direction && event.direction(direction);
 	    log(event, 'emit', event);
 	    flow.emit.route(event);
 	    log(event, 'emitted', event);
 	    return event;
-	  };
+	  }
 	
 	  flow.emit.route = function (flow) {
 	    // 2. reset status
@@ -704,57 +750,211 @@
 	
 	    // only keep unique recipients
 	    flow.emit.targets = flow.emit.route[flow.direction()](flow).filter(function (f) {
-	      if (flow.emit.recipientsMap[f.guid()]) return false;
-	      return flow.emit.recipientsMap[f.guid()] = true;
+	      if (flow.emit.recipientsMap[f.flow.guid()]) return false;
+	      return flow.emit.recipientsMap[f.flow.guid()] = true;
 	    });
 	
 	    while (flow.emit.targets.length) {
 	      var destination = flow.emit.targets.shift();
 	      if (flow.isCancelled()) break;
 	      if (flow.propagationStopped()) break;
+	      if (destination.flow.isCancelled()) continue;
 	      notify(flow, destination);
 	    }
 	  };
 	
-	  flow.emit.route.DEFAULT = function (flow) {
-	    return (0, _utils.flatten)([flow].concat(flow.parents()).map(function (node) {
-	      if ((0, _utils.isDetached)(node) || !node.parent()) return [node].concat(node.children.all());
-	      //TODO check circular deps
-	      return [node];
-	    }));
-	  };
-	
-	  flow.emit.route.UPSTREAM = function (flow) {
-	    return [flow].concat(flow.parents());
-	  };
-	
-	  flow.emit.route.DOWNSTREAM = function (flow) {
-	    return (0, _utils.flatten)([flow].concat(flow.parent()).concat(flow.parent().children.all()).filter(Boolean));
-	  };
-	
-	  flow.emit.route.NONE = function (flow) {
-	    return [flow, flow.parent()];
-	  };
+	  flow.emit.route.DOWNSTREAM = routes.downstream;
+	  flow.emit.route.UPSTREAM = routes.upstream;
+	  flow.emit.route.DEFAULT = routes.default;
+	  flow.emit.route.NONE = routes.none;
 	
 	  function notify(flow, currentNode) {
-	    if (currentNode.on.notifyListeners(flow)) {
-	      flow.emit.recipientsMap[currentNode.guid()] = flow.direction();
+	    if (currentNode.flow.on.notifyListeners(flow)) {
+	      flow.emit.recipientsMap[currentNode.flow.guid()] = flow.direction();
 	      flow.emit.recipients.push(currentNode);
 	    }
 	  }
 	
-	  function getNextFlowDestination(currentNode, direction) {
-	    return ({
-	      NONE: [currentNode],
-	      UPSTREAM: [currentNode.parent()],
-	      DEFAULT: [currentNode.parent()],
-	      DOWNSTREAM: currentNode.children()
-	    })[direction];
+	  /** 
+	   *  create directional (eg. `flow.emit.dowsntream(...)`) API
+	   */
+	  function createEmitAPI(flow) {
+	    Object.keys(_consts.DIRECTION).forEach(function (direction) {
+	      flow.emit[direction] = flow.emit[direction.toLowerCase()] = function (name) {
+	        for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+	          args[_key2 - 1] = arguments[_key2];
+	        }
+	
+	        return emit(name, args, direction);
+	      };
+	    });
 	  }
 	};
 
 /***/ },
 /* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _upstream = __webpack_require__(12);
+	
+	Object.defineProperty(exports, 'upstream', {
+	  enumerable: true,
+	  get: function get() {
+	    return _upstream.default;
+	  }
+	});
+	
+	var _none = __webpack_require__(13);
+	
+	Object.defineProperty(exports, 'none', {
+	  enumerable: true,
+	  get: function get() {
+	    return _none.default;
+	  }
+	});
+	
+	var _downstream = __webpack_require__(14);
+	
+	Object.defineProperty(exports, 'downstream', {
+	  enumerable: true,
+	  get: function get() {
+	    return _downstream.default;
+	  }
+	});
+	
+	var _default = __webpack_require__(15);
+	
+	Object.defineProperty(exports, 'default', {
+	  enumerable: true,
+	  get: function get() {
+	    return _default.default;
+	  }
+	});
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	/**
+	 *  returns: all parent nodes
+	 */
+	
+	exports.default = function (flow) {
+	  return [flow].concat(flow.parents()).map(function (flow, i, arr) {
+	    return {
+	      flow: flow,
+	      route: arr.slice(0, i + 1).reverse()
+	    };
+	  });
+	};
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	/**
+	 *  returns: only itself and the node emitting it
+	 */
+	
+	exports.default = function (flow) {
+	  return [flow].concat(flow.parent()).map(function (flow, i, arr) {
+	    return {
+	      flow: flow,
+	      route: arr.slice(0, i + 1).reverse()
+	    };
+	  });
+	};
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	exports.default = function (flow) {
+	  var visitedNodesMap = {};
+	
+	  var route = getChildren(flow, []).concat(getChildren(flow.parent(), [flow]));
+	
+	  return route;
+	  function getChildren(flow, route) {
+	    if (visitedNodesMap[flow.guid()]) return [];
+	    visitedNodesMap[flow.guid()] = true;
+	    route = [flow].concat(route);
+	    var nodes = [{ flow: flow, route: route }];
+	    flow.children().forEach(function (f) {
+	      return nodes = nodes.concat(getChildren(f, route));
+	    });
+	    return nodes;
+	  }
+	};
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _utils = __webpack_require__(6);
+	
+	exports.default = function (flow) {
+	  var visitedNodesMap = {};
+	  var route = [];
+	  var parents = [flow].concat(flow.parents()).map(function (flow, i, arr) {
+	    return {
+	      flow: flow,
+	      route: arr.slice(0, i)
+	    };
+	  });
+	
+	  parents.forEach(function (f) {
+	    // traverse downstream on detached nodes:
+	    if ((0, _utils.isDetached)(f.flow)) {
+	      route = route.concat(getChildren(f.flow, f.route.reverse()));
+	    } else {
+	      visitedNodesMap[f.flow.guid()] = true;
+	      route.push({ flow: f.flow, route: f.route.reverse() });
+	    }
+	  });
+	  return route;
+	  function getChildren(flow, route) {
+	    var visited = visitedNodesMap[flow.guid()];
+	    visitedNodesMap[flow.guid()] = true;
+	    route = [flow].concat(route);
+	    var nodes = visited ? [] : [{ flow: flow, route: route }];
+	    flow.children().forEach(function (f) {
+	      return nodes = nodes.concat(getChildren(f, route));
+	    });
+	    return nodes;
+	  }
+	};
+
+/***/ },
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -811,7 +1011,7 @@
 	};
 
 /***/ },
-/* 12 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -833,7 +1033,6 @@
 	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
 	exports.default = function (flow) {
-	  var listenerMap = {};
 	  flow.on = function () {
 	    for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
 	      args[_key - 1] = arguments[_key];
@@ -841,27 +1040,31 @@
 	
 	    var name = arguments.length <= 0 || arguments[0] === undefined ? _consts.UNSET : arguments[0];
 	
-	    if (name == _consts.UNSET) return listenerMap; //TODO clone this!
+	    if (name == _consts.UNSET) return flow.on.listenerMap; //TODO clone this!
 	    (0, _utils.assert)(typeof name != 'string', _consts.ERRORS.invalidListener);
 	
 	    if (!args.length) {
-	      return listenerMap[name];
+	      return flow.on.listenerMap[name];
 	    }
 	
 	    if (args.length == 1 && args[0] == null) {
-	      delete listenerMap[name];
+	      (0, _utils.dispatchInternalEvent)(flow, 'listenerRemoved', name);
+	      delete flow.on.listenerMap[name];
 	      return flow;
 	    }
-	    listenerMap[name] = args.filter(function (l) {
+	    var oldListeners = flow.on.listenerMap[name];
+	    flow.on.listenerMap[name] = args.filter(function (l) {
 	      return !(0, _utils.assert)(typeof l != 'function', _consts.ERRORS.invalidListenerType, (typeof l === 'undefined' ? 'undefined' : _typeof(l)) + ": " + l);
 	    });
+	    (0, _utils.dispatchInternalEvent)(flow, oldListeners ? 'listenerChanged' : 'listenerAdded', name);
 	    return flow;
 	  };
+	  flow.on.listenerMap = {};
 	
 	  flow.on.notifyListeners = function (event) {
-	    if (listenerMap[event.name()]) {
+	    if (flow.on.listenerMap[event.name()]) {
 	      event.target = flow;
-	      listenerMap[event.name()].every(function (listener) {
+	      flow.on.listenerMap[event.name()].every(function (listener) {
 	        listener.apply(event, event.data.value);
 	        return event.status() == _consts.STATUS.FLOWING;
 	      });
@@ -871,7 +1074,7 @@
 	};
 
 /***/ },
-/* 13 */
+/* 18 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -895,13 +1098,25 @@
 	      listeners: Object.keys(flow.on()),
 	      children: flow.children().map(function (f) {
 	        return { name: f.name(), guid: f.guid() };
+	      }),
+	      recipients: flow.emit.recipients && flow.emit.recipients.map(function (f) {
+	        return {
+	          flow: {
+	            guid: f.flow.guid(),
+	            name: f.flow.name() },
+	          route: f.route.map(function (f) {
+	            return {
+	              guid: f.guid(),
+	              name: f.name() };
+	          })
+	        };
 	      })
 	    };
 	  };
 	};
 
 /***/ },
-/* 14 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -934,6 +1149,28 @@
 	  };
 	  flow.data.value = data;
 	};
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	       value: true
+	});
+	
+	var _consts = __webpack_require__(5);
+	
+	var _logger = __webpack_require__(7);
+	
+	var _logger2 = _interopRequireDefault(_logger);
+	
+	var _utils = __webpack_require__(6);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = function (flow, defaults, name) {};
 
 /***/ }
 /******/ ])));

@@ -191,5 +191,41 @@ describe('Routes', function(){
       expect(cMap.join()).to.eql(['c','a','sut','b','test'].join())
       expect(eMap.join()).to.eql(['e','b','sut','b','test'].join())
     })
+
+    describe('foo', ()=>{
+
+    it('should traverse events', function(){
+      sut.on('test', ()=>{})
+      var a = sut.create('a')
+        .on('test', ()=>{ })
+
+      var test = a
+        .emit('b')
+        .emit('c')
+        .emit('test')
+
+       var route = test.emit.route.DEFAULT(test)
+       var map = route.map(f=>f.flow.name())
+       console.log(map)
+       expect(map.join()).to.eql('test,c,b,a,sut')
+    })
+    it('should record route to upstream recipients', function(){
+      
+      var a = sut.create('a')
+        .on('test', ()=>{})
+
+      var test = a
+        .emit('b')
+        .emit('c')
+        .emit('test')
+      console.log(test.emit.recipients)
+      var recipient = test.emit.recipients[0]
+      var recipientMap = recipient.route.map(f=>f.name())
+      expect(recipient.flow).to.eql(a)
+      expect(recipientMap.join()).to.eql('a,b,c,test')
+    })
+
+    })
+
   })
 })

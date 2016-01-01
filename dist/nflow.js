@@ -937,7 +937,8 @@
 	      route = route.concat(getChildren(f.flow, f.route.reverse()));
 	    } else {
 	      visitedNodesMap[f.flow.guid()] = true;
-	      route.push({ flow: f.flow, route: f.route.reverse() });
+	      var r = [f.flow].concat(f.route.reverse());
+	      route.push({ flow: f.flow, route: r });
 	    }
 	  });
 	  return route;

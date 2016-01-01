@@ -6,6 +6,7 @@ import { DEFAULTS
 
 import {merge, detach, flatten, assert, isDetached, isFlow} from '../utils'
 import logger from '../logger'
+import * as routes from '../routes'
 
 var log = logger.log
 export default (flow)=>{
@@ -27,10 +28,16 @@ export default (flow)=>{
   flow.direction.value = flow.create.defaults.direction
   merge(DIRECTION, flow.direction)
 
-  flow.emit = (name=UNSET, ...args) => {
+  flow.emit = (name=UNSET, ...args)=>{
+    return emit(name, args)
+  }
+  createEmitAPI(flow)
+
+  function emit(name=UNSET, args, direction){
     if (name==UNSET) {
       // emit current flow object
       detach(flow)
+      direction && flow.direction(direction)
       log(flow, 'emit', flow)
       flow.emit.route(flow)
       log(flow, 'emitted', flow)
@@ -39,9 +46,9 @@ export default (flow)=>{
     if (isFlow(name)) {
       //1. reparent the passed in flow object where it's emitted from
       name.parent(flow)
-
       //2.  emit the passed in flow object
-      detach(flow)
+      detach(name)
+      direction && name.direction(direction)
       log(name, 'emit', name)
       flow.emit.route(name)
       log(name, 'emitted', name)
@@ -53,12 +60,13 @@ export default (flow)=>{
     
     var event = flow.create(name, ...args)
     detach(event)
+    direction && event.direction(direction)
     log(event, 'emit', event)
     flow.emit.route(event)
     log(event, 'emitted', event)
     return event
   }
-
+  
   flow.emit.route = (flow)=>{
     // 2. reset status
     flow.emit.recipients = []
@@ -69,57 +77,44 @@ export default (flow)=>{
     // only keep unique recipients
     flow.emit.targets = flow.emit.route[flow.direction()](flow)
       .filter(f=>{
-        if (flow.emit.recipientsMap[f.guid()]) return false
-        return flow.emit.recipientsMap[f.guid()] = true
+        if (flow.emit.recipientsMap[f.flow.guid()]) return false
+        return flow.emit.recipientsMap[f.flow.guid()] = true
       })
 
     while (flow.emit.targets.length){
       var destination = flow.emit.targets.shift()
       if (flow.isCancelled()) break;
       if (flow.propagationStopped()) break;
+      if (destination.flow.isCancelled()) continue;
       notify(flow, destination)
     }
   }
-
-  flow.emit.route.DEFAULT = (flow)=>{
-    return flatten([flow].concat(flow.parents())
-      .map((node)=>{
-        if (isDetached(node)
-          || !node.parent()) return [node]
-          .concat(node.children.all())
-        //TODO check circular deps
-        return [node]
-    }))}
-
-  flow.emit.route.UPSTREAM = (flow)=>{
-    return [flow].concat(flow.parents())
-  }
-
-  flow.emit.route.DOWNSTREAM = (flow)=>{
-    return flatten([flow]
-      .concat(flow.parent())
-      .concat(flow.parent().children.all())
-      .filter(Boolean)
-    )}
-
-  flow.emit.route.NONE = (flow)=>[flow, flow.parent()]
-
+  
+  flow.emit.route.DOWNSTREAM = routes.downstream
+  flow.emit.route.UPSTREAM = routes.upstream
+  flow.emit.route.DEFAULT = routes.default
+  flow.emit.route.NONE = routes.none
+  
   function notify(flow, currentNode){
-    if (currentNode.on.notifyListeners(flow)) {
-      flow.emit.recipientsMap[currentNode.guid()] = flow.direction()
+    if (currentNode.flow.on.notifyListeners(flow)) {
+      flow.emit.recipientsMap[currentNode.flow.guid()] = flow.direction()
       flow.emit.recipients.push(currentNode)
     }
   }
 
-
-  function getNextFlowDestination(currentNode, direction){
-    return {
-      NONE: [currentNode],
-      UPSTREAM: [currentNode.parent()],
-      DEFAULT: [currentNode.parent()],
-      DOWNSTREAM: currentNode.children()
-    }[direction]
+  /** 
+   *  create directional (eg. `flow.emit.dowsntream(...)`) API
+   */
+function createEmitAPI(flow){
+  Object.keys(DIRECTION)
+    .forEach(direction=>{
+      flow.emit[direction] 
+        = flow.emit[direction.toLowerCase()]
+        = (name, ...args)=>{
+        return emit(name,args, direction)
+      }
+    })
   }
 
-
 }
+

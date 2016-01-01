@@ -5,6 +5,7 @@
   "main": "dist/nflow.js",
   "scripts": {
     "start": "webpack-dev-server",
+    "build": "webpack --watch",
     "pretest": "webpack",
     "test": "mocha ./dist/node-test.js --reporter mocha-circleci-reporter",
     "prepublish-to-npm": "webpack",

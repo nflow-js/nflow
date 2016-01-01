@@ -15,7 +15,8 @@ export const STATUS = {
   FLOWING: "FLOWING",
   STOPPED: "STOPPED",
   COMPLETED: "COMPLETED",
-  CANCELLED: "CANCELLED"
+  CANCELLED: "CANCELLED",
+  DISPOSED: "DISPOSED"
 }
 
 export const DEFAULTS = {
@@ -42,6 +43,7 @@ export const ERRORS = {
 , invalidParent:'Invalid flow parent object. Expected a flow instance, got: %s'
 , invalidParents:'Invalid Argument. Please use the child.parent(parent) API to re-parent flow objects.'
 , invalidStatus:'Invalid Argument. The .status() API is read only'
+, invalidDisposeArgs:'Invalid Argument. The .dispose() API requires no parameters'
 , invalidCancelArgs:'Invalid Argument. The .cancel() API requires no parameters'
 , invalidStopPropagationArgs:'Invalid Argument. The .stopPropagation() API requires no parameters'
 , invalidRoot:'Invalid Argument. The .parents.root() API is read only'

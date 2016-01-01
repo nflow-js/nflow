@@ -20,9 +20,10 @@ function log(flow, name, newData, oldData){
 function debug(flow, name, d, d0){
   sendToDevTools(name, 
     {
-      name: d.name.value, 
-      id: d.guid.value,
-      parentId: flow.guid.value
+      flow: flow.toObj(),
+      name: name,
+      d: d && (d.toObj? d.toObj():d),
+      d0: d0 && (d0.toObj? d0.toObj():d0)
     })
 }
 
@@ -38,14 +39,11 @@ function sendToDevTools(action, payload){
 
 function init(flow){
 
-  flow.enableDevTools = (enabled=UNSET)=>{
-    if (enabled===UNSET) return devToolsEnabled
+  flow.enableDevTools = (enabled=true)=>{
     devToolsEnabled = enabled
+    
     if (enabled) {
-      sendToDevTools('start', {
-        name: flow.name.value, 
-        id: flow.guid.value
-      })
+      debug(flow, 'start', flow, flow)
     }
     return flow
   }

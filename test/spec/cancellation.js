@@ -89,7 +89,26 @@ describe('Cancellation', function(){
       
       setTimeout(done, 10)
     })
-    
+    it('should not deliver events into a cancelled subtree', function(done){
+      function shouldCall(){
+        done()
+      }
+      function shouldNotCall(){
+        done('stopped event should not call listener')
+      }
+      var a = sut.create('a')
+        .on('test',shouldNotCall)
+      var b = a.create('b')
+        .on('test',shouldNotCall)
+      
+      var c = sut.create('c')
+      c.create('d')
+        .on('test',shouldCall)
+
+      a.cancel()
+      c.emit('test')
+      
+    })
   })
 
   describe('Flow stopPropagation()', function(){
@@ -147,6 +166,8 @@ describe('Cancellation', function(){
       
     })
     
+    
+
   })
 
   

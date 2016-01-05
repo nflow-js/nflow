@@ -13,7 +13,8 @@ function log(flow, name, newData, oldData){
   !isInternal(flow)
     && loggers.forEach(f=>f(flow, name, newData, oldData))
   
-  devToolsEnabled
+  !isInternal(flow)
+    && devToolsEnabled
     && debug(flow, name, newData, oldData)
 }
 

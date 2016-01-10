@@ -52,8 +52,9 @@ export default (flow)=>{
   /**
    *  .parent() API
    */
-  flow.parent = (parent=UNSET) => {
-    if (parent===UNSET) return flow.parent.value;
+  flow.parent = (...parentArgs) => {
+    if (!parentArgs.length) return flow.parent.value;
+    var parent = parentArgs[0]
     parent && assert(!isFlow(parent), ERRORS.invalidParent, parent)
     var previousParent = flow.parent() 
     detach(flow)
@@ -77,12 +78,18 @@ export default (flow)=>{
   }
 
   flow.parents.find = (matcher)=>{
+    if (matcher==null) return null
+    var filter = matcher
+    if (typeof(matcher)=="string") filter = f=>f.name()==matcher
+    else if (isFlow(matcher)) filter = f=>f==matcher
+
     return flow.parents()
-      .filter(typeof(matcher)=="string"
-          ? (f=>f.name()==matcher)
-          : matcher)
+      .filter(filter)
       .pop()
   }
+  flow.parents.has = (matcher)=>(
+    !!flow.parents.find(matcher)
+  )
 
   flow.parents.root = (...args)=>{
     assert(args.length, ERRORS.invalidRoot)

@@ -46,21 +46,25 @@
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
 	var _nflow = __webpack_require__(1);
 	
 	var _nflow2 = _interopRequireDefault(_nflow);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	global.nflow = _nflow2.default;
-	module.exports = _nflow2.default;
+	if (global) global.nFlow = _nflow2.default;
+	exports.default = _nflow2.default;
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -80,9 +84,7 @@
 	
 	var root = (0, _factory2.default)(_consts.DEFAULTS, "flow");
 	_logger2.default.init(root);
-	global.nflow = root;
 	exports.default = root;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 2 */
@@ -106,7 +108,6 @@
 	  defaults.behaviours.forEach(function (d) {
 	    behaviours[d](flow, defaults, name, data);
 	  });
-	
 	  return flow;
 	};
 
@@ -408,7 +409,7 @@
 	    return f(flow, name, newData, oldData);
 	  });
 	
-	  devToolsEnabled && debug(flow, name, newData, oldData);
+	  !(0, _utils.isInternal)(flow) && devToolsEnabled && debug(flow, name, newData, oldData);
 	}
 	
 	function debug(flow, name, d, d0) {
@@ -527,9 +528,8 @@
 	   *  .parent() API
 	   */
 	  flow.parent = function () {
-	    var parent = arguments.length <= 0 || arguments[0] === undefined ? _consts.UNSET : arguments[0];
-	
-	    if (parent === _consts.UNSET) return flow.parent.value;
+	    if (!arguments.length) return flow.parent.value;
+	    var parent = arguments.length <= 0 || arguments[0] === undefined ? undefined : arguments[0];
 	    parent && (0, _utils.assert)(!(0, _utils.isFlow)(parent), _consts.ERRORS.invalidParent, parent);
 	    var previousParent = flow.parent();
 	    (0, _utils.detach)(flow);
@@ -553,9 +553,18 @@
 	  };
 	
 	  flow.parents.find = function (matcher) {
-	    return flow.parents().filter(typeof matcher == "string" ? function (f) {
+	    if (matcher == null) return null;
+	    var filter = matcher;
+	    if (typeof matcher == "string") filter = function (f) {
 	      return f.name() == matcher;
-	    } : matcher).pop();
+	    };else if ((0, _utils.isFlow)(matcher)) filter = function (f) {
+	      return f == matcher;
+	    };
+	
+	    return flow.parents().filter(filter).pop();
+	  };
+	  flow.parents.has = function (matcher) {
+	    return !!flow.parents.find(matcher);
 	  };
 	
 	  flow.parents.root = function () {
@@ -1008,6 +1017,7 @@
 	    }).forEach(function (f) {
 	      return f(flow);
 	    });
+	    return flow;
 	  };
 	};
 

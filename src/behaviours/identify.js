@@ -34,6 +34,7 @@ export default (flow, defaults, name)=>{
     functions
       .filter(f=>typeof(f)=='function')
       .forEach(f=>f(flow))
+    return flow
   }
 
 }

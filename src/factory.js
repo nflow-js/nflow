@@ -1,6 +1,4 @@
 import * as behaviours from './behaviours'
-
-
 export default (defaults, name, data)=>{
   var flow = defaults.factory()
 
@@ -9,6 +7,5 @@ export default (defaults, name, data)=>{
     .forEach((d)=>{
       behaviours[d](flow, defaults, name, data)
   })
-
   return flow
 }

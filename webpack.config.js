@@ -7,7 +7,7 @@ module.exports = {
   entry: {
     'node-test': './test/node-test.js',
     'web-test':  './test/web-test.js',
-    'nflow':     './src/'
+    'nflow':     './src/index'
   },
   output: {
     filename: '[name].js',

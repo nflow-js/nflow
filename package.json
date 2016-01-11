@@ -1,6 +1,6 @@
 {
   "name": "nflow",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "event/data/control flow",
   "main": "dist/nflow.js",
   "scripts": {

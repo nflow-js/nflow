@@ -1,3 +1,3 @@
 import nFlow from './nflow'
 if (global) global.nFlow = nFlow
-module.exports = flow
+module.exports = nFlow

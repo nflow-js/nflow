@@ -6,20 +6,18 @@ import { DEFAULTS
        , UNSET } from './consts'
 import factory from './factory'
 
-var devToolsEnabled = false
 var loggers = []
 
 function log(flow, name, newData, oldData){
-  !isInternal(flow)
-    && loggers.forEach(f=>f(flow, name, newData, oldData))
-  
-  !isInternal(flow)
-    && devToolsEnabled
-    && debug(flow, name, newData, oldData)
+  if (!isInternal(flow)){
+    loggers.forEach(f=>f(flow, name, newData, oldData))
+    debug(flow, name, newData, oldData)
+  }
 }
 
 function debug(flow, name, d, d0){
-  sendToDevTools(name, 
+  global.__nflow_devtools_hook__ &&
+  global.__nflow_devtools_hook__(
     {
       flow: flow.toObj(),
       name: name,
@@ -28,24 +26,12 @@ function debug(flow, name, d, d0){
     })
 }
 
-function sendToDevTools(action, payload){
-  var eventDetail = {
-    action: action, 
-    payload:payload
-  };
-  var flowEvent = new document.defaultView.CustomEvent("FlowEvent", {detail: eventDetail});
-  document.dispatchEvent(flowEvent);
-}
-
-
 function init(flow){
-
+  
   flow.enableDevTools = (enabled=true)=>{
-    devToolsEnabled = enabled
+    debug(flow, 'start', flow, flow)
     
-    if (enabled) {
-      debug(flow, 'start', flow, flow)
-    }
+    console.warn('flow.enableDevtools() is now deprecated. nflow-devtools will automatically start logging when Chrome devtools is open')
     return flow
   }
   
@@ -62,5 +48,4 @@ function init(flow){
 export default { 
   init
 , log
-, sendToDevTools
   }

@@ -39,7 +39,8 @@
     "webpack": "^1.12.8",
     "webpack-dev-server": "^1.12.1",
     "publish": "0.5.0",
-    "mocha-circleci-reporter": "^0.0.1"
+    "mocha-circleci-reporter": "^0.0.1",
+    "chai": "^3.5.0"
   },
   "directories": {
     "test": "test"

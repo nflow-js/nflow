@@ -1,4 +1,11 @@
-export { default as upstream } from './upstream'
-export { default as none } from './none'
-export { default as downstream } from './downstream'
-export { default as default } from './default'
+import upstream from  './upstream'
+import none from  './none'
+import downstream from  './downstream'
+import defaultDirection from  './default'
+
+export default {
+  upstream,
+  downstream,
+  none,
+  "default": defaultDirection // IE8 compatibility fix
+}

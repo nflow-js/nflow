@@ -1,9 +1,21 @@
-export {default as cancellable } from './cancellable'
-export {default as connect } from './connect'
-export {default as create } from './create'
-export {default as emit } from './emit'
-export {default as identify } from './identify'
-export {default as listen } from './listen'
-export {default as loggable } from './loggable'
-export {default as stateful } from './stateful'
-export {default as get } from './get'
+import cancellable from './cancellable'
+import connect from './connect'
+import create from './create'
+import emit from './emit'
+import identify from './identify'
+import listen from './listen'
+import loggable from './loggable'
+import stateful from './stateful'
+import get from './get'
+
+export default {
+  cancellable,
+  connect,
+  create,
+  emit,
+  identify,
+  listen,
+  loggable,
+  stateful,
+  get
+}

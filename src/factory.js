@@ -1,4 +1,4 @@
-import * as behaviours from './behaviours'
+import behaviours from './behaviours'
 export default (defaults, name, data)=>{
   var flow = defaults.factory()
 

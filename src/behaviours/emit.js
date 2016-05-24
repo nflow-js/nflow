@@ -6,7 +6,7 @@ import { DEFAULTS
 
 import {merge, detach, flatten, assert, isDetached, isFlow} from '../utils'
 import logger from '../logger'
-import * as routes from '../routes'
+import routes from '../routes'
 
 var log = logger.log
 export default (flow)=>{

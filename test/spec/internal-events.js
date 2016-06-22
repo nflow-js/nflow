@@ -11,9 +11,10 @@ describe('Internal Events', function(){
 
   })
   describe('parent() API', function(){
-    it('should dispatch flow.childRemoved internal event', function(done){
+    it('should dispatch flow.parent internal event', function(done){
       var payload = {}
-      var listener = function(oldParent){
+      var listener = function(newParent,oldParent){
+        expect(newParent).to.equal(null)
         expect(oldParent).to.equal(sut)
         done()
       }
@@ -22,11 +23,11 @@ describe('Internal Events', function(){
 
       sut
         .create('test')
-        .on('flow.childRemoved', listener)
-        .parent(sut1)
+        .on('flow.parent', listener)
+        .parent(null)
     })
 
-    it('should dispatch flow.childAdded internal event on reparenting', function(done){
+    it('should dispatch flow.parent internal event on reparenting', function(done){
       var payload = {}
       var listener = function(newParent, oldParent){
         expect(newParent).to.equal(sut1)
@@ -38,13 +39,14 @@ describe('Internal Events', function(){
 
       sut
         .create('test')
-        .on('flow.childAdded', listener)
+        .on('flow.parent', listener)
         .parent(sut1)
     })
 
-    it('should dispatch flow.children.childRemoved internal event', function(done){
+    it('should dispatch flow.children.parent internal event', function(done){
       var payload = {}
-      var listener = function(f, oldParent){
+      var listener = function(f, newParent, oldParent){
+        expect(newParent).to.equal(sut1)
         expect(oldParent).to.equal(sut)
         done()
       }
@@ -52,12 +54,12 @@ describe('Internal Events', function(){
       var sut1 = sut.create('newParent')
 
       sut
-        .on('flow.children.childRemoved', listener)
+        .on('flow.children.parent', listener)
         .create('test')
         .parent(sut1)
     })
     
-    it('should dispatch flow.children.childAdded internal event', function(done){
+    it('should dispatch flow.children.parent internal event', function(done){
       var payload = {}
       var listener = function(f, newParent, oldParent){
         expect(f.name()).to.equal("test")
@@ -69,7 +71,7 @@ describe('Internal Events', function(){
       var sut1 = sut.create('newParent')
 
       sut
-        .on('flow.children.childAdded', listener)
+        .on('flow.children.parent', listener)
         .create('test0')
         .create('test1')
         .create('test2')

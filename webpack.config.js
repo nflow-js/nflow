@@ -1,4 +1,5 @@
-
+var package = require('./package.json')
+var webpack = require('webpack')
 var path = require('path');
 var hostname = 'localhost'
 var port = '5000'
@@ -29,6 +30,11 @@ module.exports = {
         , query: { presets: ['es2015', 'stage-0'] }},
     ]
   },
+  plugins:[
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(package.version)
+    })
+  ],
   stats: {
     colors: true,
     reasons: true

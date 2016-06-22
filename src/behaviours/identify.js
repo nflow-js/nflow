@@ -33,7 +33,7 @@ export default (flow, defaults, name)=>{
   flow.call = (...functions)=>{
     functions
       .filter(f=>typeof(f)=='function')
-      .forEach(f=>f(flow))
+      .forEach(f=>f.call(flow,flow))
     return flow
   }
 

@@ -1,25 +1,49 @@
+import {serialise} from '../utils'
 export default (flow)=>{
   flow.toString = () => {
     return JSON.stringify(flow.toObj())
   }
 
-  flow.toObj = () => ({
-    name: flow.name(),
-    guid: flow.guid(),
-    parent:{
-      name: flow.parent() && flow.parent().name(),
-      guid: flow.parent() && flow.parent().guid()
-    },
-    status: flow.status(),
-    listeners: Object.keys(flow.on()),
-    children: flow.children().map(f=>({ name: f.name(), guid: f.guid() })),
-    recipients: flow.emit.recipients && flow.emit.recipients.map(f=>({
-      flow: {
-        guid: f.flow.guid(),
-        name: f.flow.name() },
-      route: f.route.map(f=>({
-        guid: f.guid(),
-        name: f.name() }))
+  flow.toObj = (...args) => {
+    const props = args.reduce((a,b)=>(a[b]=1,a),{})
+    const hasProp = prop=>!args.length || props[prop]
+    const add = (name, valueF)=>{if(hasProp(name)) obj[name]=valueF() }
+    let obj = {}
+
+    add('name',   flow.name)
+    add('guid',   flow.guid)
+    add('version',()=>flow.version)
+    add('status', flow.status)
+    add('data',   ()=>serialise(flow.data()))
+    add('parent', ()=>({
+      name: flow.parent.value && flow.parent.value.name.value,
+      guid: flow.parent.value && flow.parent.value.guid.value
     }))
-  })
+    add('listeners', ()=>{
+      const l = flow.on()
+      let o = {}
+      Object.keys(l)
+        .forEach(key=>o[key]=l[key]
+          .map(f=>f.name||'function'))
+      return o;
+    })
+    add('children', ()=>flow.children()
+      .map(f=>f.toObj('name','guid')))
+
+    add('recipients', ()=>{
+      return flow.emit.recipients 
+      && flow.emit.recipients.map(f=>({
+        flow: f.flow.toObj('name','guid'),
+        route: f.route.map(f=>({
+          flow: f.flow.toObj('name','guid'),
+          direction: f.direction
+        })),
+        listeners: f.listeners.map(l=>({
+          name: serialise(l.listener),
+          status:l.status
+        }))
+      }))
+    })
+    return obj;
+  }
 }

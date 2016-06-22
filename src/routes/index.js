@@ -1,4 +1,5 @@
 export { default as upstream } from './upstream'
-export { default as none } from './none'
+export { default as current } from './current'
+export { default as none } from './current'
 export { default as downstream } from './downstream'
 export { default as default } from './default'

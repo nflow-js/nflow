@@ -11,11 +11,11 @@ import { DEFAULTS
 export default (flow, defaults)=>{
 
   flow.create = (name, ...data) => {
-    
     var instance = factory(flow.create.defaults, name, data)
     instance.parent.value = flow
     flow.children.value.push(instance)
     dispatchInternalEvent(flow, 'create', instance)
+
     return instance
   }
 
@@ -23,23 +23,23 @@ export default (flow, defaults)=>{
     factory: defaults.factory,
     behaviours: defaults.behaviours.concat(),
     direction: defaults.direction
-
   }
 
   flow.dispose = (...args) => {
     assert(args.length
          , ERRORS.invalidDisposeArgs)
-    if (flow.status.value == STATUS.DISPOSED) return;
+    if (flow.dispose.value == true) return;
     
     dispatchInternalEvent(flow, 'dispose', true)
     flow.parent(null)
-    flow.status.value = STATUS.DISPOSED
+    flow.dispose.value = true
     flow.on.listenerMap = {}
     
     //recursively dispose all downstream nodes
     flow.children().forEach(f=>f.dispose())
     return flow
   }
+  flow.dispose.value = false
 
 
 }

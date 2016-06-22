@@ -6,7 +6,7 @@ import { DEFAULTS
 import factory from '../factory'
 import {merge, detach, flatten, assert, isDetached, isFlow, dispatchInternalEvent} from '../utils'
 import logger from '../logger'
-import * as routes from '../routes'
+import routes from '../routes'
 
 var log = logger.log
 export default (flow)=>{

@@ -1,5 +1,12 @@
-export { default as upstream } from './upstream'
-export { default as current } from './current'
-export { default as none } from './current'
-export { default as downstream } from './downstream'
-export { default as default } from './default'
+import upstream from  './upstream'
+import current from  './current'
+import downstream from  './downstream'
+import _default from  './default'
+
+export default {
+  upstream,
+  downstream,
+  none:current, // deprecated
+  current,
+  "default": _default // IE8 compatibility fix
+}

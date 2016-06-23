@@ -4,10 +4,19 @@
 
 export const UNSET = {}
 export const DIRECTION = {
-  NONE: "NONE",
+  CURRENT: "CURRENT",
+  NONE: "CURRENT", // deprecated
   DEFAULT: "DEFAULT",
   UPSTREAM: "UPSTREAM",
   DOWNSTREAM: "DOWNSTREAM"
+}
+
+export const DIRECTION_BITMASK = {
+  CURRENT:    1<<0,
+  NONE:       1<<0, // deprecated
+  DEFAULT:    1<<1,
+  UPSTREAM:   1<<2,
+  DOWNSTREAM: 1<<3
 }
 
 export const STATUS = {
@@ -29,7 +38,8 @@ export const DEFAULTS = {
     'emit',
     'listen',
     'cancellable',
-    'loggable'
+    'loggable',
+    'stats'
   ],
   direction: DIRECTION.DEFAULT
 }
@@ -45,6 +55,6 @@ export const ERRORS = {
 , invalidStatus:'Invalid Argument. The .status() API is read only'
 , invalidDisposeArgs:'Invalid Argument. The .dispose() API requires no parameters'
 , invalidCancelArgs:'Invalid Argument. The .cancel() API requires no parameters'
-, invalidStopPropagationArgs:'Invalid Argument. The .stopPropagation() API requires no parameters'
+, invalidStopPropagationArgs:'Invalid Argument. The .stopPropagation(direction) API requires either no parameters or a valid flow direction(eg. flow.direction.UPSTREAM)'
 , invalidRoot:'Invalid Argument. The .parents.root() API is read only'
 }

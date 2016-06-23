@@ -1,4 +1,4 @@
-import {isInternal} from './utils'
+import {isInternal, serialise} from './utils'
 import { DEFAULTS
        , ERRORS
        , STATUS
@@ -6,61 +6,61 @@ import { DEFAULTS
        , UNSET } from './consts'
 import factory from './factory'
 
-var devToolsEnabled = false
 var loggers = []
 
 function log(flow, name, newData, oldData){
-  !isInternal(flow)
-    && loggers.forEach(f=>f(flow, name, newData, oldData))
-  
-  !isInternal(flow)
-    && devToolsEnabled
-    && debug(flow, name, newData, oldData)
-}
-
-function debug(flow, name, d, d0){
-  sendToDevTools(name, 
-    {
-      flow: flow.toObj(),
-      name: name,
-      d: d && (d.toObj? d.toObj():d),
-      d0: d0 && (d0.toObj? d0.toObj():d0)
+  if (!isInternal(flow)){
+    loggers.forEach(f=>{
+      f.isRemote
+        ? f.logger(remoteLog(flow, name, newData, oldData))
+        : f.logger(flow, name, newData, oldData)
     })
+    debug(flow, name, newData, oldData)
+  }
 }
 
-function sendToDevTools(action, payload){
-  var eventDetail = {
-    action: action, 
-    payload:payload
-  };
-  var flowEvent = new document.defaultView.CustomEvent("FlowEvent", {detail: eventDetail});
-  document.dispatchEvent(flowEvent);
+function debug(flow, name, newData, oldData){
+  global.__nflow_devtools_hook__ &&
+  global.__nflow_devtools_hook__(
+    remoteLog(flow, name, newData, oldData))
 }
 
+/**
+ *  Converts a local log message(direct references) to a remote one(unmarshallable)
+ */
+function remoteLog(flow, name, d, d0){
+  let o = {
+      flow: flow.toObj('name','guid'),
+      action: name
+    }
+  let props = ['name', 'guid']
+  if (name=='start') props.push('version', 'status')
+  if (name=='create') props.push('status')
+  if (name=='create' && d.data()!==undefined) props.push('data')
+  if (name=='emitted' ) props.push('recipients')
+  let newData = (d && d.toObj? d.toObj(...props):serialise(d))
+  let oldData = (d0 && d0.toObj? d0.toObj(...props):serialise(d0))
+  if (newData!==undefined) o.d=newData
+  if (oldData!==undefined) o.d0=oldData
+  return o
+}
 
 function init(flow){
-
   flow.enableDevTools = (enabled=true)=>{
-    devToolsEnabled = enabled
-    
-    if (enabled) {
-      debug(flow, 'start', flow, flow)
-    }
+    console.warn('flow.enableDevtools() is now deprecated. nflow-devtools will automatically start logging when Chrome devtools is open')
     return flow
   }
   
-
-  flow.logger = (logger=UNSET) => {
+  flow.logger = (logger=UNSET, isRemote=false) => {
     if (logger===UNSET) return loggers
-    loggers.push(logger)
+    else loggers.push({logger,isRemote})
     return flow
   }
-
+  flow.logger.reset = ()=>loggers=[];
+  debug(flow, 'start', flow)
 }
-
 
 export default { 
   init
 , log
-, sendToDevTools
   }

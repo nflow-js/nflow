@@ -1,3 +1,4 @@
+
 import cancellable from './cancellable'
 import connect from './connect'
 import create from './create'
@@ -7,6 +8,7 @@ import listen from './listen'
 import loggable from './loggable'
 import stateful from './stateful'
 import get from './get'
+import stats from './stats'
 
 export default {
   cancellable,
@@ -17,5 +19,7 @@ export default {
   listen,
   loggable,
   stateful,
-  get
+  get,
+  stats
 }
+

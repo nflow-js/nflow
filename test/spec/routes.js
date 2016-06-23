@@ -1,6 +1,8 @@
 import flow from 'nflow'
 import assert from 'assert'
 import {expect} from 'chai'
+
+let noop = ()=>{}
 var sut
 
 describe('Routes', function(){
@@ -40,7 +42,7 @@ describe('Routes', function(){
     })
 
     it('should record route to recipients', function(){
-      sut.on('test', ()=>{})
+      sut.on('test', noop)
       var a = sut.create('a')
       var b = sut.create('b')
       var c = a.create('c')
@@ -49,13 +51,27 @@ describe('Routes', function(){
       var d = b.emit.upstream('test')
       
       var recipient = d.emit.recipients[0]
-      var recipientMap = recipient.route.map(f=>f.name())
+      var recipientMap = recipient.route.map(f=>f.flow.name())
       expect(recipient.flow).to.eql(sut)  
-      expect(recipientMap.join()).to.eql(['sut','b','test'].join())
+      expect(recipientMap.join()).to.eql('test,b,sut')
     })
+    
+    it('should not deliver to unreachable recipients', function(){
+        sut
+        var a = sut.create('a')
+        var b = sut.create('b')
+        var c = a.create('c').on('test', noop)
+        var e = b.create('e').on('test', noop)
+
+        var d = b.emit.upstream('test')
+        
+        var recipients = d.emit.recipients
+        expect(recipients.length).to.equal(0)
+      })
   })
 
-  describe('route.none() API', function(){
+
+  describe('route.current() API', function(){
     it('should return event and current node', function(){
       var f = sut
         .create('a')
@@ -63,7 +79,7 @@ describe('Routes', function(){
         .create('c')
         .emit('d')
       
-      var route = f.emit.route.NONE(f)
+      var route = f.emit.route.CURRENT(f)
       var map = route.map(f=>f.flow.name())
       expect(map).to.eql(['d','c'])  
     })
@@ -79,23 +95,22 @@ describe('Routes', function(){
         
       f.create('z')
       
-      var route = f.emit.route.NONE(f)
+      var route = f.emit.route.CURRENT(f)
       var map = route.map(f=>f.flow.name())
       expect(map).to.eql(['d','c'])  
     })
 
     it('should record route to recipients', function(){
-      sut.on('test', ()=>{})
+      sut.on('test', noop)
       var a = sut.create('a')
-        .on('test', ()=>{})
-      var d = a.emit.none('test')
+        .on('test', noop)
+      var d = a.emit.current('test')
       
       var recipient = d.emit.recipients[0]
-      var recipientMap = recipient.route.map(f=>f.name())
+      var recipientMap = recipient.route.map(f=>f.flow.name())
       expect(recipient.flow).to.eql(a)  
-      expect(recipientMap.join()).to.eql(['a', 'test'].join())
+      expect(recipientMap.join()).to.eql('test,a')
     })
-    
   })
 
   describe('route.downstream() API', function(){
@@ -136,19 +151,19 @@ describe('Routes', function(){
       var a = sut.create('a')
       var b = sut.create('b')
       var c = a.create('c')
-        .on('test', ()=>{})
+        .on('test', noop)
       var e = b.create('e')
-        .on('test', ()=>{})
+        .on('test', noop)
       var d = sut.emit.downstream('test')
       
       var cTest = d.emit.recipients[0]
       var eTest = d.emit.recipients[1]
-      var cMap = cTest.route.map(f=>f.name())
-      var eMap = eTest.route.map(f=>f.name())
+      var cMap = cTest.route.map(f=>f.flow.name())
+      var eMap = eTest.route.map(f=>f.flow.name())
       expect(cTest.flow).to.eql(c)  
       expect(eTest.flow).to.eql(e)
-      expect(cMap.join()).to.eql(['c','a','sut','test'].join())
-      expect(eMap.join()).to.eql(['e','b','sut','test'].join())
+      expect(cMap.join()).to.eql('test,sut,a,c')
+      expect(eMap.join()).to.eql('test,sut,b,e')
     })
   })
 
@@ -173,59 +188,56 @@ describe('Routes', function(){
       var map = route.map(f=>f.flow.name())
       expect(map).to.eql(['a', 'sut'])  
     })
+    it('should record upstream route to recipients', function(){
+      var a = sut.create('a')
+      var b = a.create('b').on('test', noop)
+      var c = b.create('c')
+      var d = c.create('d')
+      
+      var test = d.emit('test')
+      
+      var testRecipients = test.emit.recipients[0]
+      var map = testRecipients.route.map(f=>f.flow.name())
+      expect(testRecipients.flow).to.eql(b)
+      expect(map.join()).to.eql('test,d,c,b')
+      
+    })
+    
     it('should record route to recipients', function(){
       var a = sut.create('a')
-      var b = sut.create('b')
-      var c = a.create('c')
-        .on('test', ()=>{})
-      var e = b.create('e')
-        .on('test', ()=>{})
-      var d = b.emit('test')
+      var b = a.create('b')
+      var c0 = b.create('c0').on('test', noop)
+      var c = b.create('c')
+      var d = c.create('d')
       
-      var cTest = d.emit.recipients[0]
-      var eTest = d.emit.recipients[1]
-      var cMap = cTest.route.map(f=>f.name())
-      var eMap = eTest.route.map(f=>f.name())
-      expect(cTest.flow).to.eql(c)  
-      expect(eTest.flow).to.eql(e)
-      expect(cMap.join()).to.eql(['c','a','sut','b','test'].join())
-      expect(eMap.join()).to.eql(['e','b','sut','b','test'].join())
-    })
-
-    describe('foo', ()=>{
-
-    it('should traverse events', function(){
-      sut.on('test', ()=>{})
-      var a = sut.create('a')
-        .on('test', ()=>{ })
-
-      var test = a
-        .emit('b')
-        .emit('c')
-        .emit('test')
-
-       var route = test.emit.route.DEFAULT(test)
-       var map = route.map(f=>f.flow.name())
-       console.log(map)
-       expect(map.join()).to.eql('test,c,b,a,sut')
-    })
-    it('should record route to upstream recipients', function(){
+      var test = d.emit('test')
       
-      var a = sut.create('a')
-        .on('test', ()=>{})
-
-      var test = a
-        .emit('b')
-        .emit('c')
-        .emit('test')
-      console.log(test.emit.recipients)
-      var recipient = test.emit.recipients[0]
-      var recipientMap = recipient.route.map(f=>f.name())
-      expect(recipient.flow).to.eql(a)
-      expect(recipientMap.join()).to.eql('a,b,c,test')
+      var testRecipients = test.emit.recipients[0]
+      var map = testRecipients.route.map(f=>f.flow.name())
+      expect(testRecipients.flow).to.eql(c0)
+      expect(map.join()).to.eql('test,d,c,b,a,sut,a,b,c0')
     })
 
+    it('should record route to detached recipients', function(){
+      var a = sut.create('a').on('test', noop)
+      var b = a.create('b').emit()
+      var c0 = b.create('c0').on('test', noop)
+      var c = b.create('c')
+      var d = c.create('d')
+      
+      var test = d.emit('test')
+      
+      var testRecipients0 = test.emit.recipients[0]
+      var testRecipients1 = test.emit.recipients[1]
+      var map0 = testRecipients0.route.map(f=>f.flow.name())
+      var map1 = testRecipients1.route.map(f=>f.flow.name())
+      expect(testRecipients0.flow.name()).to.eql('c0')
+      expect(testRecipients1.flow.name()).to.eql('a')
+      expect(map0.join()).to.eql('test,d,c,b,c0')
+      expect(map1.join()).to.eql('test,d,c,b,a')
     })
+
+    
 
   })
 })

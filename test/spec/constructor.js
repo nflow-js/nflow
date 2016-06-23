@@ -26,11 +26,21 @@ describe('Construction', function(){
     })
   })
 
+  describe('guid API', function(){
+    it('should have globally unique ID-s', function(){
+      var sut1 = testFlow.create('test')   
+      var sut2 = testFlow.create('test')
+      console.log(sut1.guid())
+      console.log(sut2.guid())
+      expect(sut1.guid()).to.not.equal(sut2.guid())
+    })
+  })
+
   describe('.create() API', function(){
-    it('should reuse existing flow objects', function(){
+    it('should create new flow objects', function(){
       var sut1 = testFlow.create('test')
       var sut2 = testFlow.create('test')
-      expect(sut1).to.equal(sut2)
+      expect(sut1).to.not.equal(sut2)
     })
 
     it('should NOT reuse existing flow objects for unnamed flow objects', function(){

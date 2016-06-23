@@ -1,3 +1,4 @@
+import './spec/propagation.js'
 import './spec/cancellation.js'
 import './spec/connection.js'
 import './spec/constructor.js'

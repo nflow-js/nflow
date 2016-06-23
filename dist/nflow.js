@@ -46,18 +46,14 @@
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
 	var _nflow = __webpack_require__(1);
 	
 	var _nflow2 = _interopRequireDefault(_nflow);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	if (global) global.nFlow = _nflow2.default;
-	exports.default = _nflow2.default;
+	if (global) global.nflow = _nflow2.default;
+	module.exports = _nflow2.default;
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
@@ -126,7 +122,7 @@
 	Object.defineProperty(exports, 'cancellable', {
 	  enumerable: true,
 	  get: function get() {
-	    return _cancellable.default;
+	    return _interopRequireDefault(_cancellable).default;
 	  }
 	});
 	
@@ -135,7 +131,7 @@
 	Object.defineProperty(exports, 'connect', {
 	  enumerable: true,
 	  get: function get() {
-	    return _connect.default;
+	    return _interopRequireDefault(_connect).default;
 	  }
 	});
 	
@@ -144,7 +140,7 @@
 	Object.defineProperty(exports, 'create', {
 	  enumerable: true,
 	  get: function get() {
-	    return _create.default;
+	    return _interopRequireDefault(_create).default;
 	  }
 	});
 	
@@ -153,7 +149,7 @@
 	Object.defineProperty(exports, 'emit', {
 	  enumerable: true,
 	  get: function get() {
-	    return _emit.default;
+	    return _interopRequireDefault(_emit).default;
 	  }
 	});
 	
@@ -162,7 +158,7 @@
 	Object.defineProperty(exports, 'identify', {
 	  enumerable: true,
 	  get: function get() {
-	    return _identify.default;
+	    return _interopRequireDefault(_identify).default;
 	  }
 	});
 	
@@ -171,7 +167,7 @@
 	Object.defineProperty(exports, 'listen', {
 	  enumerable: true,
 	  get: function get() {
-	    return _listen.default;
+	    return _interopRequireDefault(_listen).default;
 	  }
 	});
 	
@@ -180,7 +176,7 @@
 	Object.defineProperty(exports, 'loggable', {
 	  enumerable: true,
 	  get: function get() {
-	    return _loggable.default;
+	    return _interopRequireDefault(_loggable).default;
 	  }
 	});
 	
@@ -189,7 +185,7 @@
 	Object.defineProperty(exports, 'stateful', {
 	  enumerable: true,
 	  get: function get() {
-	    return _stateful.default;
+	    return _interopRequireDefault(_stateful).default;
 	  }
 	});
 	
@@ -198,9 +194,11 @@
 	Object.defineProperty(exports, 'get', {
 	  enumerable: true,
 	  get: function get() {
-	    return _get.default;
+	    return _interopRequireDefault(_get).default;
 	  }
 	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
 /* 4 */
@@ -385,7 +383,7 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -401,19 +399,19 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var devToolsEnabled = false;
 	var loggers = [];
 	
 	function log(flow, name, newData, oldData) {
-	  !(0, _utils.isInternal)(flow) && loggers.forEach(function (f) {
-	    return f(flow, name, newData, oldData);
-	  });
-	
-	  !(0, _utils.isInternal)(flow) && devToolsEnabled && debug(flow, name, newData, oldData);
+	  if (!(0, _utils.isInternal)(flow)) {
+	    loggers.forEach(function (f) {
+	      return f(flow, name, newData, oldData);
+	    });
+	    debug(flow, name, newData, oldData);
+	  }
 	}
 	
 	function debug(flow, name, d, d0) {
-	  sendToDevTools(name, {
+	  global.__nflow_devtools_hook__ && global.__nflow_devtools_hook__({
 	    flow: flow.toObj(),
 	    name: name,
 	    d: d && (d.toObj ? d.toObj() : d),
@@ -421,25 +419,14 @@
 	  });
 	}
 	
-	function sendToDevTools(action, payload) {
-	  var eventDetail = {
-	    action: action,
-	    payload: payload
-	  };
-	  var flowEvent = new document.defaultView.CustomEvent("FlowEvent", { detail: eventDetail });
-	  document.dispatchEvent(flowEvent);
-	}
-	
 	function init(flow) {
 	
 	  flow.enableDevTools = function () {
 	    var enabled = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 	
-	    devToolsEnabled = enabled;
+	    debug(flow, 'start', flow, flow);
 	
-	    if (enabled) {
-	      debug(flow, 'start', flow, flow);
-	    }
+	    console.warn('flow.enableDevtools() is now deprecated. nflow-devtools will automatically start logging when Chrome devtools is open');
 	    return flow;
 	  };
 	
@@ -454,9 +441,9 @@
 	
 	exports.default = {
 	  init: init,
-	  log: log,
-	  sendToDevTools: sendToDevTools
+	  log: log
 	};
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 8 */
@@ -493,9 +480,9 @@
 	
 	    var filter = matcher;
 	    if (matcher == null) return [];
-	    if (typeof matcher == "string") filter = function (f) {
+	    if (typeof matcher == "string") filter = function filter(f) {
 	      return f.name() == matcher;
-	    };else if ((0, _utils.isFlow)(matcher)) filter = function (f) {
+	    };else if ((0, _utils.isFlow)(matcher)) filter = function filter(f) {
 	      return f == matcher;
 	    };
 	    var children = recursive ? flow.children.all() : flow.children();
@@ -529,7 +516,7 @@
 	   */
 	  flow.parent = function () {
 	    if (!arguments.length) return flow.parent.value;
-	    var parent = arguments.length <= 0 || arguments[0] === undefined ? undefined : arguments[0];
+	    var parent = arguments.length <= 0 ? undefined : arguments[0];
 	    parent && (0, _utils.assert)(!(0, _utils.isFlow)(parent), _consts.ERRORS.invalidParent, parent);
 	    var previousParent = flow.parent();
 	    (0, _utils.detach)(flow);
@@ -555,9 +542,9 @@
 	  flow.parents.find = function (matcher) {
 	    if (matcher == null) return null;
 	    var filter = matcher;
-	    if (typeof matcher == "string") filter = function (f) {
+	    if (typeof matcher == "string") filter = function filter(f) {
 	      return f.name() == matcher;
-	    };else if ((0, _utils.isFlow)(matcher)) filter = function (f) {
+	    };else if ((0, _utils.isFlow)(matcher)) filter = function filter(f) {
 	      return f == matcher;
 	    };
 	
@@ -615,14 +602,7 @@
 	      data[_key - 1] = arguments[_key];
 	    }
 	
-	    var instance = flow.get(name);
-	    if (instance) {
-	      var _instance;
-	
-	      (_instance = instance).data.apply(_instance, data);
-	      return instance;
-	    }
-	    instance = (0, _factory2.default)(flow.create.defaults, name, data);
+	    var instance = (0, _factory2.default)(flow.create.defaults, name, data);
 	    instance.parent.value = flow;
 	    flow.children.value.push(instance);
 	    (0, _utils.dispatchInternalEvent)(flow, 'create', instance);
@@ -815,7 +795,7 @@
 	Object.defineProperty(exports, 'upstream', {
 	  enumerable: true,
 	  get: function get() {
-	    return _upstream.default;
+	    return _interopRequireDefault(_upstream).default;
 	  }
 	});
 	
@@ -824,7 +804,7 @@
 	Object.defineProperty(exports, 'none', {
 	  enumerable: true,
 	  get: function get() {
-	    return _none.default;
+	    return _interopRequireDefault(_none).default;
 	  }
 	});
 	
@@ -833,7 +813,7 @@
 	Object.defineProperty(exports, 'downstream', {
 	  enumerable: true,
 	  get: function get() {
-	    return _downstream.default;
+	    return _interopRequireDefault(_downstream).default;
 	  }
 	});
 	
@@ -842,9 +822,11 @@
 	Object.defineProperty(exports, 'default', {
 	  enumerable: true,
 	  get: function get() {
-	    return _default.default;
+	    return _interopRequireDefault(_default).default;
 	  }
 	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
 /* 12 */
@@ -991,7 +973,7 @@
 	    (0, _utils.assert)(arguments.length, _consts.ERRORS.invalidGuid);
 	    return flow.guid.value;
 	  };
-	  flow.guid.value = "" + guid++;
+	  flow.guid.value = createGuid();
 	
 	  flow.name = function () {
 	    var name = arguments.length <= 0 || arguments[0] === undefined ? _consts.UNSET : arguments[0];
@@ -1020,6 +1002,14 @@
 	    return flow;
 	  };
 	};
+	
+	function createGuid() {
+	  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+	    var r = Math.random() * 16 | 0,
+	        v = c == 'x' ? r : r & 0x3 | 0x8;
+	    return v.toString(16);
+	  });
+	}
 
 /***/ },
 /* 17 */
@@ -1031,6 +1021,8 @@
 	  value: true
 	});
 	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
 	var _consts = __webpack_require__(5);
 	
 	var _utils = __webpack_require__(6);
@@ -1040,8 +1032,6 @@
 	var _logger2 = _interopRequireDefault(_logger);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 	
 	exports.default = function (flow) {
 	  flow.on = function () {
@@ -1103,8 +1093,10 @@
 	    return {
 	      name: flow.name(),
 	      guid: flow.guid(),
-	      parentName: flow.parent() && flow.parent().name(),
-	      parentGuid: flow.parent() && flow.parent().guid(),
+	      parent: {
+	        name: flow.parent() && flow.parent().name(),
+	        guid: flow.parent() && flow.parent().guid()
+	      },
 	      status: flow.status(),
 	      listeners: Object.keys(flow.on()),
 	      children: flow.children().map(function (f) {

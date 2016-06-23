@@ -1,11 +1,12 @@
 import upstream from  './upstream'
-import none from  './none'
+import current from  './current'
 import downstream from  './downstream'
-import defaultDirection from  './default'
+import _default from  './default'
 
 export default {
   upstream,
   downstream,
-  none,
-  "default": defaultDirection // IE8 compatibility fix
+  none:current, // deprecated
+  current,
+  "default": _default // IE8 compatibility fix
 }

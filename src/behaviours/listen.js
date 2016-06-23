@@ -1,4 +1,4 @@
-import { ERRORS, UNSET, STATUS } from '../consts'
+import { ERRORS, UNSET, STATUS, DIRECTION_BITMASK } from '../consts'
 import {assert, dispatchInternalEvent} from '../utils'
 import logger from '../logger'
 
@@ -13,7 +13,7 @@ export default (flow)=>{
     }
 
     if (args.length==1 && args[0]==null) {
-      dispatchInternalEvent(flow, 'listenerRemoved', name)
+      dispatchInternalEvent(flow, 'listenerRemoved', {name})
       delete flow.on.listenerMap[name]
       return flow;
     }
@@ -25,20 +25,38 @@ export default (flow)=>{
     dispatchInternalEvent(flow, oldListeners
       ? 'listenerChanged'
       : 'listenerAdded'
-      , name)
+      , {name, handlers:args.map( d=>d.name||'function' )})
     return flow
   }
   flow.on.listenerMap = {};
 
   flow.on.notifyListeners = (event)=>{
     if (flow.on.listenerMap[event.name()]) {
+      let listeners = []
       event.target = flow
       flow.on.listenerMap[event.name()]
-        .every(listener=>{
+        .forEach(listener=>{
+          let l = {
+            listener
+          }
+          listeners.push(l)
+          if (event.status() != STATUS.FLOWING) {
+            l.status = event.status()
+            return;
+          }
+          if (event.stopPropagation.modifiers[flow.guid.value]
+            & DIRECTION_BITMASK['CURRENT']) {
+            l.status = 'SKIPPED'
+            return;
+          }
+          l.status='DELIVERED'
           listener.apply(event, event.data.value)
-          return (event.status() == STATUS.FLOWING)
+          
         })
-      return true
+      return {
+        flow,
+        listeners
+      }
     }
   }
 }

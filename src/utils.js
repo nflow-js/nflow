@@ -5,6 +5,8 @@ import { DEFAULTS
        , DIRECTION
        , UNSET } from './consts'
 import logger from './logger'
+
+const RECURSION_LIMIT = 1024;
 /**
  *  utils
  */
@@ -52,7 +54,7 @@ export function dispatchInternalEvent(flow, name, newData, oldData){
   var e= factory(DEFAULTS, "flow."+name)
   e.name.isInternal = true
   e.data.value = [newData, oldData]
-  e.direction.value= DIRECTION.NONE
+  e.direction.value= DIRECTION.CURRENT
   e.parent.value = flow
   e.emit()
   e.data.value = [flow, newData, oldData]
@@ -66,3 +68,36 @@ export function dispatchInternalEvent(flow, name, newData, oldData){
   
   logger.log(flow, name, newData, oldData)
 }
+
+export const serialise = o=>JSON.stringify(o, replacer())
+
+function replacer() {
+  let stack = []
+  , r = 0
+  , i
+    return function replacer(key, value) {
+      if (key === "") {
+        stack = [];
+        r = 0;
+      }
+      switch(typeof value) {
+        case "function":
+          return "".concat(
+            "function ",
+            value.name || "anonymous",
+            "(",
+              Array(value.length + 1).join(",arg").slice(1),
+            "){...}"
+          );
+        case "boolean":
+        case "number":
+        case "string":
+          return value;
+        default:
+          if (!value || RECURSION_LIMIT < ++r) return undefined;
+          i = stack.indexOf(value);
+          if (i < 0) return stack.push(value) && value;
+          return "*Recursive" + i;
+      }
+    };
+  }

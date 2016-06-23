@@ -58,9 +58,9 @@ export default (flow)=>{
     parent && assert(!isFlow(parent), ERRORS.invalidParent, parent)
     var previousParent = flow.parent() 
     detach(flow)
-    dispatchInternalEvent(flow, 'childRemoved', previousParent)
+    dispatchInternalEvent(flow, 'parent', parent, previousParent)
     attach(parent)
-    dispatchInternalEvent(flow, 'childAdded', parent, previousParent)
+    dispatchInternalEvent(flow, 'parented', parent, previousParent)
     return flow
   }
 
@@ -103,6 +103,8 @@ export default (flow)=>{
       flow.children.value
         .filter(f=>f!=child)
   }
+  
+  flow.target = flow
 
   function attach(parent) {
     parent && parent.children.value.push(flow)

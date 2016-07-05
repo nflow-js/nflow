@@ -12,7 +12,7 @@ function log(flow, name, newData, oldData){
   if (!isInternal(flow)){
     loggers.forEach(f=>{
       f.isRemote
-        ? f.logger(remoteLog(flow, name, newData, oldData))
+        ? f.logger(remoteLog(flow, name, newData, oldData), flow)
         : f.logger(flow, name, newData, oldData)
     })
     debug(flow, name, newData, oldData)
@@ -22,7 +22,7 @@ function log(flow, name, newData, oldData){
 function debug(flow, name, newData, oldData){
   global.__nflow_devtools_hook__ &&
   global.__nflow_devtools_hook__(
-    remoteLog(flow, name, newData, oldData))
+    remoteLog(flow, name, newData, oldData), flow)
 }
 
 /**

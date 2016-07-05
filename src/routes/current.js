@@ -9,9 +9,9 @@ export default (flow)=>(
       flow,
       route: arr
         .slice(0,i+1)
-        .map(f=>({
+        .map((f,i)=>({
           flow:f,
-          direction: DIRECTION.CURRENT
+          direction: i?DIRECTION.UPSTREAM:DIRECTION.CURRENT
         }))
     }))
 )

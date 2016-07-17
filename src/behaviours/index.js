@@ -9,11 +9,13 @@ import loggable from './loggable'
 import stateful from './stateful'
 import get from './get'
 import stats from './stats'
+import disposable from './disposable'
 
 export default {
   cancellable,
   connect,
   create,
+  disposable,
   emit,
   identify,
   listen,
@@ -22,4 +24,3 @@ export default {
   get,
   stats
 }
-

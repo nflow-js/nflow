@@ -12,7 +12,7 @@ describe('Logging', function(){
       .parent(null)
 
   })
-  
+
   describe('Flow Logging', ()=>{
 
     it('Should toString', ()=>{
@@ -23,7 +23,7 @@ describe('Logging', function(){
       expect(sut.version).to.exist
       expect(sut.version).to.equal(VERSION)
     })
-    
+
     it('Should use global logger', (done)=>{
       var test = sut.create("test")
       flow.logger((flow, name, newData, oldData)=>{
@@ -47,7 +47,7 @@ describe('Logging', function(){
       sut
         .on('foo',()=>{})
         .on('bar',()=>{},function namedFunction(){})
-      
+
       expect(sut.toObj()).to.have.deep.property('listeners.foo');
       expect(sut.toObj()).to.have.deep.property('listeners.bar');
 
@@ -62,13 +62,12 @@ describe('Logging', function(){
 
   })
   describe('Remote Logger API', ()=>{
-    
+
     it('Should use remote logger', (done)=>{
       var test = sut.create("test")
       flow.logger(log=>{
         if (test.done) return;
         test.done = true
-        console.log(log)
         expect(log.flow.guid).to.eql(test.guid())
         done()
       },true)
@@ -116,6 +115,28 @@ describe('Logging', function(){
       },true)
       test.name('bar')
     })
+
+    it('Should not log ignored nodes', ()=>{
+      var test = sut.create("test")
+        .stats({ignore:true})
+      flow.logger(log=>{
+        assert.fail('should not log ignored nodes')
+      },true)
+      test.name('bar')
+
+    })
+    it('Should not log children of ignored nodes', ()=>{
+      var test = sut.create("test")
+        .stats({ignore:true})
+        .create('test1')
+      flow.logger(log=>{
+        assert.fail('should not log ignored nodes')
+      },true)
+      test.name('bar')
+
+    })
+
+
     it('Should log .data(x) API', (done)=>{
       var test = sut.create("test", "foo")
       flow.logger(log=>{
@@ -148,7 +169,7 @@ describe('Logging', function(){
       },true)
       test.parent(null)
     })
-    
+
     it('Should log reparenting (.parent(node))', (done)=>{
       var test = sut.create("test", "foo")
       var test2 = sut.create('test2')
@@ -164,7 +185,7 @@ describe('Logging', function(){
     it('Should log .emit() API', (done)=>{
       var test = sut.create("test")
       flow.logger(log=>{
-        
+
         expect(log.action).to.equal('emit')
         expect(log.flow.name).to.equal('sut')
         expect(log.d.name).to.equal('test')
@@ -185,7 +206,7 @@ describe('Logging', function(){
       },true)
       test.emit('foo')
     })
-   
+
     it('Should log .emitted("foo") API', (done)=>{
       var test = sut.create("test")
         .on('foo',()=>{
@@ -271,7 +292,7 @@ describe('Logging', function(){
       },true)
       let o = {foo:{}}
       o.bar = o.foo
-      
+
       test.data(o)
     })
     it('Should serialise Array', (done)=>{

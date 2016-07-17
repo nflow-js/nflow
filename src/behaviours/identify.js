@@ -9,7 +9,7 @@ import {assert, dispatchInternalEvent} from '../utils'
 
 var guid = 0
 export default (flow, defaults, name)=>{
-  
+
   flow.guid = (...args) => {
     assert(args.length
          , ERRORS.invalidGuid)
@@ -26,7 +26,7 @@ export default (flow, defaults, name)=>{
     dispatchInternalEvent(flow, 'name', name, previousName)
     return flow
   }
-  flow.name.value = name || flow.guid()
+  flow.name.value = name || ''
   flow.name.isFlow = true
   flow.name.isInternal = false
 

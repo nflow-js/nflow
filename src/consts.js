@@ -35,6 +35,7 @@ export const DEFAULTS = {
     'stateful',
     'connect',
     'create',
+    'disposable',
     'emit',
     'listen',
     'cancellable',
@@ -57,4 +58,5 @@ export const ERRORS = {
 , invalidCancelArgs:'Invalid Argument. The .cancel() API requires no parameters'
 , invalidStopPropagationArgs:'Invalid Argument. The .stopPropagation(direction) API requires either no parameters or a valid flow direction(eg. flow.direction.UPSTREAM)'
 , invalidRoot:'Invalid Argument. The .parents.root() API is read only'
+, invalidStatsArgs:'Invalid Argument. The .stats() API requires an object'
 }

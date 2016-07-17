@@ -24,7 +24,7 @@ nFlow uses webpack to compile the code, run the tests and run a local dev server
 
 Clone this repo and run:
  - `npm start`
- - navigate to `http://localhost:4000/webpack-dev-server/`
+ - navigate to `http://localhost:5000/webpack-dev-server/` to run the tests in the browser
 
 ### Unit tests
 [![Circle CI](https://circleci.com/gh/nflow-js/nflow.svg?style=svg&circle-token=c48681c248ecfdd1fcbc94ca9f5dd2b39fd06fbc)](https://circleci.com/gh/nflow-js/nflow)

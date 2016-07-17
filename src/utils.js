@@ -19,19 +19,19 @@ export function assert(condition, error, val){
 }
 
 export function isFlow(flow){
-  return flow 
+  return flow
     && flow.name
     && flow.name.isFlow
 }
 
 export function isInternal(flow){
-  return flow 
+  return flow
     && flow.name
     && flow.name.isInternal
 }
 
 export function detach(flow){
-  flow.parent() 
+  flow.parent()
     && flow.parent().children.detach(flow)
 }
 
@@ -51,6 +51,7 @@ export function merge(source, target){
 }
 
 export function dispatchInternalEvent(flow, name, newData, oldData){
+  if (isIgnored(flow)) return
   var e= factory(DEFAULTS, "flow."+name)
   e.name.isInternal = true
   e.data.value = [newData, oldData]
@@ -61,15 +62,21 @@ export function dispatchInternalEvent(flow, name, newData, oldData){
   e.direction.value= DIRECTION.UPSTREAM
   e.name.value="flow.children."+name
   e.emit()
-  
+
   e.direction.value= DIRECTION.DOWNSTREAM
   e.name.value="flow.parent."+name
   e.emit()
-  
+
   logger.log(flow, name, newData, oldData)
 }
 
 export const serialise = o=>JSON.stringify(o, replacer())
+
+function isIgnored(flow){
+  return [flow]
+    .concat(flow.parents())
+    .some(e=>e.stats.value.ignore)
+}
 
 function replacer() {
   let stack = []

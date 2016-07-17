@@ -1,7 +1,0 @@
-
- - [x] allow multiple siblings to share the same name
- - [ ] automatically set hight of tree() in flow-vis
- - [ ] flow-vis: deal with cyclick dependency
- - [ ] flow-vis: visualise cancelled nodes
- - [ ] implement `.clone`
- - [x] migrate over to webpack  

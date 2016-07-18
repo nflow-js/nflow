@@ -35,6 +35,7 @@ function remoteLog(flow, name, d, d0){
     }
   let props = ['name', 'guid']
   if (name=='start') props.push('version', 'status')
+  if (name=='cancel') props.push('status')
   if (name=='create') props.push('status')
   if (name=='create' && d.data()!==undefined) props.push('data')
   if (name=='emitted' ) props.push('recipients')
@@ -50,7 +51,7 @@ function init(flow){
     console.warn('flow.enableDevtools() is now deprecated. nflow-devtools will automatically start logging when Chrome devtools is open')
     return flow
   }
-  
+
   flow.logger = (logger=UNSET, isRemote=false) => {
     if (logger===UNSET) return loggers
     else loggers.push({logger,isRemote})
@@ -60,7 +61,7 @@ function init(flow){
   debug(flow, 'start', flow)
 }
 
-export default { 
+export default {
   init
 , log
   }

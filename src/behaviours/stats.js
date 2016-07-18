@@ -12,7 +12,9 @@ export default (flow, defaults)=>{
     if (d===undefined) return flow.stats.value
     assert(typeof(d)!=='object'
          , ERRORS.invalidStatsArgs)
+    let previousStats = flow.stats.value
     flow.stats.value = {...flow.stats.value, ...d}
+    dispatchInternalEvent(flow, 'stats', flow.stats.value, previousStats)
     return flow
   }
 

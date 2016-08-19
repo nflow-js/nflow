@@ -20,6 +20,7 @@ function log(flow, name, newData, oldData){
 }
 
 function debug(flow, name, newData, oldData){
+  typeof global !== 'undefined' &&
   global.__nflow_devtools_hook__ &&
   global.__nflow_devtools_hook__(
     remoteLog(flow, name, newData, oldData), flow)

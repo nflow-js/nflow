@@ -19,7 +19,7 @@ config:
   git_user_email: github@zoltanb.co.uk
   npm_update_depth: 0
   version_prefix: v
-  create_branch: false
+  create_branch: true
   npm_shrinkwrap: true
   create_gh_pages: false
   gh_pages_dir: null

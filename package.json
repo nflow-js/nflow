@@ -7,9 +7,7 @@
     "start": "webpack-dev-server",
     "build": "webpack --watch",
     "pretest": "webpack",
-    "test": "mocha ./dist/node-test.js --reporter mocha-circleci-reporter",
-    "prepublish-to-npm": "webpack",
-    "publish-to-npm": "publish"
+    "test": "mocha ./dist/node-test.js --reporter mocha-circleci-reporter"
   },
   "keywords": [
     "event",
@@ -37,7 +35,6 @@
     "mocha-circleci-reporter": "^0.0.1",
     "mocha-loader": "^0.7.1",
     "node-circleci-autorelease": "^2.2.4",
-    "publish": "0.5.0",
     "raw-loader": "^0.5.1",
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.7",

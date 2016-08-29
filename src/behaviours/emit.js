@@ -3,14 +3,20 @@ import { DEFAULTS
        , STATUS
        , DIRECTION
        , UNSET } from '../consts'
-import factory from '../factory'
-import {merge, detach, flatten, assert, isDetached, isFlow, dispatchInternalEvent} from '../utils'
+import  factory from '../factory'
+import { merge
+       , detach
+       , flatten
+       , assert
+       , isDetached
+       , isFlow
+       , dispatchInternalEvent } from '../utils'
 import logger from '../logger'
 import routes from '../routes'
 
 var log = logger.log
 export default (flow)=>{
-  
+
   flow.status = (...args) => {
     assert(args.length
          , ERRORS.invalidStatus)
@@ -20,7 +26,7 @@ export default (flow)=>{
   }
   flow.status.value = STATUS.IDLE
   merge(STATUS, flow.status)
-  
+
 
   flow.direction = (direction=UNSET) => {
     if (direction===UNSET) return flow.direction.value
@@ -38,7 +44,7 @@ export default (flow)=>{
   createEmitAPI(flow)
 
   function emit(name=UNSET, args, direction){
-    if (name==UNSET) {
+    if (name===UNSET) {
       // emit current flow object
       detach(flow)
       direction && flow.direction(direction)
@@ -62,11 +68,11 @@ export default (flow)=>{
     }
 
     // create and emit a new event
-    assert(typeof(name)!='string'
+    assert(typeof(name)!=='string'
       , ERRORS.invalidEventName)
-    
 
-    var event = flow.create(name, ...args)    
+
+    var event = flow.create(name, ...args)
     detach(event)
     if (direction) event.direction.value = direction
     dispatchInternalEvent(flow, 'emit', event)
@@ -74,14 +80,14 @@ export default (flow)=>{
     dispatchInternalEvent(flow, 'emitted', event)
     return event
   }
-  
+
   flow.emit.route = (flow)=>{
     // 2. reset status
     flow.emit.recipients = []
     flow.emit.recipientsMap = {}
-    
+
     flow.status.value = STATUS.FLOWING;
-    
+
     // only keep unique recipients
     flow.emit.targets = flow.emit.route[flow.direction()](flow)
       .filter(f=>!flow.emit.recipientsMap[f.flow.guid()])
@@ -97,13 +103,13 @@ export default (flow)=>{
       flow.status.value = STATUS.COMPLETED
     }
   }
-  
+
   Object.keys(routes).forEach(route=>{
-    flow.emit.route[route] 
-      = flow.emit.route[route.toUpperCase()] 
+    flow.emit.route[route]
+      = flow.emit.route[route.toUpperCase()]
       = routes[route]
   })
-  
+
   function notify(flow, currentNode){
     //if (unreachable(flow, currentNode)) return;
     let result = currentNode.flow.on.notifyListeners(flow)
@@ -112,17 +118,17 @@ export default (flow)=>{
       result.direction = flow.direction()
       flow.emit.recipientsMap[currentNode.flow.guid()] = flow.direction()
       flow.emit.recipients.push(result)
-      
+
     }
   }
 
-  /** 
+  /**
    *  create directional (eg. `flow.emit.dowsntream(...)`) API
    */
 function createEmitAPI(flow){
   Object.keys(DIRECTION)
     .forEach(direction=>{
-      flow.emit[direction] 
+      flow.emit[direction]
         = flow.emit[direction.toLowerCase()]
         = (name, ...args)=>{
         return emit(name,args, direction)
@@ -131,4 +137,3 @@ function createEmitAPI(flow){
   }
 
 }
-

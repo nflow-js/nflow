@@ -2,7 +2,7 @@ import {assert, detach, dispatchInternalEvent, isFlow} from '../utils'
 import { ERRORS, UNSET } from '../consts'
 
 export default (flow)=>{
-  
+
   /**
    *  .children() API
    */
@@ -12,18 +12,18 @@ export default (flow)=>{
   }
   flow.children.value = []
 
-  flow.children.has = (matcher, recursive)=>flow.children.find(matcher, recursive)!=null
+  flow.children.has = (matcher, recursive)=>flow.children.find(matcher, recursive)!==undefined
   flow.children.find = (matcher, recursive)=>flow.children.findAll(matcher, recursive).pop()
   flow.children.findAll = (matcher, recursive)=>{
 
     var filter = matcher;
-    if (matcher==null) return []
-    if (typeof(matcher)=="string") filter = f=>f.name()==matcher
-    else if (isFlow(matcher)) filter = f=>f==matcher
-    var children = recursive 
+    if (matcher===null) return []
+    if (typeof(matcher)==="string") filter = f=>f.name()===matcher
+    else if (isFlow(matcher)) filter = f=>f===matcher
+    var children = recursive
       ? flow.children.all()
       : flow.children()
-    
+    console.log(children, filter)
     return children.filter(filter)
   }
 
@@ -43,7 +43,7 @@ export default (flow)=>{
       childMap[flow.guid()] = true
       var c = flow.children.value
       var gc = flow.children.value.map(getChildren)
-      
+
       return c.concat.apply(c, gc);
     }
 
@@ -56,7 +56,7 @@ export default (flow)=>{
     if (!parentArgs.length) return flow.parent.value;
     var parent = parentArgs[0]
     parent && assert(!isFlow(parent), ERRORS.invalidParent, parent)
-    var previousParent = flow.parent() 
+    var previousParent = flow.parent()
     detach(flow)
     dispatchInternalEvent(flow, 'parent', parent, previousParent)
     attach(parent)
@@ -74,14 +74,14 @@ export default (flow)=>{
       parentMap[p.guid()]=true
       p = p.parent()
     }
-    return parents 
+    return parents
   }
 
   flow.parents.find = (matcher)=>{
-    if (matcher==null) return null
+    if (matcher===null) return null
     var filter = matcher
-    if (typeof(matcher)=="string") filter = f=>f.name()==matcher
-    else if (isFlow(matcher)) filter = f=>f==matcher
+    if (typeof(matcher)=="string") filter = f=>f.name()===matcher
+    else if (isFlow(matcher)) filter = f=>f===matcher
 
     return flow.parents()
       .filter(filter)
@@ -99,11 +99,11 @@ export default (flow)=>{
   }
 
   flow.children.detach = (child)=>{
-    flow.children.value = 
+    flow.children.value =
       flow.children.value
-        .filter(f=>f!=child)
+        .filter(f=>f!==child)
   }
-  
+
   flow.target = flow
 
   function attach(parent) {

@@ -1,3 +1,4 @@
+/* globals VERSION */
 import logger from '../logger'
 import {assert, dispatchInternalEvent} from '../utils'
 import { DEFAULTS

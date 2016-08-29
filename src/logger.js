@@ -26,6 +26,12 @@ function debug(flow, name, newData, oldData){
     remoteLog(flow, name, newData, oldData), flow)
 }
 
+const propMap = {
+  'start': ['version', 'status'],
+  'cancel': ['status'],
+  'create': ['status'],
+  'emitted': ['recipients']
+}
 /**
  *  Converts a local log message(direct references) to a remote one(unmarshallable)
  */
@@ -35,11 +41,8 @@ function remoteLog(flow, name, d, d0){
       action: name
     }
   let props = ['name', 'guid']
-  if (name=='start') props.push('version', 'status')
-  if (name=='cancel') props.push('status')
-  if (name=='create') props.push('status')
+  propMap[name] && props.push(...propMap[name])
   if (name=='create' && d.data()!==undefined) props.push('data')
-  if (name=='emitted' ) props.push('recipients')
   let newData = (d && d.toObj? d.toObj(...props):serialise(d))
   let oldData = (d0 && d0.toObj? d0.toObj(...props):serialise(d0))
   if (newData!==undefined) o.d=newData

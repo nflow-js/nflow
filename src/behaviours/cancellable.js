@@ -7,7 +7,7 @@ import { DEFAULTS
 import {assert, detach, dispatchInternalEvent} from '../utils'
 
 export default (flow, defaults, name)=>{
-  
+
   flow.cancel = (...args) => {
     assert(args.length
          , ERRORS.invalidCancelArgs)
@@ -21,8 +21,8 @@ export default (flow, defaults, name)=>{
   flow.isCancelled = () => {
     return [flow]
       .concat(flow.parents())
-      .some(e=>e.status() == STATUS.CANCELLED
-          || e.status() == STATUS.DISPOSED
+      .some(e=>e.status() === STATUS.CANCELLED
+          || e.status() === STATUS.DISPOSED
         )
   }
 
@@ -30,7 +30,7 @@ export default (flow, defaults, name)=>{
     direction!==UNSET && assert(!DIRECTION[direction.toUpperCase()]
          , ERRORS.invalidStopPropagationArgs)
 
-    if (direction==UNSET){
+    if (direction===UNSET){
       flow.status.value = STATUS.STOPPED
       flow.stopPropagation.value = true;
       flow.stopPropagation.modifiers[flow.target.guid] = -1 //bitmask fill
@@ -53,18 +53,18 @@ export default (flow, defaults, name)=>{
 
 
   flow.propagationStopped = () => {
-    
+
     return flow.stopPropagation.value
   }
 
 }
-/** 
+/**
  *  create directional (eg. `flow.stopPropagation.dowsntream(...)`) API
  */
 function createStopPropagationModifiers(flow){
   Object.keys(DIRECTION)
     .forEach(direction=>{
-      flow.stopPropagation[direction] 
+      flow.stopPropagation[direction]
         = flow.stopPropagation[direction.toLowerCase()]
         = ()=>{
           return flow.stopPropagation(direction)

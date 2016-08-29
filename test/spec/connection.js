@@ -30,32 +30,32 @@ describe('Connection', function(){
     })
 
     it('should retrieve children', function(){
-      
+
       var a = sut.create("test1")
       var b = sut.create("test2")
       var c = sut.create("test3")
-      expect(sut.children()).to.eql([a,b,c])  
+      expect(sut.children()).to.eql([a,b,c])
     })
-    
+
     it('should not retrieve detached children', function(){
-      
+
       var a = sut.create("test1")
       var b = sut.create("test2")
       var d = sut.create("detached")
       var c = sut.create("test3")
       d.parent(null)
-      expect(sut.children()).to.eql([a,b,c])  
+      expect(sut.children()).to.eql([a,b,c])
     })
 
     it('.all() should return all children recursively', function(){
-      
+
       var a = sut.create("test1")
       var b = a.create("test2")
       var c = b.create("test3")
       var children = sut.children.all()
-      expect(children).to.eql([a,b,c])  
+      expect(children).to.eql([a,b,c])
     })
-    
+
     it('.all() should handle circular dependencies', function(){
       var a = sut.create('a')
       var b = a.create('b')
@@ -63,76 +63,76 @@ describe('Connection', function(){
       var c1 = b.create('c1')
       a.parent(c)
       var children = b.children.all()
-      expect(children.map(e=>e.name())).to.eql(["c","c1","a","b"])  
+      expect(children.map(e=>e.name())).to.eql(["c","c1","a","b"])
     })
 
     it('should find child by String', function(){
-      
+
       var a = sut.create("test1")
       var b = sut.create("test2")
       var c = sut.create("test3")
       var match = sut.children.find("test2")
-      expect(match).to.eql(b)  
+      expect(match).to.eql(b)
     })
-    
+
     it('should find child by matcher function', function(){
-      
+
       var a = sut.create("test1").data(1)
       var b = sut.create("test2").data(2)
       var c = sut.create("test3").data(3)
       var match = sut.children.find(f=>f.data()==2)
 
-      expect(match).to.eql(b)  
+      expect(match).to.eql(b)
     })
 
     it('should find All children by matcher function', function(){
-      
+
       var a = sut.create("test1").data(1)
       var b = sut.create("test2").data(2)
       var c = sut.create("test3").data(3)
       var match = sut.children.findAll(f=>f.data()>=2)
 
-      expect(match).to.eql([b,c])  
+      expect(match).to.eql([b,c])
     })
 
     it('should find child by String recursively', function(){
-      
+
       var a = sut.create("test1")
       var b = a.create("test2")
       var c = b.create("test3")
       var match = sut.children.find("test2", true)
-      expect(match).to.eql(b)  
+      expect(match).to.eql(b)
     })
-    
+
     it('should find All children by matcher function recursively', function(){
       var a = sut.create("test1").data(1)
       var b = a.create("test2").data(2)
       var c = b.create("test3").data(3)
       var match = sut.children.findAll(f=>f.data()>=2, true)
-      expect(match).to.eql([b,c])  
+      expect(match).to.eql([b,c])
     })
-    
+
 
     it('should check if child exists by matcher function', function(){
-      
+
       var a = sut.create("test1").data(1)
       var b = sut.create("test2").data(2)
       var c = sut.create("test3").data(3)
       var match = sut.children.has(f=>f.data()>=2)
 
-      expect(match).to.be.true  
+      expect(match).to.be.true
     })
 
     it('should check if child exists by matcher function recursively', function(){
-      
+
       var a = sut.create("test1").data(1)
       var b = a.create("test2").data(2)
       var c = b.create("test3").data(3)
       var match1 = sut.children.has(f=>f.data()>=2, false)
       var match2 = sut.children.has(f=>f.data()>=2, true)
 
-      expect(match1).to.be.false  
-      expect(match2).to.be.true  
+      expect(match1).to.be.false
+      expect(match2).to.be.true
     })
 
 
@@ -145,7 +145,7 @@ describe('Connection', function(){
       var sut2 = sut1.create('child')
       expect(sut2.parent()).to.equal(sut1)
     })
-    
+
     it('should detach', function(){
       var sut1 = sut.create('sut1')
       var sut2 = sut1.create('sut2')
@@ -174,7 +174,7 @@ describe('Connection', function(){
       expect(sut2.parents()).to.eql([sut1, sut])
       expect(sut3.parents()).to.eql([sut2, sut1, sut])
     })
-    
+
     it('return correct chain for detached nodes', function(){
       var sut1 = sut.create('sut1')
       var sut2 = sut1.create('sut2')

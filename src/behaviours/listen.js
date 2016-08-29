@@ -7,12 +7,12 @@ export default (flow)=>{
     if (name==UNSET) return flow.on.listenerMap //TODO clone this!
     assert(typeof(name)!='string'
       , ERRORS.invalidListener)
-    
+
     if (!args.length) {
       return flow.on.listenerMap[name]
     }
 
-    if (args.length==1 && args[0]==null) {
+    if (args.length==1 && args[0]===null) {
       dispatchInternalEvent(flow, 'listenerRemoved', {name})
       delete flow.on.listenerMap[name]
       return flow;
@@ -40,18 +40,18 @@ export default (flow)=>{
             listener
           }
           listeners.push(l)
-          if (event.status() != STATUS.FLOWING) {
+          if (event.status() !== STATUS.FLOWING) {
             l.status = event.status()
             return;
           }
           if (event.stopPropagation.modifiers[flow.guid.value]
-            & DIRECTION_BITMASK['CURRENT']) {
+            & DIRECTION_BITMASK.CURRENT) {
             l.status = 'SKIPPED'
             return;
           }
           l.status='DELIVERED'
           listener.apply(event, event.data.value)
-          
+
         })
       return {
         flow,

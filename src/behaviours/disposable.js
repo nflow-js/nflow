@@ -7,7 +7,7 @@ export default (flow, defaults)=>{
   flow.dispose = (...args) => {
     assert(args.length
          , ERRORS.invalidDisposeArgs)
-    if (flow.dispose.value == true) return;
+    if (flow.dispose.value === true) return;
 
     //recursively(depth first) dispose all downstream nodes
     flow.children().forEach(f=>f.dispose())

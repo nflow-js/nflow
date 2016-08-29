@@ -1,7 +1,6 @@
 /**
  *  consts
  */
-
 export const UNSET = {}
 export const DIRECTION = {
   CURRENT: "CURRENT",

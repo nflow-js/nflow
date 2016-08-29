@@ -29,7 +29,7 @@ export default (flow, defaults)=>{
   flow.dispose = (...args) => {
     assert(args.length
          , ERRORS.invalidDisposeArgs)
-    if (flow.dispose.value == true) return;
+    if (flow.dispose.value === true) return;
 
     dispatchInternalEvent(flow, 'dispose', true)
     flow.parent(null)

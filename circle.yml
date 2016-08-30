@@ -10,6 +10,8 @@ machine:
     - git config --global user.name "mere"
     - git config --global user.email "github@zoltanb.co.uk"
 dependencies:
+  pre:
+    - echo -e "$NPM_USER\n$NPM_PASS\n$NPM_EMAIL" | npm login
   post:
     - nca run echo "before update-modules"
     - nca run nca notice update-modules

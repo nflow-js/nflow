@@ -10,6 +10,7 @@ import stateful from './stateful'
 import get from './get'
 import stats from './stats'
 import disposable from './disposable'
+import namespace from './namespace'
 
 export default {
   cancellable,
@@ -22,5 +23,6 @@ export default {
   loggable,
   stateful,
   get,
-  stats
+  stats,
+  namespace
 }

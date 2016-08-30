@@ -30,6 +30,13 @@ export function isInternal(flow){
     && flow.name.isInternal
 }
 
+export function isListenerNameMatch(flow, name){
+  return name === flow.name()
+    || name === flow.guid()
+    || name === '*'
+  // TODO: add support for foo:bar.* and regex/function matchers
+}
+
 export function detach(flow){
   flow.parent()
     && flow.parent().children.detach(flow)

@@ -39,7 +39,8 @@ export const DEFAULTS = {
     'listen',
     'cancellable',
     'loggable',
-    'stats'
+    'stats',
+    'namespace'
   ],
   direction: DIRECTION.DEFAULT
 }
@@ -53,9 +54,12 @@ export const ERRORS = {
 , invalidParent:'Invalid flow parent object. Expected a flow instance, got: %s'
 , invalidParents:'Invalid Argument. Please use the child.parent(parent) API to re-parent flow objects.'
 , invalidStatus:'Invalid Argument. The .status() API is read only'
+, invalidNamespaceArgs:'Invalid Argument. The .namespace() API is read only'
 , invalidDisposeArgs:'Invalid Argument. The .dispose() API requires no parameters'
 , invalidCancelArgs:'Invalid Argument. The .cancel() API requires no parameters'
 , invalidStopPropagationArgs:'Invalid Argument. The .stopPropagation(direction) API requires either no parameters or a valid flow direction(eg. flow.direction.UPSTREAM)'
 , invalidRoot:'Invalid Argument. The .parents.root() API is read only'
 , invalidStatsArgs:'Invalid Argument. The .stats() API requires an object'
 }
+
+export const NS_SEPARATOR = ':'

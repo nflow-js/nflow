@@ -1,3 +1,4 @@
+import './spec/namespace.js'
 import './spec/propagation.js'
 import './spec/cancellation.js'
 import './spec/connection.js'

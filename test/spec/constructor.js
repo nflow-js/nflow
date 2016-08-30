@@ -30,8 +30,6 @@ describe('Construction', function(){
     it('should have globally unique ID-s', function(){
       var sut1 = testFlow.create('test')
       var sut2 = testFlow.create('test')
-      console.log(sut1.guid())
-      console.log(sut2.guid())
       expect(sut1.guid()).to.not.equal(sut2.guid())
     })
   })
@@ -109,11 +107,11 @@ describe('Construction', function(){
       var sut = testFlow.create('test', 0)
       expect(sut.data()).to.equal(0)
 
-      var sut = testFlow.create('test', false)
-      expect(sut.data()).to.equal(false)
+      var sut1 = testFlow.create('test', false)
+      expect(sut1.data()).to.equal(false)
 
-      var sut = testFlow.create('test', '')
-      expect(sut.data()).to.equal('')
+      var sut2 = testFlow.create('test', '')
+      expect(sut2.data()).to.equal('')
     })
 
     it('should store single data object', function(){

@@ -118,7 +118,6 @@ export default (flow)=>{
       result.direction = flow.direction()
       flow.emit.recipientsMap[currentNode.flow.guid()] = flow.direction()
       flow.emit.recipients.push(result)
-
     }
   }
 

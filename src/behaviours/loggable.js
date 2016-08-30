@@ -31,16 +31,20 @@ export default (flow)=>{
       .map(f=>f.toObj('name','guid')))
 
     add('recipients', ()=>{
-      return flow.emit.recipients 
+      return flow.emit.recipients
       && flow.emit.recipients.map(f=>({
+        direction: f.direction,
         flow: f.flow.toObj('name','guid'),
         route: f.route.map(f=>({
           flow: f.flow.toObj('name','guid'),
           direction: f.direction
         })),
         listeners: f.listeners.map(l=>({
-          name: serialise(l.listener),
-          status:l.status
+          name: l.name,
+          handlers:l.handlers.map(h=>({
+            status:h.status,
+            listener:serialise(h.listener)
+          }))
         }))
       }))
     })

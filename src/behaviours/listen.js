@@ -1,10 +1,10 @@
 import { ERRORS, UNSET, STATUS, DIRECTION_BITMASK } from '../consts'
-import {assert, dispatchInternalEvent} from '../utils'
+import {assert, dispatchInternalEvent, isListenerNameMatch} from '../utils'
 import logger from '../logger'
 
 export default (flow)=>{
   flow.on = (name=UNSET, ...args) => {
-    if (name==UNSET) return flow.on.listenerMap //TODO clone this!
+    if (name===UNSET) return flow.on.listenerMap //TODO clone this!
     assert(typeof(name)!='string'
       , ERRORS.invalidListener)
 
@@ -31,32 +31,43 @@ export default (flow)=>{
   flow.on.listenerMap = {};
 
   flow.on.notifyListeners = (event)=>{
-    if (flow.on.listenerMap[event.name()]) {
-      let listeners = []
-      event.target = flow
-      flow.on.listenerMap[event.name()]
-        .forEach(listener=>{
-          let l = {
-            listener
-          }
-          listeners.push(l)
-          if (event.status() !== STATUS.FLOWING) {
-            l.status = event.status()
-            return;
-          }
-          if (event.stopPropagation.modifiers[flow.guid.value]
-            & DIRECTION_BITMASK.CURRENT) {
-            l.status = 'SKIPPED'
-            return;
-          }
-          l.status='DELIVERED'
-          listener.apply(event, event.data.value)
-
+    let keys = Object.keys(flow.on.listenerMap)
+    let listeners = []
+    event.target = flow
+    keys.forEach(listenerName=>{
+      if (isListenerNameMatch(event, listenerName)){
+        let handlers = flow.on.listenerMap[listenerName]
+        listeners.push({
+          name: listenerName,
+          handlers: deliverToHandlers(event, handlers, flow)
         })
-      return {
-        flow,
-        listeners
       }
-    }
+    })
+    delete event.target
+    return listeners.length
+      ? { flow, listeners }
+      : null
+
   }
+}
+
+function deliverToHandlers(event, handlers, flow){
+  return handlers
+    .map(listener=>{
+      let l = {
+        listener
+      }
+      if (event.status() !== STATUS.FLOWING) {
+        l.status = event.status()
+        return l;
+      }
+      if (event.stopPropagation.modifiers[flow.guid.value]
+        & DIRECTION_BITMASK.CURRENT) {
+        l.status = 'SKIPPED'
+        return l;
+      }
+      l.status='DELIVERED'
+      listener.apply(event, event.data.value)
+      return l
+    })
 }

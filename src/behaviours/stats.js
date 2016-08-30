@@ -14,7 +14,9 @@ export default (flow, defaults)=>{
     assert(typeof(d)!=='object'
          , ERRORS.invalidStatsArgs)
     let previousStats = flow.stats.value
+    /*jshint ignore:start*/
     flow.stats.value = {...flow.stats.value, ...d}
+    /*jshint ignore:end*/
     dispatchInternalEvent(flow, 'stats', flow.stats.value, previousStats)
     return flow
   }

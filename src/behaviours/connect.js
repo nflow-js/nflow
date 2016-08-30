@@ -23,7 +23,6 @@ export default (flow)=>{
     var children = recursive
       ? flow.children.all()
       : flow.children()
-    console.log(children, filter)
     return children.filter(filter)
   }
 
@@ -77,6 +76,7 @@ export default (flow)=>{
     return parents
   }
 
+  flow.parents.get = 
   flow.parents.find = (matcher)=>{
     if (matcher===null) return null
     var filter = matcher

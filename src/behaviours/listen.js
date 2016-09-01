@@ -35,7 +35,9 @@ export default (flow)=>{
     let listeners = []
     event.target = flow
     keys.forEach(listenerName=>{
-      if (isListenerNameMatch(event, listenerName)){
+      let localisedListenerName = flow.namespace.localise(listenerName)
+      let shouldDeliver = event.namespace.match(localisedListenerName)
+      if (shouldDeliver){
         let handlers = flow.on.listenerMap[listenerName]
         listeners.push({
           name: listenerName,

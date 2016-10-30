@@ -1,41 +1,38 @@
+/* globals describe, it, beforeEach */
 import flow from 'nflow'
-import assert from 'assert'
 import {expect} from 'chai'
 var sut
 
-describe('Dispatchers', function(){
-  beforeEach(function(){
+describe('Dispatchers', function () {
+  beforeEach(function () {
     sut = flow
       .create('sut')
       .parent(null)
-
   })
-  describe('.emit() API', function(){
-
-    it('emit should create a new node', function(){
+  describe('.emit() API', function () {
+    it('emit should create a new node', function () {
       var bar = sut.emit('bar')
       expect(bar.parent()).to.equal(sut)
     })
 
-    it('should detach emitted node', function(){
+    it('should detach emitted node', function () {
       var bar = sut.emit('bar')
       expect(bar.parent().children()).to.not.contain(bar)
     })
 
-    it('should emit new node', function(done){
+    it('should emit new node', function (done) {
       var payload = {}
-      var listener = function(data){
+      var listener = function (data) {
         expect(data).to.equal(payload)
         done()
       }
       sut.on('bar', listener)
         .emit('bar', payload)
-      
     })
 
-    it('should emit current node', function(done){
+    it('should emit current node', function (done) {
       var payload = {}
-      var listener = function(data){
+      var listener = function (data) {
         expect(data).to.equal(payload)
         done()
       }
@@ -45,10 +42,10 @@ describe('Dispatchers', function(){
         .emit()
     })
 
-    it('should deliver multiple payloads', function(done){
+    it('should deliver multiple payloads', function (done) {
       var payload1 = {}
       var payload2 = {}
-      var listener = function(data1, data2){
+      var listener = function (data1, data2) {
         expect(data1).to.equal(payload1)
         expect(data2).to.equal(payload2)
         done()
@@ -59,26 +56,21 @@ describe('Dispatchers', function(){
         .emit()
     })
 
-    it('should deliver to multiple listeners on the same node', function(done){
+    it('should deliver to multiple listeners on the same node', function (done) {
       var payload1 = {}
       var payload2 = {}
-      var listener1 = function(data1, data2){
+      var listener1 = function (data1, data2) {
         expect(data1).to.equal(payload1)
         expect(data2).to.equal(payload2)
         listener1.done = true
-        listener1.done
-          && listener2.done
-          && done()
+        listener2.done && done()
       }
-      var listener2 = function(data1, data2){
+      var listener2 = function (data1, data2) {
         expect(data1).to.equal(payload1)
         expect(data2).to.equal(payload2)
         listener2.done = true
-        listener1.done
-          && listener2.done
-          && done()
+        listener1.done && done()
       }
-
 
       sut.on('bar', listener1, listener2)
         .create('bar')
@@ -86,8 +78,8 @@ describe('Dispatchers', function(){
         .emit()
     })
 
-    it('should emit lightweight nodes', function(done){
-      var listener = function(data){
+    it('should emit lightweight nodes', function (done) {
+      var listener = function (data) {
         expect(data).to.equal(undefined)
         done()
       }
@@ -96,12 +88,11 @@ describe('Dispatchers', function(){
         .emit()
     })
   })
-    
-  describe('Flow Direction', function(){
 
-    it('should flow upstream', function(done){
+  describe('Flow Direction', function () {
+    it('should flow upstream', function (done) {
       var payload = {}
-      var listener = function(data){
+      var listener = function (data) {
         expect(data).to.equal(payload)
         done()
       }
@@ -111,9 +102,9 @@ describe('Dispatchers', function(){
         .emit('bar', payload)
     })
 
-    it('should flow downstream', function(done){
+    it('should flow downstream', function (done) {
       var payload = {}
-      var listener = function(data){
+      var listener = function (data) {
         expect(data).to.equal(payload)
         done()
       }
@@ -121,84 +112,80 @@ describe('Dispatchers', function(){
         .create('sut2')
         .create('sut3')
           .on('bar', listener)
-      
-      sut.emit('bar', payload)
 
+      sut.emit('bar', payload)
     })
 
-    it('should flow from root', function(done){
+    it('should flow from root', function (done) {
       var payload = {}
-      
-      var listener1 = function(data){
-        expect(data).to.equal(payload)
-        listener1.ok=true
 
+      var listener1 = function (data) {
+        expect(data).to.equal(payload)
+        listener1.ok = true
       }
-      var listener2 = function(data){
+      var listener2 = function (data) {
         expect(data).to.equal(payload)
         listener1.ok && done()
       }
       var sut2 = sut
         .on('bar', listener1)
         .create('sut2')
-      
+
       sut2.create('sut3')
           .on('bar', listener2)
 
       sut.emit('bar', payload)
     })
 
-
-    it('should be unidirectional (upstream)', function(done){
+    it('should be unidirectional (upstream)', function (done) {
       var payload = {}
       var numRecipients = 0
-      var shouldListen = function(data){
+      var shouldListen = function (data) {
         expect(data).to.equal(payload)
         numRecipients++
       }
-      var shouldNotListen = function(data){
+      var shouldNotListen = function (data) {
         done(new Error('incorrect listener was called'))
       }
-      var sut3= sut
+      var sut3 = sut
         .on('bar', shouldListen)
         .create('sut2')
         .on('bar', shouldListen)
         .create('sut3')
         .on('bar', shouldListen)
-        
+
       sut3.create('sut4')
           .on('bar', shouldNotListen)
 
-      var event = sut3.create('bar', payload)
+      sut3.create('bar', payload)
         .direction(sut.direction.UPSTREAM)
         .emit()
 
-      setTimeout(function(){
-        if (numRecipients!=3) {
+      setTimeout(function () {
+        if (numRecipients !== 3) {
           expect(numRecipients).to.eql(3)
           done('not all listeners got called')
-        }
-        else done()
-      },10)
+        } else done()
+      }, 10)
     })
 
-    it('should be unidirectional (downstream)', function(done){
+    it('should be unidirectional (downstream)', function (done) {
       var payload = {}
       var numRecipients = 0
-      var shouldListen = function(data){
+      var shouldListen = function (data) {
         expect(data).to.equal(payload)
         numRecipients++
       }
-      var shouldNotListen = function(data){
+      var shouldNotListen = function (data) {
         done(new Error('incorrect listener was called'))
       }
-      var sut3= sut
+      var sut3 = sut
         .on('bar', shouldNotListen)
         .create('sut2')
         .on('bar', shouldNotListen)
         .create('sut3')
         .on('bar', shouldListen)
-        
+
       sut3.create('sut4')
           .on('bar', shouldListen)
 
@@ -207,24 +194,22 @@ describe('Dispatchers', function(){
       sut3.create('sut6')
           .on('bar', shouldListen)
 
-      var event = sut3.create('bar', payload)
+      sut3.create('bar', payload)
         .direction(sut.direction.DOWNSTREAM)
         .emit()
 
-      setTimeout(function(){
+      setTimeout(function () {
         expect(numRecipients).to.eql(4)
-        if (numRecipients!=4) done('not all listeners got called')
+        if (numRecipients !== 4) done('not all listeners got called')
         else done()
-      },10)
+      }, 10)
     })
-
   })
 
-  describe('.matcher() API', function(){
-
-    it('should match by name', function(done){
+  describe('.matcher() API', function () {
+    it('should match by name', function (done) {
       var payload = {}
-      var listener = function(data){
+      var listener = function (data) {
         expect(data).to.equal(payload)
         done()
       }
@@ -235,9 +220,9 @@ describe('Dispatchers', function(){
         .emit('bar', payload)
     })
 
-    it('should not deliver mismatching name', function(done){
+    it('should not deliver mismatching name', function (done) {
       var payload = {}
-      var listener = function(data){
+      var listener = function (data) {
         done(new Error('incorrect listener was called'))
       }
       sut.on('sut1', listener)
@@ -245,10 +230,7 @@ describe('Dispatchers', function(){
         .create('sut3')
         .emit('bar', payload)
 
-      setTimeout(done,10)
+      setTimeout(done, 10)
     })
-
   })
-
-
 })

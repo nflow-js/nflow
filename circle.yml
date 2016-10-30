@@ -6,7 +6,10 @@ general:
 machine:
   environment:
     PATH: './node_modules/.bin:$PATH'
+  node:
+      version: 6.1.0
   pre:
+    - node --version
     - git config --global user.name "mere"
     - git config --global user.email "github@zoltanb.co.uk"
 dependencies:

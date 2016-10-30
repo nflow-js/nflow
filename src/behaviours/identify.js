@@ -1,15 +1,8 @@
-import { DEFAULTS
-       , ERRORS
-       , STATUS
-       , DIRECTION
+import { ERRORS
        , UNSET } from '../consts'
+import { assert, dispatchInternalEvent } from '../utils'
 
-import logger from '../logger'
-import {assert, dispatchInternalEvent} from '../utils'
-
-var guid = 0
-export default (flow, defaults, name)=>{
-
+export default (flow, defaults, name) => {
   flow.guid = (...args) => {
     assert(args.length
          , ERRORS.invalidGuid)
@@ -17,9 +10,9 @@ export default (flow, defaults, name)=>{
   }
   flow.guid.value = createGuid()
 
-  flow.name = (name=UNSET) => {
-    if (name===UNSET) return flow.name.value
-    assert(typeof(name)!="string"
+  flow.name = (name = UNSET) => {
+    if (name === UNSET) return flow.name.value
+    assert(typeof (name) !== 'string'
          , ERRORS.invalidName, name)
     var previousName = flow.name.value
     flow.name.value = name
@@ -30,19 +23,19 @@ export default (flow, defaults, name)=>{
   flow.name.isFlow = true
   flow.name.isInternal = false
 
-  flow.call = (...functions)=>{
+  flow.call = (...functions) => {
     functions
-      .filter(f=>typeof(f)=='function')
-      .forEach(f=>f.call(flow,flow))
+      .filter(f => typeof (f) === 'function')
+      .forEach(f => f.call(flow, flow))
     return flow
   }
-
 }
 
-function createGuid(){
+function createGuid () {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
-    .replace(/[xy]/g, function(c) {
-      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-      return v.toString(16);
-    });
+    .replace(/[xy]/g, c => {
+      let r = Math.random() * 16 | 0
+      let v = c === 'x' ? r : (r & 0x3 | 0x8)
+      return v.toString(16)
+    })
 }

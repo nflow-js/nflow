@@ -1,19 +1,18 @@
-import logger from '../logger'
-import {assert, dispatchInternalEvent} from '../utils'
+import { dispatchInternalEvent } from '../utils'
 
-export default (flow, defaults, name, data)=>{
-    flow.data = (...data) => {
+export default (flow, defaults, name, data) => {
+  flow.data = (...data) => {
     if (!data.length) {
-      return (flow.data.value.length<=1)
+      return (flow.data.value.length <= 1)
         ? flow.data.value[0]
         : flow.data.value
-      }
+    }
     var oldData = flow.data.value
     flow.data.value = data
     dispatchInternalEvent(flow, 'data'
-      , (data.length>1?data:data[0])
-      , (oldData.length>1?oldData:oldData[0]))
+      , (data.length > 1 ? data : data[0])
+      , (oldData.length > 1 ? oldData : oldData[0]))
     return flow
-    }
-    flow.data.value = data
   }
+  flow.data.value = data
+}

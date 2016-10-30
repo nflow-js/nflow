@@ -1,14 +1,16 @@
-var package = require('./package.json')
+require('es6-promise').polyfill()
+var pkg = require('./package.json')
 var webpack = require('webpack')
-var path = require('path');
+var path = require('path')
 var hostname = 'localhost'
 var port = '5000'
+var JsDocPlugin = require('jsdoc-webpack-plugin')
 
 module.exports = {
   entry: {
     'node-test': './test/node-test.js',
-    'web-test':  './test/web-test.js',
-    'nflow':     './src/index'
+    'web-test': './test/web-test.js',
+    'nflow': './src/index'
   },
   output: {
     filename: '[name].js',
@@ -16,23 +18,26 @@ module.exports = {
     libraryTarget: 'this',
     publicPath: 'http://' + hostname + ':' + port + '/dist/'
   },
-  resolve:{
+  resolve: {
     root: path.resolve(__dirname, 'src'),
-    alias:{
+    alias: {
       'nflow': 'nflow.js'
     }
   },
   module: {
     loaders: [
-      { test: /\.js$/
-        , exclude: /node_modules/
-        , loader: 'babel'
+      { test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel'
       }
     ]
   },
-  plugins:[
+  plugins: [
     new webpack.DefinePlugin({
-      VERSION: JSON.stringify(package.version)
+      VERSION: JSON.stringify(pkg.version)
+    }),
+    new JsDocPlugin({
+      conf: './src-docs/config.json'
     })
   ],
   stats: {
@@ -45,8 +50,8 @@ module.exports = {
 
   devServer: {
     progress: true,
-    contentBase: "test",
+    contentBase: 'test',
     host: hostname,
     port: port
-  },
+  }
 }

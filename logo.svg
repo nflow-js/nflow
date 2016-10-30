@@ -1,0 +1,20 @@
+<?xml version="1.0"?><svg width="394.41351" height="554.93317" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <filter id="filter3537" height="1.5149" y="-0.25745" width="1.615501" x="-0.307751">
+   <feGaussianBlur id="feGaussianBlur3539" stdDeviation="13.005789"/>
+  </filter>
+ </defs>
+ <metadata id="metadata7">image/svg+xml</metadata>
+ <g>
+  <title>Layer 1</title>
+  <g id="layer1">
+   <g id="g2462">
+    <path id="path2530" d="m394.416138,362.094574c0,105.894867 -88.341187,191.838531 -197.190308,191.838531c-108.849121,0 -199.2041,-85.962799 -197.19019,-191.838531c2.67579,-142.019196 111.086194,-199.866165 197.19019,-363.094574c91.455933,157.876678 197.190308,257.199707 197.190308,363.094574z" stroke-dashoffset="0" stroke-miterlimit="4" marker-end="none" marker-mid="none" marker-start="none" stroke-width="3" fill-rule="evenodd" fill-opacity="0.53" fill="#007fff" opacity="0.698551"/>
+    <path id="path3520" d="m387.608154,361.649567c0,101.679596 -84.824829,184.202362 -189.341064,184.202362c-104.516357,0 -191.2749,-82.541046 -189.34131,-184.202362c2.56934,-136.36618 106.664552,-191.910629 189.34131,-348.641726c87.815308,151.592395 189.341064,246.961917 189.341064,348.641726z" stroke-dashoffset="0" stroke-miterlimit="4" marker-end="none" marker-mid="none" marker-start="none" stroke-width="3" fill-rule="evenodd" fill="#007fff" opacity="0.698551"/>
+    <path id="path3542" d="m384.314575,357.708466c0,100.470612 -83.81604,182.011993 -187.089722,182.011993c-103.27343,0 -189.000004,-81.55954 -187.089354,-182.011993c2.53882,-134.744553 105.395987,-189.628433 187.089354,-344.495815c56.102295,499.609249 187.089722,244.025173 187.089722,344.495815z" stroke-dashoffset="0" stroke-miterlimit="4" marker-end="none" marker-mid="none" marker-start="none" stroke-width="3" fill-rule="evenodd" fill="#007fff" opacity="0.698551"/>
+    <path id="path3556" d="m394.416138,360.532074c0,105.894867 -88.341187,191.838531 -197.190308,191.838531c-108.849121,0 -199.2041,-85.962799 -197.19019,-191.838531c2.67579,-142.019196 111.086194,-199.866165 197.19019,-363.094574c91.455933,157.876678 197.190308,257.199707 197.190308,363.094574z" stroke-dashoffset="0" stroke-miterlimit="4" marker-end="none" marker-mid="none" marker-start="none" stroke-width="3" fill-rule="evenodd" fill="#007fff" opacity="0.698551"/>
+    <path d="m125.794952,173.818832a22.936041,14.60322 0 1 1 -45.872093,54.158279a22.936041,14.60322 0 1 1 45.872093,-54.158279z" id="path3541" filter="url(#filter3537)" stroke-dashoffset="0" stroke-miterlimit="4" marker-end="none" marker-mid="none" marker-start="none" stroke-width="3" fill-rule="evenodd" fill-opacity="0.800578" fill="#007fff" opacity="0.823188"/>
+   </g>
+  </g>
+ </g>
+</svg>

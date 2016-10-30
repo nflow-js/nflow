@@ -1,16 +1,18 @@
-import {assert, dispatchInternalEvent} from '../utils'
+import { assert, dispatchInternalEvent } from '../utils'
 import { ERRORS } from '../consts'
 
-
-export default (flow, defaults)=>{
-
+export default (flow, defaults) => {
+  /**
+   * [dispose description]
+   * @return {flow} flow - the current node
+   */
   flow.dispose = (...args) => {
     assert(args.length
          , ERRORS.invalidDisposeArgs)
-    if (flow.dispose.value === true) return;
+    if (flow.dispose.value === true) return
 
-    //recursively(depth first) dispose all downstream nodes
-    flow.children().forEach(f=>f.dispose())
+    // recursively(depth first) dispose all downstream nodes
+    flow.children().forEach(f => f.dispose())
 
     dispatchInternalEvent(flow, 'dispose', true)
     flow.parent(null)
@@ -20,6 +22,4 @@ export default (flow, defaults)=>{
     return flow
   }
   flow.dispose.value = false
-
-
 }

@@ -1,0 +1,49 @@
+{
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc","closure"]
+  },
+  "source": {
+    "include": "src",
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "plugins": [
+    "plugins/markdown",
+    "./src-docs/plugins/codepen"
+  ],
+  "markdown": {
+		"parser": "gfm",
+		"hardwrap": true,
+		"tags": ["examples"]
+	},
+  "templates": {
+    "applicationName": "nflow API",
+    "disqus": "",
+    "googleAnalytics": "",
+    "openGraph": {
+      "title": "nflow API",
+      "type": "website",
+      "image": "logo.svg",
+      "site_name": "nflow API Docs",
+      "url": "",
+      "default": {
+  			"outputSourceFiles" : true
+  		}
+    },
+    "meta": {
+      "title": "",
+      "description": "",
+      "keyword": ""
+    },
+    "linenums": true
+  },
+  "opts": {
+    "_template": "templates/default",
+    "template": "./node_modules/jaguarjs-jsdoc",
+    "encoding": "utf8",
+    "destination": "./docs/",
+    "recurse": true,
+    "_tutorials": "./src-docs"
+  }
+}

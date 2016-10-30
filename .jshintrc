@@ -1,8 +1,0 @@
-{
-  "asi": true,
-  "esversion": 6,
-  "laxbreak": true,
-  "laxcomma": true,
-  "expr": true,
-  "-W138": false //Regular parameters should not come after default parameters
-}

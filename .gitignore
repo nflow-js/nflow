@@ -1,8 +1,7 @@
 node_modules
 .test
-dist/node-test.js
-dist/node-test.js.map
-dist/web-test.js
-dist/web-test.js.map
+dist
 npm-debug.log
 test-results.xml
+.DS_Store
+docs

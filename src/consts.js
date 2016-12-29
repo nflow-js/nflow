@@ -9,10 +9,10 @@ export const DIRECTION = {
 
 export const DIRECTION_BITMASK = {
   CURRENT: 1 << 0,
-  NONE: 1 << 0, // deprecated
-  DEFAULT: 1 << 1,
-  UPSTREAM: 1 << 2,
-  DOWNSTREAM: 1 << 3
+  NONE: 1 << 0, // 1 deprecated
+  DEFAULT: 1 << 1, // 2
+  UPSTREAM: 1 << 2, // 4
+  DOWNSTREAM: 1 << 3 // 8
 }
 
 export const STATUS = {
@@ -44,7 +44,7 @@ export const DEFAULTS = {
 export const ERRORS = {
   invalidGuid: 'Invalid Argument. Guid-s are immutable. Please use the .name() API to change the name of a flow object.',
   invalidChildren: 'Invalid Argument. Please use child.parent(parent) to re-parent flow objects.',
-  invalidListener: 'Invalid Arguments. Please use .on("foo", handler) to create a listener.',
+  invalidListener: 'Invalid Arguments. Expected a String as the listenerName, got: %s',
   invalidListenerType: 'Invalid Listener function. Expected a function, got: %s',
   invalidEventName: 'Invalid Arguments. Please use .emit("foo", payload) to emit a flow event.',
   invalidName: 'Invalid flow Name. Expected a String value, got: %s',
@@ -52,9 +52,11 @@ export const ERRORS = {
   invalidParents: 'Invalid Argument. Please use the child.parent(parent) API to re-parent flow objects.',
   invalidStatus: 'Invalid Argument. The .status() API is read only',
   invalidNamespaceArgs: 'Invalid Argument. The .namespace() API is read only',
+  invalidFullNamespace: 'Invalid Argument. The .namespace.match(full_ns) requires a full namespace array, got: %s',
   invalidDisposeArgs: 'Invalid Argument. The .dispose() API requires no parameters',
   invalidCancelArgs: 'Invalid Argument. The .cancel() API requires no parameters',
   invalidStopPropagationArgs: 'Invalid Argument. The .stopPropagation(direction) API requires either no parameters or a valid flow direction(eg. flow.direction.UPSTREAM)',
+  invalidStopPropagationAugmentation: 'Invalid Argument. The .stopPropagation(direction) API can only be used on emitted events.',
   invalidRoot: 'Invalid Argument. The .parents.root() API is read only',
   invalidStatsArgs: 'Invalid Argument. The .stats() API requires an object'
 }

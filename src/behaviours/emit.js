@@ -1,6 +1,7 @@
 import { ERRORS
        , STATUS
        , DIRECTION
+       , DIRECTION_BITMASK
        , UNSET } from '../consts'
 import { merge
        , detach
@@ -16,6 +17,11 @@ export default (flow) => {
     if (flow.cancel.value) return STATUS.CANCELLED
     if (flow.dispose.value) return STATUS.DISPOSED
     return flow.status.value
+  }
+  flow.status.set = (status) => {
+    if (status === flow.status.value) return
+    !flow.name.isInternal && dispatchInternalEvent(flow, 'status', status, flow.status.value)
+    flow.status.value = status
   }
   flow.status.value = STATUS.IDLE
   merge(STATUS, flow.status)
@@ -33,16 +39,19 @@ export default (flow) => {
   flow.emit = (name = UNSET, ...args) => {
     return emit(name, args)
   }
+  flow.emit.recipients = []
+  flow.emit.recipientsMap = {}
   createEmitAPI(flow)
 
   function emit (name = UNSET, args, direction) {
     if (name === UNSET) {
       // emit current flow object
       detach(flow)
+      let p = flow.parent() || flow
       direction && flow.direction(direction)
-      !flow.name.isInternal && dispatchInternalEvent(flow.parent(), 'emit', flow)
-      flow.emit.route(flow)
-      !flow.name.isInternal && dispatchInternalEvent(flow.parent(), 'emitted', flow)
+      !flow.name.isInternal && dispatchInternalEvent(p, 'emit', flow)
+      p.emit.route(flow)
+      !flow.name.isInternal && dispatchInternalEvent(p, 'emitted', flow)
       return flow
     }
     if (isFlow(name)) {
@@ -51,7 +60,7 @@ export default (flow) => {
       // 2.  emit the passed in flow object
       detach(name)
       direction && name.direction(direction)
-      name.data(...args)
+      args.length && name.data(...args)
       dispatchInternalEvent(flow, 'emit', name)
       flow.emit.route(name)
       dispatchInternalEvent(flow, 'emitted', name)
@@ -71,26 +80,22 @@ export default (flow) => {
     return event
   }
 
-  flow.emit.route = (flow) => {
-    // 2. reset status
-    flow.emit.recipients = []
-    flow.emit.recipientsMap = {}
+  flow.emit.route = (event) => {
+    event.stopPropagation.value = false
+    event.status.set(STATUS.FLOWING)
 
-    flow.status.value = STATUS.FLOWING
+    event.emit.targets = flow.emit.route[event.direction()](event)
+      .concat(event.emit.targets || [])
 
-    // only keep unique recipients
-    flow.emit.targets = flow.emit.route[flow.direction()](flow)
-      .filter(f => !flow.emit.recipientsMap[f.flow.guid()])
-
-    while (flow.emit.targets.length) {
-      var destination = flow.emit.targets.shift()
-      if (flow.isCancelled()) break
-      if (flow.propagationStopped()) break
+    while (event.emit.targets.length) {
+      var destination = event.emit.targets.shift()
+      if (event.isCancelled()) break
+      if (event.propagationStopped()) break
       if (destination.flow.isCancelled()) continue
-      notify(flow, destination)
+      notify(event, destination)
     }
-    if (!flow.isCancelled() && !flow.propagationStopped()) {
-      flow.status.value = STATUS.COMPLETED
+    if (!event.isCancelled() && !event.propagationStopped()) {
+      event.status.set(STATUS.COMPLETED)
     }
   }
 
@@ -101,14 +106,30 @@ export default (flow) => {
   })
 
   function notify (flow, currentNode) {
-    // if (unreachable(flow, currentNode)) return;
+    // only deliver once per node
+    if (flow.emit.recipientsMap[currentNode.flow.guid()]) return
+    if (isUnreachable(flow, currentNode)) return
+    flow.emit.recipientsMap[currentNode.flow.guid()] = flow.direction()
     let result = currentNode.flow.on.notifyListeners(flow)
     if (result) {
       result.route = currentNode.route
       result.direction = flow.direction()
-      flow.emit.recipientsMap[currentNode.flow.guid()] = flow.direction()
       flow.emit.recipients.push(result)
     }
+  }
+
+  function isUnreachable (flow, destination) {
+    let modifiers = Object.keys(flow.stopPropagation.modifiers)
+    if (!modifiers.length) return false
+
+    let routeMap = destination.route.reduce((i, route) => {
+      i[route.flow.guid()] |= DIRECTION_BITMASK[route.direction]
+      return i
+    }, {})
+
+    return modifiers.some(guid => {
+      return routeMap[guid] === flow.stopPropagation.modifiers[guid]
+    })
   }
 
 /*!

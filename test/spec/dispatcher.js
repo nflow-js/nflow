@@ -20,6 +20,14 @@ describe('Dispatchers', function () {
       expect(bar.parent().children()).to.not.contain(bar)
     })
 
+    it('should emit orphaned node', function (done) {
+      var orphaned = sut.create('bar').parent(null)
+      orphaned.create('a').on('bar', () => {
+        done()
+      })
+      orphaned.emit()
+    })
+
     it('should emit new node', function (done) {
       var payload = {}
       var listener = function (data) {

@@ -61,6 +61,7 @@ export default (flow) => {
    * a.parent(b) // reparent a onto b
    */
   flow.parent = (...parentArgs) => {
+    // TODO: accept an index parameter for attaching the flow node as the nth child
     if (!parentArgs.length) return flow.parent.value
     var parent = parentArgs[0]
     parent && assert(!isFlow(parent), ERRORS.invalidParent, parent)

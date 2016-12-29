@@ -199,21 +199,21 @@ describe('Logging', function () {
     })
 
     it('Should log .emitted("foo") API', (done) => {
-      var test = sut.create('test')
-        .on('foo', () => {
-          flow.logger(log => {
-            let recipient = log.d.recipients[0]
-            expect(log.action).to.equal('emitted')
-            expect(log.flow.name).to.equal('test')
-            expect(log.d.name).to.equal('foo')
+      flow.logger(log => {
+        if (log.action !== 'emitted') return
 
-            expect(recipient.flow.name).to.equal('test')
-            expect(recipient.route.map(f => f.flow.name).join())
-              .to.equal('foo,test')
-            flow.logger.reset()
-            done()
-          }, true)
-        })
+        let recipient = log.d.recipients[0]
+        expect(log.flow.name).to.equal('test')
+        expect(log.d.name).to.equal('foo')
+
+        expect(recipient.flow.name).to.equal('test')
+        expect(recipient.route.map(f => f.flow.name).join())
+          .to.equal('foo,test')
+        flow.logger.reset()
+        done()
+      }, true)
+      var test = sut.create('test')
+        .on('foo', () => {})
       test.emit('foo')
     })
 

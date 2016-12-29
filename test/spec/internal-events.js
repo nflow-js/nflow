@@ -119,11 +119,12 @@ describe('Internal Events', function () {
     it('should dispatch flow.children.create internal event', function (done) {
       sut
         .on('flow.children.create', (f, flowCreated) => {
-          expect(f.name()).to.equal('sut')
-          expect(flowCreated.name()).to.equal('test')
+          expect(f.name()).to.equal('test')
+          expect(flowCreated.name()).to.equal('test2')
           done()
         })
         .create('test')
+        .create('test2')
     })
 
     it('should dispatch flow.children.data internal event', function (done) {

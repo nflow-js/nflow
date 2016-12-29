@@ -43,7 +43,8 @@ export default (flow, defaults, name) => {
          , ERRORS.invalidStopPropagationArgs)
 
     if (direction === UNSET) {
-      flow.status.value = STATUS.STOPPED
+      flow.status.set(STATUS.STOPPED)
+      flow.emit.targets = []
       flow.stopPropagation.value = true
       flow.stopPropagation.modifiers[flow.target.guid] = -1 // bitmask fill
       dispatchInternalEvent(flow, 'propagationStopped', true)

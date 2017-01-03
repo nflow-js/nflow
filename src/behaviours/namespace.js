@@ -1,4 +1,4 @@
-import { assert } from '../utils'
+import { assert, getLocalName } from '../utils'
 import { ERRORS, NS_SEPARATOR } from '../consts'
 
 export default (flow, defaults, name, data) => {
@@ -98,7 +98,7 @@ export default (flow, defaults, name, data) => {
      , listenerName)
 
     // 1. Check that the local names match
-    if (!isLocalNameMatch({id: toLocal(flow.name()), f: flow}, listenerName)) return false
+    if (!isLocalNameMatch({id: getLocalName(flow.name()), f: flow}, listenerName)) return false
     // 2. Check that the receiver's explicit NS matches the sender's NS
     if (!isNamespaceMatch(flow, flow.name(), listenerNode.namespace.localise(listenerName))) return false
     // 2. Check that the sender's explicit NS matches the receiver's NS
@@ -171,7 +171,7 @@ export default (flow, defaults, name, data) => {
  * @return {Boolean} true if the local names are the same
  */
 function isLocalNameMatch ({id, f}, receiverName) {
-  const receiverLocalName = toLocal(receiverName)
+  const receiverLocalName = getLocalName(receiverName)
 
   const match = id === '*' ||
     receiverLocalName === '*' ||
@@ -179,10 +179,4 @@ function isLocalNameMatch ({id, f}, receiverName) {
     id === receiverLocalName
 
   return match
-}
-
-function toLocal (name) {
-  return name
-    .split(NS_SEPARATOR)
-    .pop()
 }

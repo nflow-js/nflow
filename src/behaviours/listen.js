@@ -1,5 +1,5 @@
 import { ERRORS, UNSET, STATUS, DIRECTION_BITMASK } from '../consts'
-import { assert, dispatchInternalEvent } from '../utils'
+import { assert, dispatchInternalEvent, invalidateListenerCache } from '../utils'
 
 export default (flow) => {
   flow.on = (name = UNSET, ...args) => {
@@ -12,8 +12,9 @@ export default (flow) => {
     }
 
     if (args.length === 1 && args[0] === null) {
-      dispatchInternalEvent(flow, 'listenerRemoved', {name})
       delete flow.on.listenerMap[name]
+      invalidateListenerCache(flow)
+      dispatchInternalEvent(flow, 'listenerRemoved', {name})
       return flow
     }
     var oldListeners = flow.on.listenerMap[name]
@@ -21,6 +22,7 @@ export default (flow) => {
       .filter(l => !assert(typeof (l) !== 'function'
         , ERRORS.invalidListenerType, typeof (l) + ': ' + l)
       )
+    invalidateListenerCache(flow)
     dispatchInternalEvent(flow, oldListeners
       ? 'listenerChanged'
       : 'listenerAdded'
@@ -28,6 +30,7 @@ export default (flow) => {
     return flow
   }
   flow.on.listenerMap = {}
+  flow.on.listenerCache = {}
 
   flow.on.notifyListeners = (event) => {
     let keys = Object.keys(flow.on.listenerMap)

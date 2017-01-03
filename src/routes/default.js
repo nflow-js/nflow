@@ -1,7 +1,8 @@
-import {isDetached} from '../utils'
+import {isDetached, createMatcher} from '../utils'
 import {DIRECTION} from '../consts'
 
-export default (flow) => {
+export default (flow, matcher) => {
+  let match = createMatcher(matcher)
   var visitedNodesMap = {}
   var route = []
   var parents = [flow].concat(flow.parents())
@@ -17,7 +18,7 @@ export default (flow) => {
   parents.forEach(f => {
       // traverse downstream on detached nodes:
     visitedNodesMap[f.flow.guid()] = true
-    route.push(f)
+    match(f.flow) && route.push(f)
 
     if (isDetached(f.flow)) {
       route = route.concat(getChildren(f.flow, f.route))
@@ -28,7 +29,7 @@ export default (flow) => {
   function getChildren (flow, route) {
     var visited = (visitedNodesMap[flow.guid()])
     visitedNodesMap[flow.guid()] = true
-    // route = route
+    if (!match(flow)) return []
     var nodes = visited ? [] : [{ flow, route }]
     flow.children()
       .forEach(f => {

@@ -42,8 +42,8 @@ describe('Internal Events', function () {
 
     it('should dispatch flow.children.parent internal event', function (done) {
       var listener = function (f, newParent, oldParent) {
-        expect(newParent).to.equal(sut1)
-        expect(oldParent).to.equal(sut)
+        expect(newParent.name()).to.equal('newParent')
+        expect(oldParent.name()).to.equal('sut')
         done()
       }
 
@@ -55,7 +55,7 @@ describe('Internal Events', function () {
         .parent(sut1)
     })
 
-    it('should dispatch flow.children.parent internal event', function (done) {
+    it('should dispatch flow.children.parent internal event upstream', function (done) {
       var listener = function (f, newParent, oldParent) {
         expect(f.name()).to.equal('test')
         expect(newParent.name()).to.equal('newParent')

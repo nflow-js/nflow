@@ -19,7 +19,7 @@ describe('Routes', function () {
         .create('c')
         .create('d')
 
-      var route = f.emit.route.UPSTREAM(f)
+      var route = f.emit.route.UPSTREAM(f, true)
       var map = route.map(f => f.flow.name())
       expect(map).to.eql(['d', 'c', 'b', 'a', 'sut'])
     })
@@ -35,7 +35,7 @@ describe('Routes', function () {
 
       f.create('z')
 
-      var route = f.emit.route.UPSTREAM(f)
+      var route = f.emit.route.UPSTREAM(f, true)
       var map = route.map(f => f.flow.name())
       expect(map).to.eql(['d', 'c', 'b', 'a', 'sut'])
     })
@@ -77,7 +77,7 @@ describe('Routes', function () {
         .create('c')
         .emit('d')
 
-      var route = f.emit.route.CURRENT(f)
+      var route = f.emit.route.CURRENT(f, true)
       var map = route.map(f => f.flow.name())
       expect(map).to.eql(['d', 'c'])
     })
@@ -93,7 +93,7 @@ describe('Routes', function () {
 
       f.create('z')
 
-      var route = f.emit.route.CURRENT(f)
+      var route = f.emit.route.CURRENT(f, true)
       var map = route.map(f => f.flow.name())
       expect(map).to.eql(['d', 'c'])
     })
@@ -173,22 +173,22 @@ describe('Routes', function () {
       b.create('e')
       var d = b.create('d')
 
-      var route = d.emit.route.DEFAULT(d)
+      var route = d.emit.route.DEFAULT(d, true)
       var map = route.map(f => f.flow.name())
-      expect(map.join()).to.eql(['d', 'b', 'sut', 'a', 'c', 'e'].join())
+      expect(map).to.deep.eql(['d', 'b', 'sut', 'a', 'c', 'e'])
     })
 
     it('should not return unrelated nodes', function () {
       var a = sut.create('a')
       var b = sut.create('b')
       b.parent(null)
-      var route = a.emit.route.DEFAULT(a)
+      var route = a.emit.route.DEFAULT(a, true)
       var map = route.map(f => f.flow.name())
       expect(map).to.eql(['a', 'sut'])
     })
     it('should record upstream route to recipients', function () {
       var a = sut.create('a')
-      var b = a.create('b').on('test', noop)
+      var b = a.create('b').on('test', () => console.log('received'))
       var c = b.create('c')
       var d = c.create('d')
 

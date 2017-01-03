@@ -7,6 +7,7 @@ import { merge
        , detach
        , assert
        , isFlow
+       , getLocalName
        , dispatchInternalEvent } from '../utils'
 import routes from '../routes'
 
@@ -49,9 +50,9 @@ export default (flow) => {
       detach(flow)
       let p = flow.parent() || flow
       direction && flow.direction(direction)
-      !flow.name.isInternal && dispatchInternalEvent(p, 'emit', flow)
+      dispatchInternalEvent(p, 'emit', flow)
       p.emit.route(flow)
-      !flow.name.isInternal && dispatchInternalEvent(p, 'emitted', flow)
+      dispatchInternalEvent(p, 'emitted', flow)
       return flow
     }
     if (isFlow(name)) {
@@ -83,8 +84,9 @@ export default (flow) => {
   flow.emit.route = (event) => {
     event.stopPropagation.value = false
     event.status.set(STATUS.FLOWING)
-
-    event.emit.targets = flow.emit.route[event.direction()](event)
+    let localName = getLocalName(event.name())
+    let matcher = f => f.on.listenerCache[localName]
+    event.emit.targets = flow.emit.route[event.direction()](event, matcher)
       .concat(event.emit.targets || [])
 
     while (event.emit.targets.length) {

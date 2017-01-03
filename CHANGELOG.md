@@ -1,3 +1,5 @@
+# 0.2.12
+ - event name caching
 # 0.2.5
  - added `.stats()` API
  - fixed bug where `flow.dispose()` was not called on child nodes

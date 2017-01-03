@@ -1,3 +1,4 @@
+import './spec/caching.js'
 import './spec/namespace.js'
 import './spec/propagation.js'
 import './spec/cancellation.js'

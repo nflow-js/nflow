@@ -1,8 +1,11 @@
+import { createMatcher } from '../utils'
 import {DIRECTION} from '../consts'
+
 /*
  *  returns: all parent nodes
  */
-export default (flow) => {
+export default (flow, matcher) => {
+  let match = createMatcher(matcher)
   return [flow]
     .concat(flow.parents())
     .map((flow, i, arr) => ({
@@ -13,4 +16,5 @@ export default (flow) => {
           direction: DIRECTION.UPSTREAM
         }))
     }))
+    .filter(f => match(f.flow))
 }

@@ -1,4 +1,9 @@
-import { assert, detach, dispatchInternalEvent, isFlow } from '../utils'
+import { assert,
+  detach,
+  isFlow,
+  dispatchInternalEvent,
+  invalidateListenerCache,
+  createMatcher } from '../utils'
 import { ERRORS } from '../consts'
 
 export default (flow) => {
@@ -14,12 +19,9 @@ export default (flow) => {
   flow.children.value = []
 
   flow.children.has = (matcher, recursive) => flow.children.find(matcher, recursive) !== undefined
-  flow.children.find = (matcher, recursive) => flow.children.findAll(matcher, recursive).pop()
+  flow.children.find = (matcher, recursive = true) => flow.children.findAll(matcher, recursive).pop()
   flow.children.findAll = (matcher, recursive) => {
-    var filter = matcher
-    if (matcher === null) return []
-    if (typeof (matcher) === 'string') filter = f => f.name() === matcher
-    else if (isFlow(matcher)) filter = f => f === matcher
+    let filter = createMatcher(matcher)
     var children = recursive
       ? flow.children.all()
       : flow.children()
@@ -112,12 +114,16 @@ export default (flow) => {
     flow.children.value =
       flow.children.value
         .filter(f => f !== child)
+    invalidateListenerCache(flow)
   }
 
   flow.target = flow
 
   function attach (parent) {
-    parent && parent.children.value.push(flow)
     flow.parent.value = parent
+    if (parent) {
+      parent.children.value.push(flow)
+      invalidateListenerCache(parent)
+    }
   }
 }

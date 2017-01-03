@@ -150,6 +150,19 @@ describe('Event Propagation', function () {
 
       expect(deliveryChain.join()).to.equal('c1,b,c0,d')
     })
+
+    it('should stop DOWNSTREAM propagation', () => {
+      let deliveryChain = []
+      let process = function () { deliveryChain.push(this.target.name()) }
+      let stopDownstream = function () { this.stopPropagation.downstream() }
+      sut.create('a').create('a0').on('test', process)
+      sut.create('b')
+        .on('test', stopDownstream)
+        .create('b0').on('test', process)
+      sut.create('c').create('c0').on('test', process)
+      sut.emit('test')
+      expect(deliveryChain).to.deep.equal(['a0', 'c0'])
+    })
   })
 
   describe('Flow stopPropagation.current()', function () {

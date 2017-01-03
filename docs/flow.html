@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Namespace: flow</title>
+    
+    
+    
+    
+    
+    <meta property="og:title" content="nflow API"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:image" content="logo.svg"/>
+    <meta property="og:site_name" content="nflow API Docs"/>
+    <meta property="og:url" content=""/>
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/jaguar.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":false,"cleverLinks":false,"applicationName":"nflow API","disqus":"","googleAnalytics":"","openGraph":{"title":"nflow API","type":"website","image":"logo.svg","site_name":"nflow API Docs","url":"","default":{"outputSourceFiles":true}},"meta":{"title":"","description":"","keyword":""},"linenums":true,"default":{}};
+    </script>
+    
+
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName"><a href="index.html">nflow API</a></h3>
+
+    <div class="search">
+        <input id="search" type="text" class="form-control input-sm" placeholder="Search Documentations">
+    </div>
+    <ul class="list">
+    
+        <li class="item" data-name="flow">
+            <span class="title">
+                <a href="flow.html">flow</a>
+                
+                <span class="static">static</span>
+                
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li data-name="flow.cancel"><a href="flow.html#.cancel">cancel</a></li>
+            
+                <li data-name="flow.children"><a href="flow.html#.children">children</a></li>
+            
+                <li data-name="flow.create"><a href="flow.html#.create">create</a></li>
+            
+                <li data-name="flow.dispose"><a href="flow.html#.dispose">dispose</a></li>
+            
+                <li data-name="flow.parent"><a href="flow.html#.parent">parent</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+    </ul>
+</div>
+    <div class="main">
+        <h1 class="page-title" data-filename="flow.html">Namespace: flow</h1>
+        
+
+
+
+<section>
+    
+<header>
+    <h2>
+    flow
+    </h2>
+    
+</header>  
+
+<article>
+    <div class="container-overview">
+    
+    
+    
+        
+            <div class="description"><p>The nflow API is designed to be simple and easy to use.<br><br><br>Essentially, the heart of nflow is only 3 methods :<br></p>
+<ul>
+<li><a href="flow.html#.create">create</a>,<br></li>
+<li>flow.on and<br></li>
+<li>flow.emit.<br><br><br>Since in nflow there is only one type of object, the same API applies to every object created or emitted.<br><br>Whether they are used as dispatchers, events, stores or controllers - they are the same type of objects and share the same API.<br></li>
+</ul></div>
+        
+        
+        
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+        
+        
+    
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".cancel">
+            
+            <span class="type-signature static">static</span>flow.cancel<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="flow.html">flow</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            behaviours/cancellable.js, line 24
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Cancels the current <a href="flow.html">flow</a> node.<br><br></p>
+<p>Cancelling has the following effects:<br></p>
+<ul>
+<li><b>All</b> child nodes of a cancelled node are also cancelled <b>recursively</b>.<br></li>
+<li>Cancelled nodes cannot receive events.<br></li>
+<li>Cancelled nodes cannot emit events.<br></li>
+<li>Cancelled nodes cannot propagate events.<br></li>
+</ul>
+<p>test<p data-height="300" data-theme-id="light" data-slug-hash="GjRaYQ" data-default-tab="js,result" data-user="nflow" data-embed-version="2" data-preview="false" data-editable="true" class="codepen">See the Pen <a target="_blank" href="http://codepen.io/nflow/pen/GjRaYQ/">nflow example</a> by Ⓩⓞⓛⓣⓐⓝ Bourne (<a target="_blank" href="http://codepen.io/nflow">@nflow</a>) on <a target="_blank" href="http://codepen.io">CodePen</a>.</p><script async src="http://assets.codepen.io/assets/embed/ei.js"></script></p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="flow.html">flow</a>
+                        
+                    
+            </td>
+            <td class="description last">flow - the current flow node</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".children">
+            
+            <span class="type-signature static">static</span>flow.children<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Array.&lt;<a href="flow.html">flow</a>>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            behaviours/connect.js, line 15
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>[children description]</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Array.&lt;<a href="flow.html">flow</a>>
+                        
+                    
+            </td>
+            <td class="description last">children - Array of child nodes</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".create">
+            
+            <span class="type-signature static">static</span>flow.create<span class="signature">(name, <span class="optional">data</span>)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="flow.html">flow</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            behaviours/create.js, line 18
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Create a new flow node.<p data-height="300" data-theme-id="light" data-slug-hash="flow.create('user', {
+  id: 12345,
+  userName: 'jsmith'
+  })" data-default-tab="js,result" data-user="nflow" data-embed-version="2" data-preview="false" data-editable="true" class="codepen">See the Pen <a target="_blank" href="http://codepen.io/nflow/pen/flow.create('user', {
+  id: 12345,
+  userName: 'jsmith'
+  })/">nflow example</a> by Ⓩⓞⓛⓣⓐⓝ Bourne (<a target="_blank" href="http://codepen.io/nflow">@nflow</a>) on <a target="_blank" href="http://codepen.io">CodePen</a>.</p><script async src="http://assets.codepen.io/assets/embed/ei.js"></script></p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                <p>The name of the new node</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                        <span class="repeatable">repeatable</span>
+                    
+                
+                <p>optional data stored in the node</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="flow.html">flow</a>
+                        
+                    
+            </td>
+            <td class="description last">a new flow instance</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".dispose">
+            
+            <span class="type-signature static">static</span>flow.dispose<span class="signature">()</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{<a href="flow.html">flow</a>}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            behaviours/disposable.js, line 9
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>[dispose description]</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="flow.html">flow</a>
+                        
+                    
+            </td>
+            <td class="description last">flow - the current node</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id=".parent">
+            
+            <span class="type-signature static">static</span>flow.parent<span class="signature">(parent)</span><span class="glyphicon glyphicon-circle-arrow-right"></span><span class="type-signature returnType">{Flow}</span>
+        </h4>
+    
+        
+        <div class="tag-source">
+            behaviours/connect.js, line 65
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Set the parent of the node</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>parent</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Flow</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                <p>the new parent node</p></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Flow
+                        
+                    
+            </td>
+            <td class="description last">flow the current flow node</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code><p>let a = nflow.create('a')<br>let b = nflow.create('b')<br>a.parent(b) // reparent a onto b</p></code></pre>
+    
+
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+</article>
+
+</section>  
+
+
+
+
+
+        
+
+        <footer>
+            Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Jan 03 2017 15:11:59 GMT+0000 (UTC)
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/jaguar.js"></script>
+</body>
+</html>

@@ -2,6 +2,24 @@ import { assert, getLocalName } from '../utils'
 import { ERRORS, NS_SEPARATOR } from '../consts'
 
 export default (flow, defaults, name, data) => {
+  /**
+   * **Getter only**.
+   * Return the full namespace of the node including:
+   *  - implicit namespace identifiers (see {@link flow.namespace.implicit}),
+   *  - explicit namespace identifiers (see {@link flow.namespace.explicit})
+   *  - and the local name. (see {@link flow.namespace.localName})
+   *
+   * ```
+   * let foo = nflow
+   *   .create('a')
+   *   .create('b')
+   *   .create('x:y:foo')
+   *
+   * foo.namespace() // -> "nflow:a:b:x:y:foo"
+   * ```
+   * @tutorial namespacing
+   * @return {String} The full namespace of the node
+   */
   flow.namespace = (...args) => {
     assert(args.length, ERRORS.invalidNamespaceArgs)
     return flow.namespace.path()
@@ -9,6 +27,22 @@ export default (flow, defaults, name, data) => {
       .join(NS_SEPARATOR)
   }
 
+  /**
+   * **Getter only**.
+   * Return all {@link flow} nodes that form the current node's namespace
+   * ```js
+   * let a = nflow.create('a')
+   * let b = a.create('b')
+   * let foo = b.create('x:y:foo')
+   *
+   * a.namespace() // -> [nflow, a]
+   * foo.namespace() // -> [nflow, a, b, foo]
+   * ```
+   * @tutorial namespacing
+   * @alias namespace.path
+   * @memberof flow
+   * @return {flow[]} Array of nodes that make up the current node's full namespace
+   */
   flow.namespace.path = (...args) => {
     assert(args.length, ERRORS.invalidNamespaceArgs)
     return flow
@@ -18,11 +52,19 @@ export default (flow, defaults, name, data) => {
   }
 
   /**
-   * The Implicit namespace part of the node is defined by its parents.
-   * For example:
-   * If the node's parent is `a` and `a`'s parent is `b`:
-   * The node's implicit namespace is `a:b`
-   * @param  none
+   * Return the implicit namespace segment of the current node.
+   *
+   * A node's implicit namespace is defined by the node's parents:
+   * ```js
+   * let a = nflow.create('a')
+   * let b = a.create('b')
+   * let foo = b.create('x:y:foo')
+   *
+   * a.namespace.implicit() // -> ["nflow"]
+   * foo.namespace.implicit() // -> ["nflow", "a", "b"]
+   * ```
+   * @alias namespace.implicit
+   * @memberof flow
    * @return {String[]} The implicit namespace segment of the node
    */
   flow.namespace.implicit = (...args) => {
@@ -33,12 +75,15 @@ export default (flow, defaults, name, data) => {
       .map(f => f.name())
   }
   /**
-   * The Explicit namespace identifier is defined as part of the node's name
-   * For example:
-   * If the node's name is `x:y:foo`
-   * The node's explicit namespace is `x:y`
-   * @param  none
-   * @return {String[]} The explicit namespace identifier of the node
+   * Return the `explicit` namespace segment of the node.
+   * The explicit namespace segment is given as part of the node's {@link flow.name|name}
+   * ```
+   * let foo = nflow.create(a:b:foo)
+   * foo.namespace.explicit() // "a:b"
+   * ```
+   * @alias namespace.explicit
+   * @memberof flow
+   * @return {String} The explicit namespace identifier of the node
    */
   flow.namespace.explicit = (...args) => {
     assert(args.length, ERRORS.invalidNamespaceArgs)
@@ -50,46 +95,63 @@ export default (flow, defaults, name, data) => {
   }
 
   /**
-   * The local name segment of the full namespace
-   * @example
-   * let foo = flow.create('x:y:foo')
-   * foo.namespace.localName() // -> foo'
-   * @param  none
-   * @return {String} The local name of the node
+   * Return the `local name` segment of the node.
+   * The local name is the node's name, minus any explicit namespace given as part of the node's {@link flow.name|name}.
+   * ```
+   * let foo = nflow.create(a:b:foo)
+   * foo.namespace.localName() // "foo"
+   * ```
+   * @see flow.namespace.explicit
+   * @alias namespace.localName
+   * @memberof flow
+   * @return {String} The explicit namespace identifier of the node
    */
   flow.namespace.localName = (...args) => {
     assert(args.length, ERRORS.invalidNamespaceArgs)
-    return flow
+    if (flow.namespace.localName.cache === null) {
+      flow.namespace.localName.cache = flow
       .name()
       .split(NS_SEPARATOR)
       .pop()
+    }
+    return flow.namespace.localName.cache
   }
+  flow.namespace.localName.cache = null
   /**
-   * The full namespace of the node including the:
-   *  - implicit ns identifiers,
-   *  - explicit namespace identifiers
-   *  - and the local name.
-   * @example
-   * let foo = flow.create('a').create('b').create('x:y:foo')
-   * foo.namespace.full() // -> ['a','b','x','y','foo']
-   * @param  none
-   * @return {Array} The full namespace of the node
-   */
+   * **Getter only**.
+   * Return the full namespace of the node including:
+   *  - implicit namespace identifiers (see {@link flow.namespace.implicit}),
+   *  - explicit namespace identifiers (see {@link flow.namespace.explicit})
+   *  - and the local name. (see {@link flow.namespace.localName})
+   *
+   * ```
+   * let foo = nflow
+   *   .create('a')
+   *   .create('b')
+   *   .create('x:y:foo')
+   *
+   * foo.namespace.full() // -> ["nflow", "a", "b", "x", "y", "foo"]
+   * ```
+   * @tutorial namespacing
+   * @return {String[]} The full namespace of the node
+   * @alias namespace.full
+   * @memberof flow
+   * */
   flow.namespace.full = (...args) => {
     assert(args.length, ERRORS.invalidNamespaceArgs)
-    return flow.namespace.implicit()
-      .concat(flow.name().split(NS_SEPARATOR))
+    return flow.namespace().split(NS_SEPARATOR)
   }
 
   /**
+   * @internal
    * Checks if the emitted event and the receiving node are in compatible namespaces.
    * An event can be delivered if the following checks pass:
    *  - the local names are the same
    *  - the full NS of the sender contains the explicit NS of the receiver
    *  - the full NS of the receiver contains the explicit NS of the sender
    * @param  {flow} listenerNode The node receiving the event
-   * @param  {[type]} listenerName the name of the event, optionally including the explicit namespace, eg.:`x:y:foo`
-   * @return {[type]} true if the event can be delivered to the receiving node
+   * @param  {String} listenerName the name of the event, optionally including the explicit namespace, eg.:`x:y:foo`
+   * @return {Boolean} true if the event can be delivered to the receiving node
    */
   flow.namespace.match = (listenerNode, listenerName) => {
     assert(
@@ -98,7 +160,7 @@ export default (flow, defaults, name, data) => {
      , listenerName)
 
     // 1. Check that the local names match
-    if (!isLocalNameMatch({id: getLocalName(flow.name()), f: flow}, listenerName)) return false
+    if (!isLocalNameMatch({id: flow.namespace.localName(), f: flow}, listenerName)) return false
     // 2. Check that the receiver's explicit NS matches the sender's NS
     if (!isNamespaceMatch(flow, flow.name(), listenerNode.namespace.localise(listenerName))) return false
     // 2. Check that the sender's explicit NS matches the receiver's NS
@@ -106,10 +168,10 @@ export default (flow, defaults, name, data) => {
     return true
   }
 
-  /**
+  /*
    * Checks if the node's FULL NS matches the name's explicit identifiers
-   * @param  {[type]}  node the node to get the full NS from
-   * @param  {[type]}  localisedNameTo The node name to get the explicit identifiers from
+   * @param  {flow}  node the node to get the full NS from
+   * @param  {String}  localisedNameTo The node name to get the explicit identifiers from
    * @return {Boolean} true if the name's explicit identifiers sit inside the node's NS
    */
   function isNamespaceMatch (node, nameFrom, localisedNameTo) {
@@ -164,7 +226,7 @@ export default (flow, defaults, name, data) => {
   }
 }
 
-/**
+/*
  * Checks if the local name of the sender and receiver nodes are the same
  * @param  {String}  senderLocalName    The name of the emitted event
  * @param  {String}  receiverLocalName The name of the listener

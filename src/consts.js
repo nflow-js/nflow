@@ -1,4 +1,15 @@
 export const UNSET = {}
+
+/**
+ * Enum for the direction event propagation
+ * @enum {String}
+ * @readonly
+ * @name DIRECTION
+ * @property {String} CURRENT - the event is only propagated to the current node
+ * @property {String} DEFAULT - the event bubbles up to root parent(the parent that has no other parents), then traverses **depth-first** to all child nodes
+ * @property {String} UPSTREAM - The event bubbles up to the root node
+ * @property {String} DOWNSTREAM - the event traverses **depth-first** all child nodes
+ */
 export const DIRECTION = {
   CURRENT: 'CURRENT',
   NONE: 'CURRENT', // deprecated
@@ -15,6 +26,19 @@ export const DIRECTION_BITMASK = {
   DOWNSTREAM: 1 << 3 // 8
 }
 
+/**
+ * Enum for decribing the status of a flow node.
+ *
+ * Use {@link flow.status}() to get the status of a flow instance.
+ * @enum
+ * @readonly
+ * @property {String} ACTIVE (Default) The node can emit(or be emitted), propagate or listen to events.
+ * @property {String} FLOWING The node has been emitted(so it is now treated as an event), but it hasn't been delivered to all listeners yet.
+ * @property {String} STOPPED The event propagation was stopped. See {@link flow.stopPropagation}
+ * @property {String} COMPLETED The event has been propagated to all listeners.
+ * @property {String} CANCELLED The event has been cancelled. See {@link flow.cancel}
+ * @property {String} DISPOSED The event has been disposed. See {@link flow.dispose}
+ */
 export const STATUS = {
   IDLE: 'IDLE',
   FLOWING: 'FLOWING',

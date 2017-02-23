@@ -12,6 +12,11 @@ import { merge
 import routes from '../routes'
 
 export default (flow) => {
+  /**
+   * return the current status of the node
+   * @readonly
+   * @return {STATUS} The current status of the node
+   */
   flow.status = (...args) => {
     assert(args.length
          , ERRORS.invalidStatus)
@@ -19,6 +24,11 @@ export default (flow) => {
     if (flow.dispose.value) return STATUS.DISPOSED
     return flow.status.value
   }
+
+  /**
+   * @internal
+   * @param {STATUS} The new status of the node
+   */
   flow.status.set = (status) => {
     if (status === flow.status.value) return
     !flow.name.isInternal && dispatchInternalEvent(flow, 'status', status, flow.status.value)
@@ -27,6 +37,12 @@ export default (flow) => {
   flow.status.value = STATUS.IDLE
   merge(STATUS, flow.status)
 
+  /**
+   * Set the traversal direction of the node.
+   * The direction defines how the node traverses the event tree when it's emitted.
+   * @param  {DIRECTION} [direction] The traversal direction
+   * @return {flow} The current flow node
+   */
   flow.direction = (direction = UNSET) => {
     if (direction === UNSET) return flow.direction.value
     let oldDirection = flow.direction.value
@@ -37,13 +53,101 @@ export default (flow) => {
   flow.direction.value = flow.create.defaults.direction
   merge(DIRECTION, flow.direction)
 
+  /**
+   * Emit a node to traverse the flow tree.
+   *
+   * In nflow `nodes` and `events` are the same type of objects.
+   * An event is a node that gets detached from the parent, traverses the tree (see {@tutorial propagation}) and gets delivered to all listeners (see {@tutorial namespacing}).
+   * > The `.emit` API has **3 distinct behaviours**:
+   * ```js
+   * foo.emit() // turns foo into an event and emits it
+   * foo.emit('bar') // creates bar and emits it on foo
+   * foo.emit(anotherNode) // reparents anotherNode to foo and emits it
+   * ```
+   * Essentially, the following two operations are the same:
+   * ```js
+   * foo.emit('bar')
+   * foo.create('bar').emit()
+   * ```
+   *
+   * #### Listener Context
+   * Listeners are always invoked in the context of the emitted event:
+   * ```js
+   * .on('price-update', function(d){
+   *   this // refers to the emitted event
+   *   this.data() // === d
+   *   this.name() // === 'price-update'
+   * })
+   * ```
+   *
+   * Since **events are also flow objects**, you can dispatch further events on them! ({@tutorial event-chain})
+   * @param  {String} [name] The name of the event
+   * @param {...object} [data] optional data stored on the event
+   * @returns {flow} the emitted event
+   * @tutorial event-chain
+   * @tutorial propagation
+   * @tutorial namespacing
+   * @emits 'flow.emit'
+   * @emits 'flow.parent.emit'
+   * @emits 'flow.children.emit'
+   * @emits 'flow.emitted'
+   * @emits 'flow.parent.emitted'
+   * @emits 'flow.children.emitted'
+   */
   flow.emit = (name = UNSET, ...args) => {
     return emit(name, args)
   }
   flow.emit.recipients = []
   flow.emit.recipientsMap = {}
   createEmitAPI(flow)
-
+  /**
+   *
+   * Dispatched when a node is about to be emitted.
+   * @event 'flow.emit'
+   * @property {flow} parent - The emitter, ie. the parent of the emitted node.
+   * @property {flow} flow - the emitted node.
+   * @see flow.parent
+   */
+  /**
+   *
+   * Dispatched when one of the node's parents is about to be emitted.
+   * @event 'flow.parent.emit'
+   * @property {flow} parent - The emitter, ie. the parent of the emitted node.
+   * @property {flow} flow - the emitted node.
+   * @see flow.emit
+   */
+  /**
+   *
+   * Dispatched when ove of the node's children(recursive) is about to be emitted.
+   * @event 'flow.children.emit'
+   * @property {flow} parent - The emitter, ie. the parent of the emitted node.
+   * @property {flow} flow - the emitted node.
+   * @see flow.emit
+   */
+  /**
+   *
+   * Dispatched after a node has been emitted.
+   * @event 'flow.emitted'
+   * @property {flow} parent - The emitter, ie. the parent of the emitted node.
+   * @property {flow} flow - the emitted node.
+   * @see flow.parent
+   */
+  /**
+   *
+   * Dispatched after one of the node's parents has been emitted.
+   * @event 'flow.parent.emitted'
+   * @property {flow} parent - The emitter, ie. the parent of the emitted node.
+   * @property {flow} flow - the emitted node.
+   * @see flow.emit
+   */
+  /**
+   *
+   * Dispatched after one of the node's children(recursive) has been emitted.
+   * @event 'flow.children.emitted'
+   * @property {flow} parent - The emitter, ie. the parent of the emitted node.
+   * @property {flow} flow - the emitted node.
+   * @see flow.emit
+   */
   function emit (name = UNSET, args, direction) {
     if (name === UNSET) {
       // emit current flow object
@@ -81,6 +185,9 @@ export default (flow) => {
     return event
   }
 
+  /**
+   * @internal
+   */
   flow.emit.route = (event) => {
     event.stopPropagation.value = false
     event.status.set(STATUS.FLOWING)

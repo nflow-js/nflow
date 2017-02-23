@@ -31,7 +31,7 @@ export default (flow, matcher) => {
     visitedNodesMap[flow.guid()] = true
     if (!match(flow)) return []
     var nodes = visited ? [] : [{ flow, route }]
-    flow.children()
+    flow.children.value
       .forEach(f => {
         nodes = nodes
           .concat(getChildren(f, route

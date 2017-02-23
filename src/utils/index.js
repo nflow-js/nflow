@@ -42,7 +42,7 @@ export function createMatcher (matcher) {
   return matcher
 }
 
-/**
+/*
  * returns the Local Name fragment of a namespaced listener or node name.
  * @example
  * 'a:b:foo' -> 'foo'
@@ -86,7 +86,7 @@ function updateListenerCache (node) {
   for (let key in node.on.listenerMap) {
     node.on.listenerCache[getLocalName(key)] = true
   }
-  node.children().forEach(f => {
+  node.children.value.forEach(f => {
     for (let key in f.on.listenerCache) {
       node.on.listenerCache[getLocalName(key)] = true
     }
@@ -97,7 +97,7 @@ export function dispatchInternalEvent (flow, name, newData, oldData) {
   if (isIgnored(flow)) return
   if (isFlow(newData) && newData.name.isInternal) return
 
-  var current = factory(DEFAULTS, 'flow.' + name)
+  let current = factory(DEFAULTS, 'flow.' + name)
   current.name.isInternal = true
   current.data.value = [newData, oldData]
   current.parent.value = flow
@@ -112,7 +112,7 @@ export function dispatchInternalEvent (flow, name, newData, oldData) {
   let down = factory(DEFAULTS, 'flow.parent.' + name)
   down.name.isInternal = true
   down.data.value = [flow, newData, oldData]
-  flow.children().forEach(f => f.emit.downstream(down))
+  flow.children.value.forEach(f => f.emit.downstream(down))
 
   logger.log(flow, name, newData, oldData)
 }

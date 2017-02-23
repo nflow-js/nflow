@@ -125,7 +125,7 @@ describe('Routes', function () {
         .emit('d')
       f.create('e')
 
-      var route = g.emit.route.DOWNSTREAM(g)
+      var route = g.emit.route.DOWNSTREAM(g, true)
       var map = route.map(f => f.flow.name())
       expect(map).to.eql(['x', 'x0', 'a', 'b', 'c', 'e'])
     })
@@ -141,7 +141,7 @@ describe('Routes', function () {
 
       f.create('z')
 
-      var route = f.emit.route.DOWNSTREAM(f)
+      var route = f.emit.route.DOWNSTREAM(f, true)
       var map = route.map(f => f.flow.name())
       expect(map).to.eql(['c', 'z', 'b1'])
     })
@@ -188,7 +188,7 @@ describe('Routes', function () {
     })
     it('should record upstream route to recipients', function () {
       var a = sut.create('a')
-      var b = a.create('b').on('test', () => console.log('received'))
+      var b = a.create('b').on('test', () => {})
       var c = b.create('c')
       var d = c.create('d')
 

@@ -1,49 +1,71 @@
 {
   "tags": {
     "allowUnknownTags": true,
-    "dictionaries": ["jsdoc","closure"]
+    "dictionaries": ["jsdoc"]
   },
   "source": {
-    "include": "src",
-    "includePattern": ".+\\.js(doc|x)?$",
+    "include": ["src", "src/README.md"],
+    "includePattern": ".+\\.(js|jsx)?$",
     "excludePattern": "(^|\\/|\\\\)_"
   },
   "plugins": [
     "plugins/markdown",
-    "./src-docs/plugins/codepen"
+    "./src-docs/plugin/codepen",
+    "./src-docs/plugin/live-example"
   ],
   "markdown": {
 		"parser": "gfm",
 		"hardwrap": true,
-		"tags": ["examples"]
+		"excludeTags": ["liveexample"]
 	},
   "templates": {
-    "applicationName": "nflow API",
+    "cleverLinks": true,
+    "monospaceLinks": true,
+    "useLongnameInNav": true,
+    "applicationName": "nflow",
     "disqus": "",
     "googleAnalytics": "",
     "openGraph": {
-      "title": "nflow API",
+      "title": "nflow Documentation",
       "type": "website",
       "image": "logo.svg",
       "site_name": "nflow API Docs",
-      "url": "",
-      "default": {
-  			"outputSourceFiles" : true
-  		}
+      "url": ""
+
     },
     "meta": {
       "title": "",
       "description": "",
       "keyword": ""
     },
-    "linenums": true
+    "linenums": true,
+    "default":{
+      "outputSourceFiles" : true,
+      "cssFiles":{
+        "include":["foo.css"],
+        "exclude":["styles/prettify-tomorrow.css"]
+      },
+      "jsFiles":{
+        "include":["foo.js"],
+        "exclude":["scripts/prettify/lang-css.js"]
+      },
+      "templateFiles":{
+        "examples":""
+      },
+      "staticFiles":{
+        "include": [
+          "./src-docs/assets",
+          "./node_modules/nflow-vis/dist"
+        ]
+      }
+    }
   },
   "opts": {
-    "_template": "templates/default",
-    "template": "./node_modules/jaguarjs-jsdoc",
+    "template": "./node_modules/minami",
     "encoding": "utf8",
     "destination": "./docs/",
+    "private": true,
     "recurse": true,
-    "_tutorials": "./src-docs"
+    "tutorials": "./src-docs/tutorials"
   }
 }

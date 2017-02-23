@@ -1,3 +1,6 @@
+# 0.2.15
+ - emitter performance fixes
+ - initial jsdocs
 # 0.2.12
  - event name caching
 # 0.2.5

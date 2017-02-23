@@ -1,6 +1,8 @@
 import {DIRECTION} from '../consts'
+import {createMatcher} from '../utils'
 
-export default (flow) => {
+export default (flow, matcher) => {
+  let match = createMatcher(matcher)
   let visitedNodesMap = {}
   let parent = flow.parent()
   let dir = f => {
@@ -16,9 +18,10 @@ export default (flow) => {
   function getChildren (flow, route) {
     if (visitedNodesMap[flow.guid()]) return []
     visitedNodesMap[flow.guid()] = true
+    if (!match(flow)) return []
     route = route.concat([{flow: flow, direction: dir(flow)}])
     var nodes = [{ flow, route }]
-    flow.children()
+    flow.children.value
       .forEach(f => (nodes = nodes.concat(getChildren(f, route))))
     return nodes
   }

@@ -20,15 +20,19 @@ For docs and examples visit: **[http://nflow.js.org/](http://nflow.js.org/)**
 
 `npm i nflow --save`
 
-
 ### How to develop
 
 nFlow uses webpack to compile the code, run the tests and run a local dev server:
 
 Clone this repo and run:
- - `npm start`
- - navigate to `http://localhost:5000/webpack-dev-server/` to run the tests in the browser
+ - `npm start`  
+  - Unit tests are served on: http://localhost:5000/test/  
+  (Hot loader: http://localhost:5000/webpack-dev-server/test)
+  - Docs are served on: http://localhost:5000/docs/  
+  (Hot Loader: http://localhost:5000/webpack-dev-server/docs)
 
-To run the unit tests, clone this repo and run:
+
+### Unit Tests
+To run all unit tests, clone this repo and run:
  - `npm install`
  - `npm test`

@@ -1,10 +1,55 @@
 import { serialise } from '../utils'
 
 export default (flow) => {
-  flow.toString = () => {
-    return JSON.stringify(flow.toObj())
+  /**
+   * JSON Stringified version of {@link flow.toObj} for logging and debugging.
+   * @see flow.toObj
+   * @memberof flow
+   * @param  {String[]} props - The {@link flow} properties to include in the serialisation.
+   * ```
+   * let counter = nflow.create('counter-service')
+   *  .data({ counter: 5 })
+   *
+   * counter.toObj('name', 'data')
+   * // -> '{ "name": "timer-service", "counter": "5"}'
+   * ```
+   * Available properties:
+   * - `"name"` - see {@link flow.name}
+   * - `"guid"` - see {@link flow.guid}
+   * - `"version"` - see {@link flow.version}
+   * - `"data"` - see {@link flow.data}
+   * - `"status"` - see {@link flow.status}
+   * - `"parent"` - see {@link flow.parent}
+   * - `"listeners"` - see {@link flow.on}
+   * - `"children"` - see {@link flow.children}
+   * - `"recipients"` - see {@link flow.emit.recipients}
+   * @return {String} Serialised and JSON Stringified representation of the current node.
+   */
+  flow.toString = (...args) => {
+    return JSON.stringify(flow.toObj(...args))
   }
-
+  /**
+   * Serialise the flow node into a json object
+   * @param  {String[]} props - The {@link flow} properties to include in the serialisation.
+   * ```
+   * let counter = nflow.create('counter-service')
+   *  .data({ counter: 5 })
+   *
+   * counter.toObj('name', 'data')
+   * // -> { "name": "timer-service", "counter": "5"}
+   * ```
+   * Available properties:
+   * - `"name"` - see {@link flow.name}
+   * - `"guid"` - see {@link flow.guid}
+   * - `"version"` - see {@link flow.version}
+   * - `"data"` - see {@link flow.data}
+   * - `"status"` - see {@link flow.status}
+   * - `"parent"` - see {@link flow.parent}
+   * - `"listeners"` - see {@link flow.on}
+   * - `"children"` - see {@link flow.children}
+   * - `"recipients"` - see {@link flow.emit.recipients}
+   * @return {Object} Serialised JSON representation of the {@link flow} node
+   */
   flow.toObj = (...args) => {
     const props = args.reduce((a, b) => { a[b] = 1; return a }, {})
     const hasProp = prop => !args.length || props[prop]
@@ -29,7 +74,7 @@ export default (flow) => {
         })
       return o
     })
-    add('children', () => flow.children()
+    add('children', () => flow.children.value
       .map(f => f.toObj('name', 'guid')))
 
     add('recipients', () => {

@@ -1,7 +1,0 @@
-node_modules
-.test
-dist
-npm-debug.log
-test-results.xml
-.DS_Store
-docs

@@ -93,9 +93,10 @@ function updateListenerCache (node) {
   })
 }
 
-export function dispatchInternalEvent (flow, name, newData, oldData) {
+export function dispatchInternalEvent (flow, name, newData, oldData, currentOnly = false) {
   if (isIgnored(flow)) return
   if (isFlow(newData) && newData.name.isInternal) return
+  logger.log(flow, name, newData, oldData)
 
   let current = factory(DEFAULTS, 'flow.' + name)
   current.name.isInternal = true
@@ -103,6 +104,7 @@ export function dispatchInternalEvent (flow, name, newData, oldData) {
   current.parent.value = flow
   current.emit.current()
 
+  if (currentOnly) return
   let up = factory(DEFAULTS, 'flow.children.' + name)
   up.name.isInternal = true
   up.data.value = [flow, newData, oldData]
@@ -113,8 +115,6 @@ export function dispatchInternalEvent (flow, name, newData, oldData) {
   down.name.isInternal = true
   down.data.value = [flow, newData, oldData]
   flow.children.value.forEach(f => f.emit.downstream(down))
-
-  logger.log(flow, name, newData, oldData)
 }
 
 function isIgnored (flow) {

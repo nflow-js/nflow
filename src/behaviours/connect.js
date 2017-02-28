@@ -234,14 +234,14 @@ export default (flow) => {
    * @returns {flow[]} All parent nodes starting from the immediate parent to the root
    */
   flow.parents = (...args) => {
-    assert(args.length, ERRORS.invalidParents)
-    var parentMap = {}
-    var parents = []
-    var p = flow.parent()
-    while (p && !parentMap[p.guid()]) {
+    let parentMap = {}
+    parentMap[flow.guid.value] = true
+    let parents = []
+    let p = flow.parent.value
+    while (p && !parentMap[p.guid.value]) {
       parents.push(p)
-      parentMap[p.guid()] = true
-      p = p.parent()
+      parentMap[p.guid.value] = true
+      p = p.parent.value
     }
     return parents
   }

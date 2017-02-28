@@ -1,1 +1,3 @@
-## CANCEL!
+<h2>Event Cancellation</h2>
+
+Coming soon...

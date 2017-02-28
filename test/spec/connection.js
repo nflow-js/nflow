@@ -153,7 +153,7 @@ describe('Connection', function () {
       var sut2 = sut1.create('sut2')
       var sut3 = sut2.create('sut3')
 
-      expect(sut1.parents()).to.eql([sut])
+      expect(sut1.parents().map(e => e.name())).to.eql([sut].map(e => e.name()))
       expect(sut2.parents()).to.eql([sut1, sut])
       expect(sut3.parents()).to.eql([sut2, sut1, sut])
     })
@@ -179,7 +179,7 @@ describe('Connection', function () {
       var sut2 = sut1.create('sut2')
       var sut3 = sut2.create('sut3')
       sut1.parent(sut3)
-      expect(sut3.parents()).to.eql([sut2, sut1, sut3])
+      expect(sut3.parents().map(f => f.name())).to.eql([sut2, sut1].map(f => f.name()))
     })
 
     it('should handle circular references (loop + leaf)', function () {

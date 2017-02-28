@@ -1,3 +1,4 @@
+import './perf/emit-event'
 import './perf/emit'
 import 'file?name=[name].[ext]!lodash?'
 import 'file?name=[name].[ext]!./perf.html?'

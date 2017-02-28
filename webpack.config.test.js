@@ -4,7 +4,7 @@ var webpack = require('webpack')
 var path = require('path')
 var hostname = 'localhost'
 var port = '5000'
-var JsDocPlugin = require('jsdoc-webpack-plugin')
+//var JsDocPlugin = require('jsdoc-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -42,9 +42,9 @@ module.exports = {
     new webpack.DefinePlugin({
       VERSION: JSON.stringify(pkg.version)
     })
-    // new JsDocPlugin({
-    //   conf: './src-docs/config.json'
-    // })
+//     new JsDocPlugin({
+//       conf: './src-docs/config.json'
+//     })
   ],
   stats: {
     colors: true,
@@ -55,7 +55,7 @@ module.exports = {
   devtool: 'source-map',
   devServer: {
     progress: true,
-    contentBase: '.',
+    contentBase: 'docs',
     host: hostname,
     port: port
   }

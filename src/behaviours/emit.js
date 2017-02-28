@@ -31,7 +31,7 @@ export default (flow) => {
    */
   flow.status.set = (status) => {
     if (status === flow.status.value) return
-    !flow.name.isInternal && dispatchInternalEvent(flow, 'status', status, flow.status.value)
+    !flow.name.isInternal && dispatchInternalEvent(flow, 'status', status, flow.status.value, true)
     flow.status.value = status
   }
   flow.status.value = STATUS.IDLE
@@ -154,9 +154,9 @@ export default (flow) => {
       detach(flow)
       let p = flow.parent() || flow
       direction && flow.direction(direction)
-      dispatchInternalEvent(p, 'emit', flow)
+      dispatchInternalEvent(p, 'emit', flow, null, true)
       p.emit.route(flow)
-      dispatchInternalEvent(p, 'emitted', flow)
+      dispatchInternalEvent(p, 'emitted', flow, null, true)
       return flow
     }
     if (isFlow(name)) {
@@ -166,9 +166,9 @@ export default (flow) => {
       detach(name)
       direction && name.direction(direction)
       args.length && name.data(...args)
-      dispatchInternalEvent(flow, 'emit', name)
+      dispatchInternalEvent(flow, 'emit', name, null, true)
       flow.emit.route(name)
-      dispatchInternalEvent(flow, 'emitted', name)
+      dispatchInternalEvent(flow, 'emitted', name, null, true)
       return flow
     }
 
@@ -179,9 +179,9 @@ export default (flow) => {
     var event = flow.create(name, ...args)
     detach(event)
     if (direction) event.direction.value = direction
-    dispatchInternalEvent(flow, 'emit', event)
+    dispatchInternalEvent(flow, 'emit', event, null, true)
     flow.emit.route(event)
-    dispatchInternalEvent(flow, 'emitted', event)
+    dispatchInternalEvent(flow, 'emitted', event, null, true)
     return event
   }
 
@@ -216,13 +216,13 @@ export default (flow) => {
 
   function notify (flow, currentNode) {
     // only deliver once per node
-    if (flow.emit.recipientsMap[currentNode.flow.guid()]) return
+    if (flow.emit.recipientsMap[currentNode.flow.guid.value]) return
     if (isUnreachable(flow, currentNode)) return
-    flow.emit.recipientsMap[currentNode.flow.guid()] = flow.direction()
+    flow.emit.recipientsMap[currentNode.flow.guid.value] = flow.direction.value
     let result = currentNode.flow.on.notifyListeners(flow)
     if (result) {
       result.route = currentNode.route
-      result.direction = flow.direction()
+      result.direction = flow.direction.value
       flow.emit.recipients.push(result)
     }
   }

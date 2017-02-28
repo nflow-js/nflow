@@ -3,7 +3,10 @@ body {
   line-height: 1.5;
   color: #606c71;
 }
-
+h1.page-title,
+h2.home{
+  display:none;
+}
 h4.name{
   color: #159957;
   text-align: left;
@@ -12,7 +15,25 @@ h4.name{
   font-weight: bold;
   border:none;
   box-shadow: none;
+  padding: 1em 2em;
 }
+
+section.tutorial>header>h2{
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+  line-height: 24px;
+  margin: 15px 0 10px;
+  padding: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+footer>span{
+ color: currentColor;
+ color: #159957;
+}
+
 
 #flow.name {
   display:none;

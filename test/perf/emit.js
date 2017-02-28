@@ -6,10 +6,11 @@ let sut = null
 
 function setup () {
   sut = nflow.create('sut')
+    .on('test', () => {})
     .parent(null)
   let child = sut
-  for (var i = 0; i < 100; i++) {
-    child = child.create('child').on('test', () => {})
+  for (var i = 0; i < 40; i++) {
+    child = child.create('child')
   }
 }
 console.log('Running perf tests')

@@ -159,11 +159,13 @@ export default (flow, defaults, name, data) => {
      , ERRORS.invalidListener
      , listenerName)
 
-    // 1. Check that the local names match
+     // 1. check for exact match
+    if (flow.name.value === listenerName && listenerName.indexOf(NS_SEPARATOR) === -1) return true
+    // 2. Check for local name match
     if (!isLocalNameMatch({id: flow.namespace.localName(), f: flow}, listenerName)) return false
-    // 2. Check that the receiver's explicit NS matches the sender's NS
+    // 3. Check that the receiver's explicit NS matches the sender's NS
     if (!isNamespaceMatch(flow, flow.name(), listenerNode.namespace.localise(listenerName))) return false
-    // 2. Check that the sender's explicit NS matches the receiver's NS
+    // 4. Check that the sender's explicit NS matches the receiver's NS
     if (!isNamespaceMatch(listenerNode, listenerName, flow.namespace.localise(flow.name()))) return false
     return true
   }

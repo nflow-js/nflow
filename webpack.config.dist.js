@@ -2,9 +2,6 @@ require('es6-promise').polyfill()
 var pkg = require('./package.json')
 var webpack = require('webpack')
 var path = require('path')
-var hostname = 'localhost'
-var port = '5000'
-var JsDocPlugin = require('jsdoc-webpack-plugin')
 
 module.exports = {
   entry: {

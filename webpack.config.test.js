@@ -1,10 +1,9 @@
 require('es6-promise').polyfill()
-var pkg = require('./package.json')
-var webpack = require('webpack')
-var path = require('path')
-var hostname = 'localhost'
-var port = '5000'
-//var JsDocPlugin = require('jsdoc-webpack-plugin')
+const pkg = require('./package.json')
+const webpack = require('webpack')
+const path = require('path')
+const hostname = 'localhost'
+const port = '5000'
 
 module.exports = {
   entry: {
@@ -42,9 +41,6 @@ module.exports = {
     new webpack.DefinePlugin({
       VERSION: JSON.stringify(pkg.version)
     })
-//     new JsDocPlugin({
-//       conf: './src-docs/config.json'
-//     })
   ],
   stats: {
     colors: true,

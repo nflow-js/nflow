@@ -64,7 +64,7 @@ export default (flow, defaults) => {
      */
     /**
      *
-     * Dispatched when ove of the node's children(recursive) has been created.
+     * Dispatched when one of the node's children(recursive) has been created.
      * @event 'flow.children.create'
      * @property {flow} flow - the node where the new node was created from(ie. the parent).
      * @property {flow} newNode - the created node.

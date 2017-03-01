@@ -1,2 +1,15 @@
+<?js
+  var data = obj;
+  var self = this;
+  var guid = ("e"+Math.random()).replace('.','')
+?>
 
-<pre class="prettyprint"><code><?js= this.htmlsafe(obj) ?></code></pre>
+<pre><code class="hljs js"><?js= this.htmlsafe(obj) ?></code></pre>
+<figure class="<?js=guid?>"><?js=guid?></figure>
+<script type="text/javascript" class="nocode">
+  (function(){
+    var guid = '.<?js=guid?>'
+    var e = document.querySelector(guid)
+
+  })()
+</script>

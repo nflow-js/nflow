@@ -9,9 +9,7 @@
     "excludePattern": "(^|\\/|\\\\)_"
   },
   "plugins": [
-    "plugins/markdown",
-    "./src-docs/plugin/codepen",
-    "./src-docs/plugin/live-example"
+    "plugins/markdown"
   ],
   "markdown": {
 		"parser": "gfm",
@@ -31,7 +29,6 @@
       "image": "logo.svg",
       "site_name": "nflow API Docs",
       "url": ""
-
     },
     "meta": {
       "title": "",
@@ -42,14 +39,16 @@
     "default":{
       "outputSourceFiles" : true,
       "cssFiles":{
-        "include":["styles.css"],
+        "include":[
+          "styles.css"
+        ],
         "_exclude":[
           "styles/prettify-tomorrow.css",
           "styles/jsdoc-default.css"
         ]
       },
       "jsFiles":{
-        "_include":["foo.js"],
+        "include":["dist/nflow.js"],
         "_exclude":["scripts/prettify/lang-css.js"]
       },
       "templateFiles":{
@@ -60,12 +59,14 @@
           "./src-docs/assets"
         ]
       },
-      "i18nFile": "src-docs/tmpl/i18n.json"
+      "i18nFile": "src-docs/tmpl/i18n.json",
+      "theme":"github"
     }
   },
   "opts": {
-    "_template": "./node_modules/minami",
-    "template": "../minami",
+    "_template": "templates/default",
+    "_template": "./node_modules/kitsune-jsdoc-template",
+    "template": "../kitsune-jsdoc-template",
     "encoding": "utf8",
     "destination": "./docs/",
     "private": true,

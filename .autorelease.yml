@@ -6,7 +6,7 @@ hooks:
       - echo "after update-modules"
   release:
     pre:
-      - echo "before release"
+      - npm run build:dist
     post:
       - echo "after release"
   gh_pages:
@@ -21,6 +21,6 @@ config:
   version_prefix: v
   create_branch: true
   npm_shrinkwrap: true
-  create_gh_pages: false
+  create_gh_pages: true
   gh_pages_dir: null
 circle: {}

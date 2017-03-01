@@ -1,3 +1,3 @@
-<h2>Event Cancellation</h2>
+## Event Cancellation
 
 Coming soon...

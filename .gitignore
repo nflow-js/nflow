@@ -5,3 +5,4 @@ npm-debug.log
 test-results.xml
 .DS_Store
 docs
+jsdoc.*

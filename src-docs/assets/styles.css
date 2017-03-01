@@ -1,132 +1,23 @@
-body {
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  color: #606c71;
-}
 h1.page-title,
 h2.home{
   display:none;
 }
-h4.name{
-  color: #159957;
-  text-align: left;
-  background-color: #ffffff;
-  background-image: linear-gradient(120deg, rgba(21, 87, 153, 0.05), rgba(31, 141, 214, 0.05));
-  font-weight: bold;
-  border:none;
-  box-shadow: none;
-  padding: 1em 2em;
-}
-
-section.tutorial>header>h2{
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 700;
-  line-height: 24px;
-  margin: 15px 0 10px;
-  padding: 0;
-  border-bottom: 1px solid #ddd;
-}
-
-footer>span{
- color: currentColor;
- color: #159957;
-}
-
-
 #flow.name {
   display:none;
 }
 
-a, a:active{
-  color: #1e6bb8;
-  text-decoration: none;
-}
-
-h4.name a,
-nav > ul > li > a,
-nav a:hover, nav a:active {
-  color: #1e6bb8;
-}
-
-nav h3,
-h1, h2, h3{
-  color: #159957;
-}
-
-h4, h5, h6{
-  color: #606c71;
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.type-signature:last-child {
-  color: #666;
-}
-
-.type-signature {
-  color: #999;
+h4.name::before {
+  content: 'flow.';
+  color: #aaa;
   font-weight: normal;
 }
 
-.signature{
-  color: #159957;
-  font-weight: normal;
-}
-
-.prettyprint {
-  font-size: 12px;
-}
-.prettyprint.source,
-.prettyprint code {
-  background: #333;
-}
-
-.params .type {
-  white-space: normal;
-}
-
-.params td{
-  border: none;
+.type-attrib{
+  display: none;
 }
 
 .params{
   border: none;
   border-left: 2px solid #DDD;
   box-shadow: none;
-}
-
-/* desert scheme ported from vim to google prettify */
-pre.prettyprint { display: block; background-color: #333 }
-pre .nocode { background-color: none; color: #000 }
-pre .str { color: #ffa0a0 } /* string  - pink */
-pre .kwd { color: #f0e68c; font-weight: bold }
-pre .com { color: #87ceeb } /* comment - skyblue */
-pre .typ { color: #98fb98 } /* type    - lightgreen */
-pre .lit { color: #cd5c5c } /* literal - darkred */
-pre .pun { color: #fff }    /* punctuation */
-pre .pln { color: #fff }    /* plaintext */
-pre .tag { color: #f0e68c; font-weight: bold } /* html/xml tag    - lightyellow */
-pre .atn { color: #bdb76b; font-weight: bold } /* attribute name  - khaki */
-pre .atv { color: #ffa0a0 } /* attribute value - pink */
-pre .dec { color: #98fb98 } /* decimal         - lightgreen */
-
-/* Specify class=linenums on a pre to get line numbering */
-ol.linenums { margin-top: 0; margin-bottom: 0; color: #AEAEAE } /* IE indents via margin-left */
-/*li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8 { list-style-type: none }*/
-/* Alternate shading for lines */
-li.L1,li.L3,li.L5,li.L7,li.L9 { }
-
-@media print {
-  pre.prettyprint { background-color: none }
-  pre .str, code .str { color: #060 }
-  pre .kwd, code .kwd { color: #006; font-weight: bold }
-  pre .com, code .com { color: #600; font-style: italic }
-  pre .typ, code .typ { color: #404; font-weight: bold }
-  pre .lit, code .lit { color: #044 }
-  pre .pun, code .pun { color: #440 }
-  pre .pln, code .pln { color: #000 }
-  pre .tag, code .tag { color: #006; font-weight: bold }
-  pre .atn, code .atn { color: #404 }
-  pre .atv, code .atv { color: #060 }
 }

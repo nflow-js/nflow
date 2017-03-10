@@ -1,5 +1,6 @@
 {
   "home": "",
   "classes": "nflow API",
-  "static": ""
+  "static": "",
+  "parameters": "arguments"
 }

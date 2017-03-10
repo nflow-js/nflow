@@ -34,7 +34,7 @@ export default (flow) => {
    * @return {flow} the current flow object
    * @tutorial propagation
    * @tutorial namespacing
-   * @example
+   * ```
    * services
    *  .create('user-service')
    *  .on('login'   , login)
@@ -43,6 +43,7 @@ export default (flow) => {
    *                , validateEmail
    *                , validatePassword
    *                , register)
+   *  ```
    *  @emits 'flow.listenerAdded'
    *  @emits 'flow.children.listenerAdded'
    *  @emits 'flow.parent.listenerAdded'

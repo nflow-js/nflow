@@ -16,8 +16,23 @@ h4.name::before {
   display: none;
 }
 
-.params{
-  border: none;
-  border-left: 2px solid #DDD;
-  box-shadow: none;
+figure {
+  white-space: nowrap;
+  background: #f8f8f8;
+  margin:1em;
+}
+figure > figcaption {
+  width: 50%;
+  display: inline-block;
+  min-height: 200px;
+  vertical-align: top;
+}
+
+figcaption > pre {
+  margin: 10px;
+}
+
+figure >.example{
+  display: inline-block;
+  width: 50%;
 }

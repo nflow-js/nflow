@@ -4,12 +4,33 @@
   var guid = ("e"+Math.random()).replace('.','')
 ?>
 
-<pre><code class="hljs js"><?js= this.htmlsafe(obj) ?></code></pre>
-<figure class="<?js=guid?>"><?js=guid?></figure>
-<script type="text/javascript" class="nocode">
+<figure>
+  <figcaption>
+    <pre><code class="hljs js"><?js= this.htmlsafe(obj) ?></code></pre>
+  </figcaption>
+  <div class="example <?js=guid?>"></div>
+</figure>
+<script type="text/javascript">
   (function(){
     var guid = '.<?js=guid?>'
-    var e = document.querySelector(guid)
+    var e = d3.select(guid)
+    var f = nflow.create('nflow').parent(null)
+    var padding = 10
+    var tree =  nflowVis.Vis(null)
+      .call(nflowVis.Tree)
+      .on('updated', function(){
+          var bb = e.select('.tree').node().getBBox()
+          e.select('svg').style('height', bb.y+bb.height+padding+'px')
+          e.select('svg').style('width', bb.x+bb.width+padding+'px')
+      })
 
+    tree.emit('track', f)
+    tree.emit('dom', e.node())
+    tree.emit('show-events', true)
+    tree.emit('dragging', false)
+    var runExample = function(nflow){
+      <?js= obj ?>
+    }
+  runExample(f)
   })()
 </script>

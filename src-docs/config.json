@@ -40,7 +40,8 @@
       "outputSourceFiles" : true,
       "cssFiles":{
         "include":[
-          "styles.css"
+          "styles.css",
+          "nflow-vis.css"
         ],
         "_exclude":[
           "styles/prettify-tomorrow.css",
@@ -48,7 +49,10 @@
         ]
       },
       "jsFiles":{
-        "include":["dist/nflow.js"],
+        "include":[
+          "dist/nflow.js",
+          "nflow-vis.js"
+        ],
         "_exclude":["scripts/prettify/lang-css.js"]
       },
       "templateFiles":{
@@ -56,11 +60,13 @@
       },
       "staticFiles":{
         "include": [
-          "./src-docs/assets"
+          "./src-docs/assets",
+          "./node_modules/nflow-vis/dist"
         ]
       },
       "i18nFile": "src-docs/tmpl/i18n.json",
-      "theme":"github"
+      "theme":"github",
+      "paramsDisplay":"compact"
     }
   },
   "opts": {

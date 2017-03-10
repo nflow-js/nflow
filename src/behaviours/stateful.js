@@ -5,7 +5,7 @@ export default (flow, defaults, name, data) => {
    * `Get` or `Set` the current node's data.
    *
    * Every {@link flow} node has an internal data storage for storing state.
-   * @param  {...object} [data] - the data to be stored in the node
+   * @param  {...object} [data] the data to be stored in the node
    * @return {object|object[]} (Getter) the data stored in the node.
    * If multiple objects are stored in the node, they are returned as an array:
    * ```js

@@ -20,6 +20,15 @@ export default (flow) => {
    * @see flow.create
    * @readonly
    * @return {flow[]} children - Array of child nodes
+   * @example
+   * let a = nflow.create('a')
+   *
+   * let x = a.create('x')
+   * let y = a.create('y')
+   * let z = a.create('z')
+   *
+   * nflow.children() // -> [ a ]
+   * a.children() // -> [ x, y, z ]
    */
   flow.children = (...args) => {
     assert(args.length, ERRORS.invalidChildren)
@@ -52,30 +61,34 @@ export default (flow) => {
 
   /**
    * > **Aliases:**
-   * > - `children.find`
-   * @alias children.get
+   * > - `.find`
+   * > - `.children.get`
+   * > - `.children.find`
+   * @alias get
    * @memberof flow
    * @param  {(String|Function|RegEx|flow)} matcher Matcher expression:
    *   ```
    *   // function:
-   *   .children.get(node => node.data() === 5)
+   *   .get(node => node.data() === 5)
    *
    *   // string:
-   *   .children.get('foo')
+   *   .get('foo')
    *
    *   // regex
-   *   .children.get(/$foo[a-Z]*^/)
+   *   .get(/$foo[a-Z]*^/)
    *
    *   // flow
-   *   .children.get(flowInstance)
+   *   .get(flowInstance)
    *   ```
    * @param  {Boolean}  [recursive=true] recursive search or immediate children only.
    * @return {flow|undefined} The first child node that matches the filter criteria, else `undefined`
    */
-  flow.children.find = (matcher, recursive = true) => flow.children.find.all(matcher, recursive).pop()
+  flow.get = (matcher, recursive = true) => flow.children.find.all(matcher, recursive).pop()
+  flow.find = flow.get
+  flow.children.find = flow.get
 
   /**
-   * Find a child node based on a search criteria.
+   * Find all child nodes based on a search criteria.
    *
    * > **Aliases:**
    * > - `children.find.all`
@@ -108,16 +121,27 @@ export default (flow) => {
   }
 
   flow.children.findAll = flow.children.find.all
-  flow.get = flow.children.find
+
+
   flow.get.all = flow.children.find.all
   flow.getAll = flow.children.findAll
 
   /**
-   * Return all child nodes recursively.
+   * Return all child nodes recursively(Breadth First).
    *
    * @alias children.all
    * @memberof flow
    * @return {flow[]} All child nodes of the current node (recursive)
+   * @example
+   * let a = nflow.create('a')
+   * let w = a.create('w')
+   * let x = a.create('x')
+   *
+   * let b = nflow.create('b')
+   * let y = b.create('y')
+   * let z = b.create('z')
+   *
+   * nflow.children.all() // -> [ a, b, w, x, y, z ]
    */
   flow.children.all = (...args) => {
     assert(args.length, ERRORS.invalidChildren)
@@ -136,19 +160,20 @@ export default (flow) => {
   /**
    * Get or set the the parent of the current node.
    *
-   * **Reparenting:**
-   * ```
+   * @example <caption>Reparenting:</caption>
    * let a = nflow.create('a')
    * let b = nflow.create('b')
-   * a.parent(b) // reparent a onto b
-   * ```
+   * let x = a.create('x')
    *
-   * **Unparenting:**
-   * You can create a new standalone tree by setting the `parent` to `null`.
-   * ```
+   * x.parent(b) // reparent a onto b
+   *
+   * @example <caption>Unparenting: You can create a new standalone tree by setting the parent to null:</caption>
    * let a = nflow.create('a')
+   * a.create('x')
+   * a.create('y')
+   * let b = nflow.create('b')
+   *
    * a.parent(null) // unparent `a` to form a new tree
-   * ```
    *
    * @param {(flow|null)} [parent] - the new parent node
    * @returns {flow|null}

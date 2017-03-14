@@ -93,6 +93,17 @@ export default (flow) => {
    * @emits 'flow.emitted'
    * @emits 'flow.parent.emitted'
    * @emits 'flow.children.emitted'
+   * @example
+   * let a = nflow.create('a')
+   *
+   * a.create('x')
+   *   .on('hello', callback)
+   *
+   * a.create('y')
+   *   .on('hello', callback)
+   *
+   * let b = nflow.create('b')
+   * b.emit('hello')
    */
   flow.emit = (name = UNSET, ...args) => {
     return emit(name, args)

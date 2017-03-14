@@ -30,11 +30,6 @@ export default (flow, defaults) => {
    *
    * let c = a.create('c')
    * let d = a.create('d')
-   *
-   * @example <caption>second demo:</caption>
-   * let a = nflow.create('a')
-   * let b = nflow.create('b')
-   *
    * @emits 'flow.create'
    * @emits 'flow.parent.create'
    * @emits 'flow.children.create'

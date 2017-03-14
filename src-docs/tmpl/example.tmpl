@@ -10,25 +10,30 @@
   </figcaption>
   <div class="example <?js=guid?>"></div>
 </figure>
-<script type="text/javascript">
+<script type="text/babel">
   (function(){
     var guid = '.<?js=guid?>'
     var e = d3.select(guid)
     var f = nflow.create('nflow').parent(null)
-    var padding = 10
+    var padding = 20
+
     var tree =  nflowVis.Vis(null)
       .call(nflowVis.Tree)
       .on('updated', function(){
           var bb = e.select('.tree').node().getBBox()
-          e.select('svg').style('height', bb.y+bb.height+padding+'px')
-          e.select('svg').style('width', bb.x+bb.width+padding+'px')
+          e.style('height', bb.y+bb.height+padding+'px')
+          e.style('width', bb.width+padding+'px')
+          tree.emit('resize')
       })
 
     tree.emit('track', f)
     tree.emit('dom', e.node())
     tree.emit('show-events', true)
     tree.emit('dragging', false)
+    d3.select(window).on('resize.tree', ()=>tree.emit('resize'))
     var runExample = function(nflow){
+      var noop = function(){}
+      var callback = noop
       <?js= obj ?>
     }
   runExample(f)

@@ -51,7 +51,8 @@
       "jsFiles":{
         "include":[
           "dist/nflow.js",
-          "nflow-vis.js"
+          "nflow-vis.js",
+          "babel.js"
         ],
         "_exclude":["scripts/prettify/lang-css.js"]
       },

@@ -16,17 +16,18 @@ export default (flow, defaults, name) => {
    *  - <b>All</b> child nodes of a cancelled node <b>are also cancelled recursively</b>.<br>
    *
    * Cancellation is final, cancelled nodes cannot be un-cancelled.
-   * @method
-   * @memberof module:flow
    * @return {flow} flow - the current {@link flow} node
-   * @liveexample
-   * let foo = nflow.create('foo')
-   *   .on('hello', cb)
+   * @example
+   * let a = nflow.create('a')
+   * let b = nflow.create('b')
+   * a.create('x')
+   * a.create('y')
    *
-   * foo.cancel()
+   * a.cancel()
    * @emits 'flow.cancel'
    * @emits 'flow.children.cancel'
    * @emits 'flow.parent.cancel'
+   * @see flow.cancel
    */
   flow.cancel = (...args) => {
     assert(args.length
@@ -64,7 +65,6 @@ export default (flow, defaults, name) => {
   flow.cancel.value = false
 
   /**
-   * @memberof module:flow
    * @readonly
    * @return {Boolean} `true` if the node or any of the node's parents have been cancelled, else `false`
    */

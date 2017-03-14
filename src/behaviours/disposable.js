@@ -11,6 +11,8 @@ export default (flow, defaults) => {
    *  - Disposed nodes cannot receive events.
    *  - Disposed nodes cannot emit events.
    *  - Disposed nodes cannot propagate events.
+   *  - All event listeners are removed
+   *  - The data of the node is removed
    *  - Disposed nodes are unparented
    *  - <b>All child nodes</b> of a disposed node <b>are also disposed recursively</b>.<br>
    *
@@ -18,9 +20,17 @@ export default (flow, defaults) => {
    *
    * This operation is final, disposed nodes cannot be re-activated.
    *  @return {flow} the disposed node
+   *  @see flow.cancel
    *  @emits 'flow.dispose'
    *  @emits 'flow.children.dispose'
    *  @emits 'flow.parent.dispose'
+   *  @example
+   *  let a = nflow.create('a')
+   *  let b = nflow.create('b')
+   *  a.create('x')
+   *  a.create('y')
+   *
+   * a.dispose()
    */
     /* jshint ignore:end */
   flow.dispose = (...args) => {
@@ -59,7 +69,7 @@ export default (flow, defaults) => {
     flow.parent(null)
     flow.dispose.value = true
     flow.on.listenerMap = {}
-
+    flow.data.value = []
     return flow
   }
   flow.dispose.value = false

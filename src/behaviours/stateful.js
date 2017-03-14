@@ -7,17 +7,18 @@ export default (flow, defaults, name, data) => {
    * Every {@link flow} node has an internal data storage for storing state.
    * @param  {...object} [data] the data to be stored in the node
    * @return {object|object[]} (Getter) the data stored in the node.
-   * If multiple objects are stored in the node, they are returned as an array:
-   * ```js
-   * let foo = nflow.create('foo')
-   *   .data({a:5}, "somethingElse")
-   *
-   * foo.data() // [{a:5}, "somethingElse"]
-   * ```
    * @return {flow} (Setter) The current node
    * @emits 'flow.data'
    * @emits 'flow.parent.data'
    * @emits 'flow.children.data'
+   * @example <caption>Setting/getting data on a node:</caption>
+   * let foo = nflow.create('foo')
+   *   .data({
+   *      a:5
+   *    })
+   *
+   * foo.data() // -> { a:5 }
+   *
    */
   flow.data = (...data) => {
     if (!data.length) {

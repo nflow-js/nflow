@@ -5,15 +5,16 @@ export default (flow, defaults) => {
   /* jshint ignore:start */
   /**
    * Create a new flow instance.
-   * > **Note**: The parent of the newly created {@link flow} node is automatically set
+   * **Note**: The parent of the newly created {@link flow} node is automatically set
    * to the flow node it was created from.
-   * >
-   * > To create a new event tree that's not connected to existing nodes, simply unparent it after creation:
-   * > ```
-   * > let a = nflow
-   * >   .create('new-tree')
-   * >   .parent(null)
-   * > ```
+   *
+   * To create a new event tree that's not connected to existing nodes, simply unparent it after creation:
+   * ```
+   * let a = nflow
+   *   .create('new-tree')
+   *   .parent(null)
+   * ```
+   *
    * **Aliases**
    * The following command chains have identical end results:
    * - `.create('a', someData)`
@@ -79,6 +80,14 @@ export default (flow, defaults) => {
    * @param {string} name The name of the new node
    * @param {...object} [data] optional data stored in the node
    * @returns {flow} the newly created or already existing flow instance
+   * @example
+   * nflow.create('a')
+   * nflow.create('a')
+   * nflow.create('a')
+   *
+   * nflow.create.once('b')
+   * nflow.create.once('b')
+   * nflow.create.once('b')
    */
   flow.create.once = (name, ...data) => {
     let instance = flow.get(name)

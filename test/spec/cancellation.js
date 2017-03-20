@@ -4,14 +4,14 @@ import {expect} from 'chai'
 
 var sut
 
-describe('Cancellation', function () {
-  beforeEach(function () {
+describe('Cancellation', () => {
+  beforeEach(() => {
     sut = flow
       .create('sut')
       .parent(null)
   })
-  describe('Flow Cancellation', function () {
-    it('parent node should cancel all child nodes', function () {
+  describe('Flow Cancellation', () => {
+    it('parent node should cancel all child nodes', () => {
       var a = sut.create('a') // parent
       var a1 = a.create('a1') // parent's sibling
       var b = a.create('b')   // SUT
@@ -35,13 +35,22 @@ describe('Cancellation', function () {
       expect(d.isCancelled()).to.be.true
     })
 
-    it('should cancel event delegation.', function (done) {
-      function shouldCall () {
-        this.cancel()
-      }
-      function shouldNotCall () {
-        done('cancelled event should not call subsequent listeners')
-      }
+    it('should dispatch flow.cancel', done => {
+      sut.on('flow.cancel', ()=>done())
+      sut.cancel()
+    })
+    it('should dispatch flow.parent.cancel', done => {
+      sut.create('child').on('flow.parent.cancel', ()=>done())
+      sut.cancel()
+    })
+    it('should dispatch flow.children.cancel', done => {
+      sut.on('flow.children.cancel', ()=>done())
+      sut.create('child').cancel()
+    })
+
+    it('should cancel event delegation.', done => {
+      let shouldCall = function() { this.cancel() }
+      let shouldNotCall = () => { done('cancelled event should not call subsequent listeners') }
 
       sut
         .create('a') // parent
@@ -54,13 +63,9 @@ describe('Cancellation', function () {
       setTimeout(done, 10)
     })
 
-    it('should cancel event delivery on same listener', function (done) {
-      function shouldCall () {
-        this.cancel()
-      }
-      function shouldNotCall () {
-        done('cancelled event should not call subsequent listeners')
-      }
+    it('should cancel event delivery on same listener', done => {
+      let shouldCall = function() { this.cancel() }
+      let shouldNotCall = () => { done('cancelled event should not call subsequent listeners') }
 
       sut
         .create('b')
@@ -71,10 +76,8 @@ describe('Cancellation', function () {
       setTimeout(done, 10)
     })
 
-    it('should not emit events on cancelled nodes', function (done) {
-      function shouldNotCall () {
-        done('cancelled event should not call subsequent listeners')
-      }
+    it('should not emit events on cancelled nodes', done => {
+      let shouldNotCall = () => { done('cancelled event should not call subsequent listeners') }
 
       sut
         .create('b')
@@ -86,9 +89,8 @@ describe('Cancellation', function () {
 
       setTimeout(done, 10)
     })
-    it('should not deliver events into a cancelled subtree', function (done) {
-      function shouldCall () {
-        done()
+    it('should not deliver events into a cancelled subtree', done => {
+      let shouldCall = () => { done()
       }
       function shouldNotCall () {
         done('stopped event should not call listener')

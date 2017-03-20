@@ -16,6 +16,7 @@ export default (flow, defaults, name) => {
    *  - <b>All</b> child nodes of a cancelled node <b>are also cancelled recursively</b>.<br>
    *
    * Cancellation is final, cancelled nodes cannot be un-cancelled.
+   * @see flow.dispose
    * @return {flow} flow - the current {@link flow} node
    * @example
    * let a = nflow.create('a')
@@ -33,7 +34,6 @@ export default (flow, defaults, name) => {
     assert(args.length
          , ERRORS.invalidCancelArgs)
     let previousValue = flow.cancel.value
-    flow.cancel.value = true
     /**
      *
      * Dispatched when a node has been cancelled.
@@ -41,8 +41,27 @@ export default (flow, defaults, name) => {
      * @property {flow} flow - the node to be cancelled.
      * @see flow.cancel
      * @example
-     * nflow.create('timer-service')
+     * let timer = nflow
+     *   .create('timer-service')
+     *   .data({
+     *     id: null
+     *   })
      *   .on('flow.cancel', stopTimer)
+     *
+     * function startTimer(){
+     *   let d = timer.data()
+     *   d.id = setInterval(()=>timer.emit('tick'), 1000)
+     * }
+     * function stopTimer(){
+     *   let d = timer.data()
+     *   clearInterval(d.id)
+     *   d.id = null
+     * }
+     *
+     * timer.on('tick', callback)
+     *
+     * // later:
+     * timer.cancel()
      */
     /**
      *
@@ -60,6 +79,7 @@ export default (flow, defaults, name) => {
      * @see flow.cancel
      */
     dispatchInternalEvent(flow, 'cancel', true, previousValue)
+    flow.cancel.value = true
     return flow
   }
   flow.cancel.value = false
@@ -67,6 +87,19 @@ export default (flow, defaults, name) => {
   /**
    * @readonly
    * @return {Boolean} `true` if the node or any of the node's parents have been cancelled, else `false`
+   * @see flow.cancel
+   * @example
+   * let a = nflow.create('a')
+   * let b = nflow.create('b')
+   * let x = a.create('x')
+   * let y = a.create('y')
+   *
+   * a.cancel()
+   * a.isCancelled() // -> true
+   * b.isCancelled() // -> false
+   * x.isCancelled() // -> true
+   * y.isCancelled() // -> true
+   *
    */
   flow.isCancelled = () => {
     return [flow]
@@ -119,7 +152,7 @@ export default (flow, defaults, name) => {
        * @see flow.stopPropagation
        * @example
        * nflow.create('timer-service')
-       *   .on('flow.propagationStopped', cb)
+       *   .on('flow.propagationStopped', callback)
        */
       /**
        *

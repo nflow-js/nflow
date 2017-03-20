@@ -3,7 +3,8 @@ import { dispatchInternalEvent } from '../utils'
 export default (flow, defaults, name, data) => {
   /**
    * `Get` or `Set` the current node's data.
-   *
+   * If multiple data objects are given(`.data(a,b,c)`), they will be returned
+   * in an Array.
    * Every {@link flow} node has an internal data storage for storing state.
    * @param  {...object} [data] the data to be stored in the node
    * @return {object|object[]} (Getter) the data stored in the node.
@@ -12,12 +13,14 @@ export default (flow, defaults, name, data) => {
    * @emits 'flow.parent.data'
    * @emits 'flow.children.data'
    * @example <caption>Setting/getting data on a node:</caption>
-   * let foo = nflow.create('foo')
-   *   .data({
-   *      a:5
-   *    })
+   * let a = nflow.create('a')
+   *   .data({ a:5 })
    *
-   * foo.data() // -> { a:5 }
+   * let b = a.create('b')
+   *  .data(2, 3, { c: 4 })
+   *
+   * a.data() // -> { a: 5 }
+   * b.data() // -> [2, 3, { c: 4 } ]
    *
    */
   flow.data = (...data) => {

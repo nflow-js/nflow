@@ -28,12 +28,6 @@ export default (flow) => {
    *                        , registerUser)
    * ```
    * If you specify multiple listeners, they will called in sequential order.
-   *
-   * @param  {String} [name] the name of the listener
-   * @param  {...function} [listeners] The callback function(s) to be invoked.
-   * @return {flow} the current flow object
-   * @tutorial propagation
-   * @tutorial namespacing
    * ```
    * services
    *  .create('user-service')
@@ -44,6 +38,12 @@ export default (flow) => {
    *                , validatePassword
    *                , register)
    *  ```
+   *
+   * @param  {String} [name] the name of the listener
+   * @param  {...function} [listeners] The callback function(s) to be invoked.
+   * @return {flow} the current flow object
+   * @tutorial propagation
+   * @tutorial namespacing
    *  @emits 'flow.listenerAdded'
    *  @emits 'flow.children.listenerAdded'
    *  @emits 'flow.parent.listenerAdded'

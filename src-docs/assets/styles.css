@@ -6,7 +6,7 @@ h2.home{
   display:none;
 }
 
-h4.name::before {
+h4.name>.type-name::before {
   content: 'flow.';
   color: #aaa;
   font-weight: normal;
@@ -17,14 +17,16 @@ h4.name::before {
 }
 
 figure {
-  white-space: nowrap;
+  display: flex;
+  flex-wrap: wrap;
   background: #f8f8f8;
   margin:1em;
 }
+
 figure > figcaption {
-  width: 50%;
+  flex: 1 0;
   display: inline-block;
-  min-height: 200px;
+  min-height: 250px;
   vertical-align: top;
 }
 
@@ -33,6 +35,9 @@ figcaption > pre {
 }
 
 figure >.example{
-  display: inline-block;
-  width: 50%;
+  flex: 1 1;
+}
+
+svg .text-bg{
+  fill: #F8F8F8;
 }

@@ -84,6 +84,11 @@ export default (flow) => {
    * @return {flow|undefined} The first child node that matches the filter criteria, else `undefined`
    */
   flow.get = (matcher, recursive = true) => flow.children.find.all(matcher, recursive).pop()
+  /**
+   * Alias for {@link flow.get}
+   * @memberof flow
+   * @method
+   */
   flow.find = flow.get
   flow.children.find = flow.get
 
@@ -127,7 +132,7 @@ export default (flow) => {
   flow.getAll = flow.children.findAll
 
   /**
-   * Return all child nodes recursively(Breadth First).
+   * Return all child nodes recursively, using **Breadth First** traversal.
    *
    * @alias children.all
    * @memberof flow

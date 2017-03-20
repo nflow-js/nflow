@@ -97,7 +97,6 @@ export function dispatchInternalEvent (flow, name, newData, oldData, currentOnly
   if (isIgnored(flow)) return
   if (isFlow(newData) && newData.name.isInternal) return
   logger.log(flow, name, newData, oldData)
-
   let current = factory(DEFAULTS, 'flow.' + name)
   current.name.isInternal = true
   current.data.value = [newData, oldData]

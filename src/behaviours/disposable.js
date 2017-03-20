@@ -47,8 +47,12 @@ export default (flow, defaults) => {
      * @property {flow} flow - the node to be disposed.
      * @see flow.dispose
      * @example
-     * nflow.create('timer-service')
-     *   .on('flow.dispose', stopTimer)
+     * nflow.create('user-service')
+     *   .on('flow.dispose', stopService)
+     *
+     * function stopService(){
+     *   // stop timers, unsubscribe from streaming services
+     * }
      */
     /**
      *

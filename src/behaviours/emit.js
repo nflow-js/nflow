@@ -42,6 +42,18 @@ export default (flow) => {
    * The direction defines how the node traverses the event tree when it's emitted.
    * @param  {DIRECTION} [direction] The traversal direction
    * @return {flow} The current flow node
+   * @example
+   * let a = nflow.create('a')
+   * a.create('x').on('hello', callback)
+   * a.create('y').on('hello', callback)
+   *
+   * let b = nflow.create('b')
+   * b.create('x').on('hello', callback)
+   * b.create('y').on('hello', callback)
+   *
+   * a.create('hello')
+   *  .direction(nflow.direction.DOWNSTREAM)
+   *  .emit()
    */
   flow.direction = (direction = UNSET) => {
     if (direction === UNSET) return flow.direction.value

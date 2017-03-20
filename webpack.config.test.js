@@ -51,7 +51,7 @@ module.exports = {
   devtool: 'source-map',
   devServer: {
     progress: true,
-    contentBase: 'docs',
+    contentBase: '',
     host: hostname,
     port: port
   }

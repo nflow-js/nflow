@@ -33,6 +33,11 @@ export default (flow, defaults, name) => {
    * @emits 'flow.name'
    * @emits 'flow.parent.name'
    * @emits 'flow.children.name'
+   * @example
+   * let a = nflow.create('a')
+   * let b = a.create('b')
+   *
+   * b.parent().name() // -> 'a'
    */
   flow.name = (name = UNSET) => {
     if (name === UNSET) return flow.name.value
@@ -61,7 +66,7 @@ export default (flow, defaults, name) => {
      */
     /**
      *
-     * Dispatched when ove of the node's children(recursive) has been renamed.
+     * Dispatched when one of the node's children(recursive) has been renamed.
      * @event 'flow.children.name'
      * @property {flow} flow - the renamed node.
      * @property {flow} newName - the new name of the node

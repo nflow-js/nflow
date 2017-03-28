@@ -19,6 +19,8 @@ export default (flow, defaults, name, data) => {
    * ```
    * @tutorial namespacing
    * @return {String} The full namespace of the node
+   * @memberof flow#internal
+   * @alias namespace
    */
   flow.namespace = (...args) => {
     assert(args.length, ERRORS.invalidNamespaceArgs)
@@ -42,6 +44,8 @@ export default (flow, defaults, name, data) => {
    * @alias namespace.path
    * @memberof flow
    * @return {flow[]} Array of nodes that make up the current node's full namespace
+   * @memberof flow#internal
+   * @alias namespace.path
    */
   flow.namespace.path = (...args) => {
     assert(args.length, ERRORS.invalidNamespaceArgs)
@@ -66,6 +70,8 @@ export default (flow, defaults, name, data) => {
    * @alias namespace.implicit
    * @memberof flow
    * @return {String[]} The implicit namespace segment of the node
+   * @memberof flow#internal
+   * @alias namespace.implicit
    */
   flow.namespace.implicit = (...args) => {
     assert(args.length, ERRORS.invalidNamespaceArgs)
@@ -84,6 +90,8 @@ export default (flow, defaults, name, data) => {
    * @alias namespace.explicit
    * @memberof flow
    * @return {String} The explicit namespace identifier of the node
+   * @memberof flow#internal
+   * @alias namespace.explicit
    */
   flow.namespace.explicit = (...args) => {
     assert(args.length, ERRORS.invalidNamespaceArgs)
@@ -105,6 +113,8 @@ export default (flow, defaults, name, data) => {
    * @alias namespace.localName
    * @memberof flow
    * @return {String} The explicit namespace identifier of the node
+   * @memberof flow#internal
+   * @alias namespace.localName
    */
   flow.namespace.localName = (...args) => {
     assert(args.length, ERRORS.invalidNamespaceArgs)
@@ -135,7 +145,8 @@ export default (flow, defaults, name, data) => {
    * @tutorial namespacing
    * @return {String[]} The full namespace of the node
    * @alias namespace.full
-   * @memberof flow
+   * @memberof flow#internal
+   * @alias namespace.full
    * */
   flow.namespace.full = (...args) => {
     assert(args.length, ERRORS.invalidNamespaceArgs)
@@ -152,6 +163,8 @@ export default (flow, defaults, name, data) => {
    * @param  {flow} listenerNode The node receiving the event
    * @param  {String} listenerName the name of the event, optionally including the explicit namespace, eg.:`x:y:foo`
    * @return {Boolean} true if the event can be delivered to the receiving node
+   * @memberof flow#internal
+   * @alias namespace.match
    */
   flow.namespace.match = (listenerNode, listenerName) => {
     assert(
@@ -175,6 +188,7 @@ export default (flow, defaults, name, data) => {
    * @param  {flow}  node the node to get the full NS from
    * @param  {String}  localisedNameTo The node name to get the explicit identifiers from
    * @return {Boolean} true if the name's explicit identifiers sit inside the node's NS
+   * @ignore
    */
   function isNamespaceMatch (node, nameFrom, localisedNameTo) {
     let fullIDs = nameFrom
@@ -204,13 +218,15 @@ export default (flow, defaults, name, data) => {
    * Resolves a listener name(ie. explicit ns + local name) to a localised one,
    * replacing generic namespace identifiers with explicit guid-s
    * @example
-   * let foo = flow
+   * let foo = nflow
    *  .create('x')
    *  .create('y')
    *  .create('x:z:foo')
-   *  foo.namespace.localise() // -> '{guid-of-x}:z:foo'
+   *  foo.namespace.localise('x:z:foo') // -> '{guid-of-x}:z:foo'
    * @param  {String} listenerName The name of the listener, optionally including the explicit ns
    * @return {String} The localised Namespace
+   * @memberof flow#internal
+   * @alias namespace.localise
    */
   flow.namespace.localise = (ns) => {
     assert(

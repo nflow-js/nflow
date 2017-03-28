@@ -60,6 +60,7 @@ export default (flow) => {
   flow.children.has = (matcher, recursive = true) => flow.children.find(matcher, recursive) !== undefined
 
   /**
+   * Find a `downstream` node
    * > **Aliases:**
    * > - `.find`
    * > - `.children.get`
@@ -82,6 +83,15 @@ export default (flow) => {
    *   ```
    * @param  {Boolean}  [recursive=true] recursive search or immediate children only.
    * @return {flow|undefined} The first child node that matches the filter criteria, else `undefined`
+   * @example
+   * let a = nflow.create('a')
+   * let b = nflow.create('b')
+   * let x = a.create('x').data(55)
+   * let y = a.create('y').data('foo')
+   *
+   * a.get('x').data() // -> 55
+   * b.get('x') // -> null
+   * a.get(f=>f.data()==='foo') // -> y
    */
   flow.get = (matcher, recursive = true) => flow.children.find.all(matcher, recursive).pop()
   /**
@@ -98,7 +108,7 @@ export default (flow) => {
    * > **Aliases:**
    * > - `children.find.all`
    * > - `children.findAll` (DEPRECATED)
-   * @alias children.get.all
+   * @alias get.all
    * @memberof flow
    * @param  {(String|Function|RegEx|flow)} matcher Matcher expression:
    *   ```
@@ -219,7 +229,7 @@ export default (flow) => {
      */
     /**
      *
-     * Dispatched when ove of the node's children(recursive) is about to be reparented.
+     * Dispatched when one of the node's children(recursive) is about to be reparented.
      * @event 'flow.children.parent'
      * @property {flow} flow - the node to be reparented.
      * @property {flow} newParent - the the new parent node
@@ -248,7 +258,7 @@ export default (flow) => {
      */
     /**
      *
-     * Dispatched when ove of the node's children(recursive) has been reparented.
+     * Dispatched when one of the node's children(recursive) has been reparented.
      * @event 'flow.children.parented'
      * @property {flow} flow - the reparented node.
      * @property {flow} newParent - the the new parent node
@@ -262,6 +272,15 @@ export default (flow) => {
   /**
    * Return an array of all parent nodes, starting from the elements parent, going upstream until a root node is found.
    * @returns {flow[]} All parent nodes starting from the immediate parent to the root
+   * @example
+   * let a = nflow.create('a')
+   * let x = a.create('x')
+   * let y = a.create('y')
+   * let b = nflow.create('b').parent(null)
+   * let z = b.create('z')
+   *
+   * x.parents() // -> [a, nflow]
+   * z.parents() // -> [b]
    */
   flow.parents = (...args) => {
     let parentMap = {}
@@ -298,13 +317,17 @@ export default (flow) => {
    *   .parents.get(flowInstance)
    *   ```
    * @return {flow|undefined} The nearest parent node that matches the criteria, else `undefined`
+   * @example
+   * let a = nflow.create('a').data(55)
+   * let b = a.create('b').data({foo:'bar'})
+   * let c = b.create('c')
+   *
+   * c.parents.get('b') // -> b
+   * c.parents.get( f=>f.data() === 55 ) // -> a
    */
   flow.parents.find = (matcher) => {
     if (matcher === null) return null
-    var filter = matcher
-    if (typeof (matcher) === 'string') filter = f => f.name() === matcher
-    else if (isFlow(matcher)) filter = f => f === matcher
-
+    let filter = createMatcher(matcher)
     return flow.parents()
       .filter(filter)
       .pop()

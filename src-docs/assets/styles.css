@@ -2,7 +2,8 @@ h1.page-title,
 h2.home{
   display:none;
 }
-#flow.name {
+#flow.name,
+#internal.name {
   display:none;
 }
 
@@ -19,23 +20,37 @@ h4.name>.type-name::before {
 figure {
   display: flex;
   flex-wrap: wrap;
-  background: #f8f8f8;
   margin:1em;
 }
 
 figure > figcaption {
-  flex: 1 0;
-  display: inline-block;
-  min-height: 250px;
   vertical-align: top;
 }
 
 figcaption > pre {
   margin: 10px;
+
+}
+figcaption{
+  background-color: rgba(31, 141, 214, 0.03);
+  padding: 7px 7px 7px 10px;
+  -moz-box-shadow: 3px 3px rgba(31, 141, 214, 0.05);
+  -webkit-box-shadow: 3px 3px rgba(31, 141, 214, 0.05);
+  box-shadow: 3px 3px rgba(31, 141, 214, 0.05);
+  margin: 20px 0 20px 0;
+}
+
+code.hljs{
+background-color: transparent;
 }
 
 figure >.example{
-  flex: 1 1;
+  flex-grow: 1;
+}
+
+.example svg{
+  display: block;
+  margin: 0 auto;
 }
 
 svg .text-bg{

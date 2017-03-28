@@ -1,12 +1,22 @@
 <?js
-  var data = obj;
-  var self = this;
-  var guid = ("e"+Math.random()).replace('.','')
+  let data = obj;
+  let self = this;
+  let guid = ("e"+Math.random()).replace('.','')
+
+  // code to show:
+
+  let compactObj = this.extractTag(data, 'hide', o => '')
+  compactObj = this.extractTag(compactObj, 'show', o => o)
+
+  // code to run:
+  let fullObj = data
+  fullObj = this.extractTag(fullObj, 'hide', o => o)
+  fullObj = this.extractTag(fullObj, 'show', o => '')
 ?>
 
 <figure>
   <figcaption>
-    <pre><code class="hljs js"><?js= this.htmlsafe(obj) ?></code></pre>
+    <pre><code class="hljs js"><?js= this.htmlsafe(compactObj) ?></code></pre>
   </figcaption>
   <div class="example <?js=guid?>"></div>
 </figure>
@@ -19,23 +29,17 @@
 
     var tree =  nflowVis.Vis(null)
       .call(nflowVis.Tree)
-      .on('updated', function(){
-          var bb = e.select('.tree').node().getBBox()
-          e.style('height', bb.y+bb.height+padding+'px')
-          e.style('width', bb.width+padding+'px')
-          tree.emit('resize')
-      })
 
     tree.emit('track', f)
     tree.emit('dom', e.node())
     tree.emit('show-events', true)
     tree.emit('dragging', false)
-    d3.select(window).on('resize.tree', ()=>tree.emit('resize'))
     var runExample = function(nflow){
       var noop = function(){}
       var callback = noop
-      <?js= obj ?>
+
+      <?js= fullObj ?>
     }
-  runExample(f)
+    runExample(f)
   })()
 </script>

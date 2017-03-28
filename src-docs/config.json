@@ -40,8 +40,8 @@
       "outputSourceFiles" : true,
       "cssFiles":{
         "include":[
-          "styles.css",
-          "nflow-vis.css"
+          "nflow-vis.css",
+          "styles.css"
         ],
         "_exclude":[
           "styles/prettify-tomorrow.css",
@@ -58,6 +58,7 @@
       },
       "templateFiles":{
         "example":"src-docs/tmpl/example.tmpl"
+
       },
       "staticFiles":{
         "include": [

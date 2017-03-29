@@ -4,7 +4,10 @@
     "dictionaries": ["jsdoc"]
   },
   "source": {
-    "include": ["src", "src/README.md"],
+    "include": [
+      "src",
+      "src-docs/static/README.md"
+    ],
     "includePattern": ".+\\.(js|jsx)?$",
     "excludePattern": "(^|\\/|\\\\)_"
   },
@@ -57,13 +60,14 @@
         "_exclude":["scripts/prettify/lang-css.js"]
       },
       "templateFiles":{
-        "example":"src-docs/tmpl/example.tmpl"
-
+        "example":"src-docs/tmpl/example.tmpl",
+        "_header":"src-docs/tmpl/header.tmpl"
       },
       "staticFiles":{
         "include": [
           "./src-docs/assets",
-          "./node_modules/nflow-vis/dist"
+          "./node_modules/nflow-vis/dist",
+          "src-docs/static/getting-started.md"
         ]
       },
       "i18nFile": "src-docs/tmpl/i18n.json",

@@ -36,20 +36,20 @@ describe('Cancellation', () => {
     })
 
     it('should dispatch flow.cancel', done => {
-      sut.on('flow.cancel', ()=>done())
+      sut.on('flow.cancel', () => done())
       sut.cancel()
     })
     it('should dispatch flow.parent.cancel', done => {
-      sut.create('child').on('flow.parent.cancel', ()=>done())
+      sut.create('child').on('flow.parent.cancel', () => done())
       sut.cancel()
     })
     it('should dispatch flow.children.cancel', done => {
-      sut.on('flow.children.cancel', ()=>done())
+      sut.on('flow.children.cancel', () => done())
       sut.create('child').cancel()
     })
 
     it('should cancel event delegation.', done => {
-      let shouldCall = function() { this.cancel() }
+      let shouldCall = function () { this.cancel() }
       let shouldNotCall = () => { done('cancelled event should not call subsequent listeners') }
 
       sut
@@ -64,7 +64,7 @@ describe('Cancellation', () => {
     })
 
     it('should cancel event delivery on same listener', done => {
-      let shouldCall = function() { this.cancel() }
+      let shouldCall = function () { this.cancel() }
       let shouldNotCall = () => { done('cancelled event should not call subsequent listeners') }
 
       sut
@@ -90,7 +90,8 @@ describe('Cancellation', () => {
       setTimeout(done, 10)
     })
     it('should not deliver events into a cancelled subtree', done => {
-      let shouldCall = () => { done()
+      let shouldCall = () => {
+        done()
       }
       function shouldNotCall () {
         done('stopped event should not call listener')

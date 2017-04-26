@@ -136,8 +136,6 @@ export default (flow) => {
   }
 
   flow.children.findAll = flow.children.find.all
-
-
   flow.get.all = flow.children.find.all
   flow.getAll = flow.children.findAll
 

@@ -1,4 +1,5 @@
 /* globals describe, it, beforeEach, VERSION */
+/* eslint no-unused-expressions: 0 */
 import flow from 'nflow'
 import assert from 'assert'
 import {expect} from 'chai'

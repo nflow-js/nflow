@@ -1,4 +1,5 @@
 /* globals describe, it, beforeEach */
+/* eslint no-unused-expressions: 0 */
 import flow from 'nflow'
 import {expect} from 'chai'
 var sut

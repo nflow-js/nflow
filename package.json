@@ -39,6 +39,7 @@
     "eslint-plugin-standard": "^2.0.1",
     "file-loader": "^0.10.0",
     "jsdoc": "^3.4.3",
+    "kitsune-jsdoc-template": "^1.0.3",
     "lodash": "^4.17.4",
     "lodash.clonedeep": "^4.5.0",
     "minami": "^1.1.1",
